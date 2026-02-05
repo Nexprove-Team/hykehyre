@@ -1,22 +1,21 @@
-import { Geist, Geist_Mono } from "next/font/google"
-
-import "@quiethire/ui/globals.css"
-import { Providers } from "@/components/providers"
+import { Geist, Geist_Mono } from "next/font/google";
+import "./global.css";
+import { Providers } from "@/components/providers";
 
 const fontSans = Geist({
   subsets: ["latin"],
   variable: "--font-sans",
-})
+});
 
 const fontMono = Geist_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
-})
+});
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode
+  children: React.ReactNode;
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
@@ -26,5 +25,5 @@ export default function RootLayout({
         <Providers>{children}</Providers>
       </body>
     </html>
-  )
+  );
 }
