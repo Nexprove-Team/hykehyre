@@ -33,7 +33,7 @@ export function TestimonialsSection() {
         >
           <h2 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">
             Loved by{" "}
-            <span className="font-display italic text-gradient">
+            <span className="font-display italic bg-gradient-to-r from-primary via-purple-500 to-primary bg-clip-text text-transparent">
               early adopters
             </span>
           </h2>
@@ -50,7 +50,7 @@ export function TestimonialsSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-60px" }}
               transition={{ duration: 0.5, delay: i * 0.15 }}
-              className="relative rounded-2xl border border-border/60 bg-card p-8 md:p-10"
+              className="glass-card relative rounded-3xl p-8 md:p-10"
             >
               <Quote className="mb-6 size-8 text-primary/30" />
               <blockquote className="text-base leading-relaxed text-foreground md:text-lg">

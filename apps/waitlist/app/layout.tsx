@@ -1,11 +1,17 @@
-import { DM_Sans } from "next/font/google";
+import { Outfit, Instrument_Serif } from "next/font/google";
 import "./global.css";
 import { Providers } from "@/components/providers";
 
-const fontSans = DM_Sans({
+const fontSans = Outfit({
   subsets: ["latin"],
   variable: "--font-sans",
-  weight: ["400", "500", "600", "700"],
+  weight: ["300", "400", "500", "600", "700"],
+});
+
+const fontDisplay = Instrument_Serif({
+  subsets: ["latin"],
+  variable: "--font-display",
+  weight: "400",
 });
 
 export const metadata = {
@@ -22,7 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${fontSans.variable} font-sans antialiased`}
+        className={`${fontSans.variable} ${fontDisplay.variable} font-sans antialiased`}
       >
         <Providers>{children}</Providers>
       </body>

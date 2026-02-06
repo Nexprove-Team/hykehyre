@@ -1,16 +1,51 @@
 @import "tailwindcss";
 @import "@quiethire/ui/globals.css";
 
-@font-face {
-  font-family: 'Instrument Serif';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('https://fonts.gstatic.com/s/instrumentserif/v4/jizBRFtNs2ka5fCjSS3wP2SZ3YMi.woff2') format('woff2');
-}
-
 @theme inline {
-  --font-display: 'Instrument Serif', serif;
+  --font-display: var(--font-display);
+  --font-sans: var(--font-sans);
+
+  --animate-fade-up: fade-up 0.6s ease-out both;
+  --animate-shimmer: shimmer 2.5s linear infinite;
+  --animate-pulse-slow: pulse-slow 4s ease-in-out infinite;
+  --animate-float: float 6s ease-in-out infinite;
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes shimmer {
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  @keyframes pulse-slow {
+    0%,
+    100% {
+      opacity: 0.4;
+    }
+    50% {
+      opacity: 0.7;
+    }
+  }
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
 }
 
 /* Smooth scroll */
@@ -20,7 +55,7 @@ html {
 
 /* Noise texture overlay */
 .noise-bg::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
@@ -28,28 +63,17 @@ html {
   z-index: 1;
 }
 
-/* Gradient text utility */
-.text-gradient {
-  background: linear-gradient(135deg, var(--primary) 0%, oklch(0.7 0.2 300) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+/* Glassmorphism Utilities */
+.glass-panel {
+  @apply bg-background/40 backdrop-blur-md border border-white/5 shadow-xl shadow-black/5;
 }
 
-/* Stagger animation for children */
-@keyframes fade-up {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.glass-card {
+  @apply bg-linear-to-br from-white/5 to-white/0 backdrop-blur-md border border-white/10 shadow-lg transition-all duration-300 hover:border-white/20 hover:shadow-primary/5;
 }
 
-.animate-fade-up {
-  animation: fade-up 0.6s ease-out both;
+.dark .glass-card {
+  @apply bg-linear-to-br from-white/5 to-white/2;
 }
 
 /* FAQ open/close */

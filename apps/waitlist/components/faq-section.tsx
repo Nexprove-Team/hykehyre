@@ -54,7 +54,7 @@ export function FAQSection() {
         >
           <h2 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">
             Frequently asked{" "}
-            <span className="font-display italic text-gradient">questions</span>
+            <span className="font-display italic bg-gradient-to-r from-primary via-purple-500 to-primary bg-clip-text text-transparent">questions</span>
           </h2>
           <p className="mt-4 text-lg text-muted-foreground">
             Everything you need to know about Quiet Hire.
@@ -67,13 +67,17 @@ export function FAQSection() {
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.1 }}
         >
-          <Accordion type="single" collapsible className="w-full">
+          <Accordion type="single" collapsible className="w-full space-y-4">
             {faqs.map((faq, i) => (
-              <AccordionItem key={i} value={`item-${i}`}>
-                <AccordionTrigger className="text-left text-base font-medium hover:no-underline">
+              <AccordionItem 
+                key={i} 
+                value={`item-${i}`}
+                className="glass-panel overflow-hidden rounded-xl border-none px-6 shadow-none"
+              >
+                <AccordionTrigger className="text-left text-base font-medium py-6 hover:no-underline data-[state=open]:text-primary transition-colors">
                   {faq.question}
                 </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground leading-relaxed">
+                <AccordionContent className="text-muted-foreground leading-relaxed pb-6 text-sm md:text-base">
                   {faq.answer}
                 </AccordionContent>
               </AccordionItem>
