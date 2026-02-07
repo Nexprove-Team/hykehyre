@@ -1,5 +1,5 @@
 import * as cheerio from "cheerio";
-import type { ScrapeResult } from "../../base-scraper.js";
+import type { ScrapeResult } from "../../base-scraper";
 
 export function parseLeverJobs(
   html: string,

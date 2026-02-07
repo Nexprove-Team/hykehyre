@@ -1,5 +1,5 @@
 import * as cheerio from "cheerio";
-import type { ScrapeResult } from "../../base-scraper.js";
+import type { ScrapeResult } from "../../base-scraper";
 
 const JOB_KEYWORDS =
   /engineer|developer|designer|manager|analyst|scientist|recruiter|coordinator|specialist|director|lead|intern/i;

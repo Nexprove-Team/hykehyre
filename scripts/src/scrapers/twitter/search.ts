@@ -1,8 +1,8 @@
-import { getConfig } from "../../config.js";
-import { rateLimited } from "../../utils/rate-limiter.js";
-import { withRetry } from "../../utils/retry.js";
-import { createLogger } from "../../utils/logger.js";
-import type { ScrapeResult } from "../base-scraper.js";
+import { getConfig } from "../../config";
+import { rateLimited } from "../../utils/rate-limiter";
+import { withRetry } from "../../utils/retry";
+import { createLogger } from "../../utils/logger";
+import type { ScrapeResult } from "../base-scraper";
 
 const log = createLogger("twitter");
 const X_API_BASE = "https://api.twitter.com/2";

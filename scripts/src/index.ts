@@ -1,20 +1,20 @@
-import { getConfig } from "./config.js";
-import { runScraper } from "./orchestrator.js";
-import type { ScraperOptions } from "./scrapers/base-scraper.js";
+import { getConfig } from "./config";
+import { runScraper } from "./orchestrator";
+import type { ScraperOptions } from "./scrapers/base-scraper";
 
 async function getScraperForPlatform(platform: string) {
   switch (platform) {
     case "linkedin": {
-      const { LinkedInScraper } = await import("./scrapers/linkedin/index.js");
+      const { LinkedInScraper } = await import("./scrapers/linkedin");
       return new LinkedInScraper();
     }
     case "twitter": {
-      const { TwitterScraper } = await import("./scrapers/twitter/index.js");
+      const { TwitterScraper } = await import("./scrapers/twitter");
       return new TwitterScraper();
     }
     case "company-page": {
       const { CompanyPageScraper } = await import(
-        "./scrapers/company-page/index.js"
+        "./scrapers/company-page"
       );
       return new CompanyPageScraper();
     }
@@ -48,7 +48,7 @@ Usage:
   tsx src/index.ts --platform <platform> --query <search> [options]
 
 Platforms:
-  linkedin       Search recruiters via Proxycurl API
+  linkedin       Discover companies/recruiters via NinjaPear API (nubela.co)
   twitter        Search hiring tweets via X API v2
   company-page   Scrape career pages (Greenhouse, Lever, etc.)
 
@@ -60,7 +60,7 @@ Options:
 
 Examples:
   tsx src/index.ts --platform company-page --query "https://boards.greenhouse.io/stripe"
-  tsx src/index.ts --platform linkedin --query "Stripe,Vercel" --max 20
+  tsx src/index.ts --platform linkedin --query "https://stripe.com,https://vercel.com" --max 20
   tsx src/index.ts --platform twitter --query "tech recruiter hiring" --dry-run
 `);
 }

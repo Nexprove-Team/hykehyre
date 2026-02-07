@@ -1,10 +1,10 @@
-import type { Scraper, ScraperOptions, ScrapeResult } from "../base-scraper.js";
-import { detectATS } from "./detector.js";
-import { parseGreenhouseJobs } from "./parsers/greenhouse.js";
-import { parseLeverJobs } from "./parsers/lever.js";
-import { parseGenericJobs } from "./parsers/generic.js";
-import { withRetry } from "../../utils/retry.js";
-import { createLogger } from "../../utils/logger.js";
+import type { Scraper, ScraperOptions, ScrapeResult } from "../base-scraper";
+import { detectATS } from "./detector";
+import { parseGreenhouseJobs } from "./parsers/greenhouse";
+import { parseLeverJobs } from "./parsers/lever";
+import { parseGenericJobs } from "./parsers/generic";
+import { withRetry } from "../../utils/retry";
+import { createLogger } from "../../utils/logger";
 
 const log = createLogger("company-page");
 

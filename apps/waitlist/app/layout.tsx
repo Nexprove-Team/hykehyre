@@ -1,4 +1,4 @@
-import { Outfit, Instrument_Serif } from "next/font/google";
+import { Outfit, DM_Serif_Display } from "next/font/google";
 import "./global.css";
 import { Providers } from "@/components/providers";
 
@@ -8,7 +8,7 @@ const fontSans = Outfit({
   weight: ["300", "400", "500", "600", "700"],
 });
 
-const fontDisplay = Instrument_Serif({
+const fontDisplay = DM_Serif_Display({
   subsets: ["latin"],
   variable: "--font-display",
   weight: "400",

@@ -1,6 +1,6 @@
-import type { Scraper, ScraperOptions, ScrapeResult } from "../base-scraper.js";
-import { searchHiringTweets } from "./search.js";
-import { createLogger } from "../../utils/logger.js";
+import type { Scraper, ScraperOptions, ScrapeResult } from "../base-scraper";
+import { searchHiringTweets } from "./search";
+import { createLogger } from "../../utils/logger";
 
 const log = createLogger("twitter");
 

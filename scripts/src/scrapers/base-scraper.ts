@@ -1,4 +1,4 @@
-import type { NewRecruiter, NewJobListing } from "../db/schema.js";
+import type { NewRecruiter, NewJobListing } from "../db/schema";
 
 export interface ScrapeResult {
   recruiters: Omit<NewRecruiter, "id" | "createdAt" | "updatedAt">[];

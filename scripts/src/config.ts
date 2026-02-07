@@ -3,7 +3,7 @@ import { z } from "zod";
 
 const envSchema = z.object({
   SCRAPER_DATABASE_URL: z.string().min(1),
-  PROXYCURL_API_KEY: z.string().optional(),
+  NUBELA_API_KEY: z.string().optional(),
   TWITTER_BEARER_TOKEN: z.string().optional(),
   RATE_LIMIT_REQUESTS_PER_MINUTE: z.coerce.number().default(30),
   HEADLESS: z.coerce.boolean().default(true),

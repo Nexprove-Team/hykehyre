@@ -1,147 +1,136 @@
-import { getConfig } from "../../config.js";
-import { rateLimited } from "../../utils/rate-limiter.js";
-import { withRetry } from "../../utils/retry.js";
-import { createLogger } from "../../utils/logger.js";
-import type { ScrapeResult } from "../base-scraper.js";
+import { getConfig } from "../../config";
+import { rateLimited } from "../../utils/rate-limiter";
+import { withRetry } from "../../utils/retry";
+import { createLogger } from "../../utils/logger";
+import type { ScrapeResult } from "../base-scraper";
 
 const log = createLogger("linkedin");
-const PROXYCURL_BASE = "https://nubela.co/proxycurl/api";
+const NUBELA_BASE = "https://nubela.co/api/v1";
 
-interface ProxycurlSearchResult {
-  results: Array<{
-    linkedin_profile_url: string;
-    profile: {
-      full_name: string;
-      headline: string;
-      occupation: string;
-      city: string;
-      state: string;
-      country: string;
-      public_identifier: string;
-    } | null;
-  }>;
+interface NubelaCustomer {
+  name: string;
+  description: string;
+  tagline: string;
+  industry: string;
+  website: string;
+  specialties: string[];
+  linkedin_url: string;
+  twitter_url: string;
+  location: string;
+}
+
+interface NubelaCustomerListingResponse {
+  customers: NubelaCustomer[];
+  total_count: number;
   next_page: string | null;
-  total_result_count: number;
 }
 
-interface ProxycurlProfile {
-  full_name: string;
-  headline: string;
-  occupation: string;
-  city: string;
-  state: string;
-  country_full_name: string;
-  linkedin_profile_url?: string;
-  personal_emails: string[];
-  experiences: Array<{
-    company: string;
-    title: string;
-    location: string;
-  }>;
-}
-
-export async function searchRecruiters(
-  query: string,
+/**
+ * Uses NinjaPear's Customer Listing API to discover companies
+ * and their associated contact info. Maps company data into
+ * recruiter-adjacent records for follow-up enrichment.
+ */
+export async function searchByCompanyWebsite(
+  website: string,
   maxResults: number
-): Promise<ScrapeResult["recruiters"]> {
+): Promise<{
+  recruiters: ScrapeResult["recruiters"];
+  companies: Array<{
+    name: string;
+    website: string;
+    linkedinUrl: string;
+    twitterHandle: string;
+    industry: string;
+    location: string;
+    description: string;
+  }>;
+}> {
   const config = getConfig();
-  if (!config.PROXYCURL_API_KEY) {
-    throw new Error("PROXYCURL_API_KEY required for LinkedIn scraping");
+  if (!config.NUBELA_API_KEY) {
+    throw new Error("NUBELA_API_KEY required for NinjaPear API");
   }
 
   const params = new URLSearchParams({
-    keyword_first_name: "",
-    keyword_last_name: "",
-    current_role_title: "recruiter",
-    current_company_name: query,
-    page_size: String(Math.min(maxResults, 10)),
+    website,
   });
 
-  log.info(`Searching Proxycurl for recruiters at "${query}"...`);
+  log.info(`Querying NinjaPear Customer Listing for "${website}"...`);
 
   const data = await withRetry(() =>
     rateLimited(async () => {
       const res = await fetch(
-        `${PROXYCURL_BASE}/search/person/?${params}`,
+        `${NUBELA_BASE}/customer/listing?${params}`,
         {
           headers: {
-            Authorization: `Bearer ${config.PROXYCURL_API_KEY}`,
+            Authorization: `Bearer ${config.NUBELA_API_KEY}`,
           },
         }
       );
       if (!res.ok) {
-        throw new Error(`Proxycurl ${res.status}: ${await res.text()}`);
+        throw new Error(`NinjaPear ${res.status}: ${await res.text()}`);
       }
-      return res.json() as Promise<ProxycurlSearchResult>;
+      return res.json() as Promise<NubelaCustomerListingResponse>;
     })
   );
 
-  log.info(`Found ${data.total_result_count} total results`);
+  log.info(`Found ${data.total_count ?? data.customers?.length ?? 0} customers`);
+
+  const customers = (data.customers ?? []).slice(0, maxResults);
+  const companies: Array<{
+    name: string;
+    website: string;
+    linkedinUrl: string;
+    twitterHandle: string;
+    industry: string;
+    location: string;
+    description: string;
+  }> = [];
 
   const recruiters: ScrapeResult["recruiters"] = [];
 
-  for (const result of data.results.slice(0, maxResults)) {
-    if (result.profile) {
-      const p = result.profile;
+  for (const customer of customers) {
+    // Store company data for the companies table
+    const twitterHandle = customer.twitter_url
+      ? extractTwitterHandle(customer.twitter_url)
+      : null;
+
+    companies.push({
+      name: customer.name,
+      website: customer.website,
+      linkedinUrl: customer.linkedin_url,
+      twitterHandle: twitterHandle ?? "",
+      industry: customer.industry,
+      location: customer.location,
+      description: customer.description || customer.tagline,
+    });
+
+    // Create a recruiter placeholder from company data
+    // These records represent companies where recruiters can be found
+    if (customer.linkedin_url) {
       recruiters.push({
-        fullName: p.full_name,
-        role: p.occupation || p.headline,
-        company: query,
-        linkedinUrl: result.linkedin_profile_url,
-        location: [p.city, p.state, p.country].filter(Boolean).join(", "),
-        jobTypes: [],
+        fullName: `Hiring @ ${customer.name}`,
+        role: "recruiter",
+        company: customer.name,
+        linkedinUrl: customer.linkedin_url,
+        twitterHandle,
+        location: customer.location ?? null,
+        jobTypes: customer.specialties ?? [],
         source: "linkedin",
-        sourceUrl: result.linkedin_profile_url,
+        sourceUrl: customer.linkedin_url,
         scrapedAt: new Date(),
       });
     }
   }
 
-  return recruiters;
+  return { recruiters, companies };
 }
 
-export async function enrichProfile(
-  linkedinUrl: string
-): Promise<ScrapeResult["recruiters"][number] | null> {
-  const config = getConfig();
-  if (!config.PROXYCURL_API_KEY) return null;
-
-  const params = new URLSearchParams({
-    linkedin_profile_url: linkedinUrl,
-    skills: "include",
-  });
-
-  const data = await withRetry(() =>
-    rateLimited(async () => {
-      const res = await fetch(
-        `${PROXYCURL_BASE}/v2/linkedin?${params}`,
-        {
-          headers: {
-            Authorization: `Bearer ${config.PROXYCURL_API_KEY}`,
-          },
-        }
-      );
-      if (!res.ok) {
-        throw new Error(`Proxycurl ${res.status}: ${await res.text()}`);
-      }
-      return res.json() as Promise<ProxycurlProfile>;
-    })
-  );
-
-  const currentJob = data.experiences?.[0];
-
-  return {
-    fullName: data.full_name,
-    role: data.occupation || data.headline,
-    company: currentJob?.company ?? null,
-    email: data.personal_emails?.[0] ?? null,
-    linkedinUrl,
-    location: [data.city, data.state, data.country_full_name]
-      .filter(Boolean)
-      .join(", "),
-    jobTypes: [],
-    source: "linkedin",
-    sourceUrl: linkedinUrl,
-    scrapedAt: new Date(),
-  };
+function extractTwitterHandle(url: string): string | null {
+  try {
+    const u = new URL(url);
+    const path = u.pathname.replace(/^\//, "").split("/")[0];
+    return path ? `@${path}` : null;
+  } catch {
+    return null;
+  }
 }

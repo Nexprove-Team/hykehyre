@@ -1,8 +1,8 @@
 import { eq, and } from "drizzle-orm";
-import { getDB, closeDB } from "./db/index.js";
-import { recruiters, jobListings, scrapeRuns } from "./db/schema.js";
-import type { Scraper, ScraperOptions, ScrapeResult } from "./scrapers/base-scraper.js";
-import { createLogger } from "./utils/logger.js";
+import { getDB, closeDB } from "./db";
+import { recruiters, jobListings, scrapeRuns } from "./db/schema";
+import type { Scraper, ScraperOptions, ScrapeResult } from "./scrapers/base-scraper";
+import { createLogger } from "./utils/logger";
 
 const log = createLogger("orchestrator");
 
