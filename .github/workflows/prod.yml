@@ -24,10 +24,13 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v5
         with:
-          node-version: latest
+          node-version: 22
 
       - name: Install Vercel CLI
         run: npm install -g vercel
+
+      - name: Restore packageManager field
+        run: node -e "const p=require('./package.json');p.packageManager='pnpm@10.4.1';require('fs').writeFileSync('./package.json',JSON.stringify(p,null,2)+'\n')"
 
       - name: Make trivial bot commit (so last committer is GitHub Actions bot)
         run: |
