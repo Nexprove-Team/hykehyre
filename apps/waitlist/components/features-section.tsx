@@ -102,15 +102,15 @@ function FeatureCard({
       transition={{ duration: 0.5, delay: index * 0.1 }}
       className={cn(
         "glass-card group relative flex flex-col justify-between overflow-hidden rounded-3xl p-8",
-        className
+        className,
       )}
     >
       <div className="absolute right-0 top-0 h-32 w-32 -translate-y-12 translate-x-12 rounded-full bg-primary/10 blur-[60px] transition-all group-hover:bg-primary/20" />
-      
+
       <div className="relative mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/5 ring-1 ring-primary/10 transition-all group-hover:bg-primary/10 group-hover:ring-primary/20">
         <Icon className="size-6 text-primary" />
       </div>
-      
+
       <div className="relative">
         <h3 className="mb-3 text-xl font-semibold text-foreground">{title}</h3>
         <p className="text-base leading-relaxed text-muted-foreground">
@@ -126,7 +126,7 @@ export function FeaturesSection() {
     <section className="relative py-24 md:py-32" id="features">
       {/* Decorative background elements */}
       <div className="pointer-events-none absolute left-0 top-1/2 -z-10 h-[500px] w-[500px] -translate-y-1/2 rounded-full bg-primary/3 blur-[120px]" />
-      
+
       <div className="mx-auto max-w-6xl px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -143,18 +143,24 @@ export function FeaturesSection() {
             of hiring
           </h2>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">
-            Whether you&apos;re reviewing applicants or looking for your next role, 
-            Quiet Hire provides the tools you need to succeed.
+            Whether you&apos;re reviewing applicants or looking for your next
+            role, Quiet Hire provides the tools you need to succeed.
           </p>
         </motion.div>
 
         <Tabs defaultValue="reviewer" className="w-full">
           <div className="flex justify-center">
             <TabsList className="mb-12 h-12 rounded-full border border-border/50 bg-background/50 p-1 backdrop-blur-md">
-              <TabsTrigger value="reviewer" className="rounded-full px-8 py-2 text-base data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+              <TabsTrigger
+                value="reviewer"
+                className="rounded-full px-8 py-2 text-base data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+              >
                 Reviewer
               </TabsTrigger>
-              <TabsTrigger value="candidate" className="rounded-full px-8 py-2 text-base data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+              <TabsTrigger
+                value="candidate"
+                className="rounded-full px-8 py-2 text-base data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+              >
                 Candidate
               </TabsTrigger>
             </TabsList>

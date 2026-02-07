@@ -54,7 +54,9 @@ export function FAQSection() {
         >
           <h2 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">
             Frequently asked{" "}
-            <span className="font-display italic bg-gradient-to-r from-primary via-purple-500 to-primary bg-clip-text text-transparent">questions</span>
+            <span className="font-display italic bg-gradient-to-r from-primary via-purple-500 to-primary bg-clip-text text-transparent">
+              questions
+            </span>
           </h2>
           <p className="mt-4 text-lg text-muted-foreground">
             Everything you need to know about Quiet Hire.
@@ -69,8 +71,8 @@ export function FAQSection() {
         >
           <Accordion type="single" collapsible className="w-full space-y-4">
             {faqs.map((faq, i) => (
-              <AccordionItem 
-                key={i} 
+              <AccordionItem
+                key={i}
                 value={`item-${i}`}
                 className="glass-panel overflow-hidden rounded-xl border-none px-6 shadow-none"
               >
