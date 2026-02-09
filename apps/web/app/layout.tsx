@@ -1,7 +1,7 @@
 import './global.css'
-import { Providers } from '@/components/providers'
-import { Bricolage_Grotesque, DM_Sans } from 'next/font/google'
 import { cn } from '@hackhyre/ui/lib/utils'
+import { Bricolage_Grotesque, DM_Sans } from 'next/font/google'
+import { DefaultProvider } from '@hackhyre/ui/providers/default-provider'
 
 const fontSans = DM_Sans({
   subsets: ['latin'],
@@ -27,7 +27,7 @@ export default function RootLayout({
           fontBricolage.variable
         )}
       >
-        <Providers>{children}</Providers>
+        <DefaultProvider>{children}</DefaultProvider>
       </body>
     </html>
   )

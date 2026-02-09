@@ -4,6 +4,8 @@
  *
  * Variants: "Linear" (default) | "Bold" | "Bulk" | "Broken" | "Outline" | "TwoTone"
  */
+export type { IconProps, Icon } from 'iconsax-reactjs'
+
 export {
   // Navigation
   ArrowLeft2 as ArrowLeft,
@@ -96,4 +98,15 @@ export {
   TaskSquare,
   Clipboard,
   ReceiptItem,
-} from "iconsax-reactjs";
+  Pause,
+  PauseCircle,
+  Copy,
+  More,
+  Call,
+  Cake,
+  Flag,
+  Weight,
+  Book,
+  MessageText,
+  Send2 as SendMessage,
+} from 'iconsax-reactjs'
