@@ -1,11 +1,10 @@
 'use client'
+import { ReactNode } from 'react'
 import { cn } from '@hackhyre/ui/lib/utils'
 import { usePathname } from 'next/navigation'
-import React from 'react'
 
-const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
+const LayoutWrapper = ({ children }: { children: ReactNode }) => {
   const path = usePathname()
-
   return (
     <div
       className={cn(

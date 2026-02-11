@@ -1,4 +1,5 @@
 import { Header } from '@/components/home/header'
+import { Footer } from '@/components/home/footer'
 import LayoutWrapper from './layout-wrapper'
 
 export default function HomeLayout({
@@ -16,6 +17,7 @@ export default function HomeLayout({
     <LayoutWrapper>
       <Header user={user} />
       <main>{children}</main>
+      <Footer />
     </LayoutWrapper>
   )
 }
