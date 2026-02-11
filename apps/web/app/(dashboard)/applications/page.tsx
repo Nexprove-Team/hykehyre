@@ -151,6 +151,8 @@ export default function ApplicationsPage() {
     return matchesSearch && matchesStatus;
   });
 
+  const filteredCandidateIds = filtered.map((a) => a.candidateId);
+
   const counts: Record<string, number> = { all: MOCK_APPLICATIONS.length };
   for (const s of STATUS_FILTERS) {
     if (s.value !== "all") {
@@ -249,7 +251,7 @@ export default function ApplicationsPage() {
                     key={app.id}
                     app={app}
                     index={i}
-                    onSelect={() => openCandidate(app.candidateId)}
+                    onSelect={() => openCandidate(app.candidateId, filteredCandidateIds)}
                   />
                 ))}
               </TableBody>

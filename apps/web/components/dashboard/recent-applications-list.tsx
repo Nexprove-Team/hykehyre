@@ -35,6 +35,7 @@ function getRelativeTime(dateStr: string): string {
 export function RecentApplicationsList() {
   const openCandidate = useCandidateSheet((s) => s.open);
   const applications = MOCK_APPLICATIONS.slice(0, 6);
+  const candidateIds = applications.map((a) => a.candidateId);
 
   return (
     <Card>
@@ -66,7 +67,7 @@ export function RecentApplicationsList() {
           return (
             <button
               key={app.id}
-              onClick={() => openCandidate(app.candidateId)}
+              onClick={() => openCandidate(app.candidateId, candidateIds)}
               className="hover:bg-accent/50 flex w-full items-center gap-3 rounded-lg p-2.5 transition-colors text-left cursor-pointer"
             >
               <Avatar className="h-9 w-9 shrink-0">

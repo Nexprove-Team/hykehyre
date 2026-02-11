@@ -1,10 +1,11 @@
 /**
  * Centralized icon exports from Iconsax.
  * Import via: import { Icon } from "@hackhyre/ui/icons"
- *
- * Variants: "Linear" (default) | "Bold" | "Bulk" | "Broken" | "Outline" | "TwoTone"
- */
+*
+* Variants: "Linear" (default) | "Bold" | "Bulk" | "Broken" | "Outline" | "TwoTone"
+*/
 export type { IconProps, Icon } from 'iconsax-reactjs'
+
 
 export {
   // Navigation
@@ -49,6 +50,10 @@ export {
   Edit2 as Edit,
   Trash,
 
+  // Bookmarks
+  Save2 as Bookmark,
+  ArchiveBook,
+
   // Content & Media
   DocumentText,
   DocumentText1,
@@ -67,6 +72,9 @@ export {
   GlobalSearch,
   Location,
   Map,
+
+  // Layout
+  Menu as HambergerMenu,
 
   // Misc
   Star1 as Star,

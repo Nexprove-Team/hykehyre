@@ -85,6 +85,14 @@ export interface MockCandidateProfile {
   summary: string;
 }
 
+export interface MockMessage {
+  id: string;
+  candidateId: string;
+  sender: "recruiter" | "candidate";
+  text: string;
+  timestamp: string;
+}
+
 export interface MockUser {
   id: string;
   name: string;
@@ -621,6 +629,104 @@ export const MOCK_CANDIDATES: MockCandidateProfile[] = [
       },
     ],
     summary: "Full stack developer with a mathematical background. Enjoys building developer tools and optimizing complex systems.",
+  },
+];
+
+export const MOCK_MESSAGES: MockMessage[] = [
+  // Alex Johnson
+  {
+    id: "msg-001",
+    candidateId: "cand-001",
+    sender: "recruiter",
+    text: "Hi Alex, thanks for applying to the Senior Frontend Engineer role. Your experience at Stripe really stood out to us!",
+    timestamp: "2026-02-08T10:00:00",
+  },
+  {
+    id: "msg-002",
+    candidateId: "cand-001",
+    sender: "candidate",
+    text: "Thank you! I'm really excited about this opportunity. I've been following HackHyre's work and love what you're building.",
+    timestamp: "2026-02-08T10:15:00",
+  },
+  {
+    id: "msg-003",
+    candidateId: "cand-001",
+    sender: "recruiter",
+    text: "Great to hear! Would you be available for a quick intro call this week? We'd love to learn more about your design system experience.",
+    timestamp: "2026-02-08T10:22:00",
+  },
+  {
+    id: "msg-004",
+    candidateId: "cand-001",
+    sender: "candidate",
+    text: "Absolutely! I'm free Thursday or Friday afternoon. Would either of those work?",
+    timestamp: "2026-02-08T11:05:00",
+  },
+  {
+    id: "msg-005",
+    candidateId: "cand-001",
+    sender: "recruiter",
+    text: "Thursday at 2pm works perfectly. I'll send over a calendar invite shortly.",
+    timestamp: "2026-02-08T11:10:00",
+  },
+  // Priya Sharma
+  {
+    id: "msg-006",
+    candidateId: "cand-002",
+    sender: "recruiter",
+    text: "Hi Priya, we were impressed by your full stack background at Revolut. We'd love to chat about the Senior Frontend role.",
+    timestamp: "2026-02-08T09:00:00",
+  },
+  {
+    id: "msg-007",
+    candidateId: "cand-002",
+    sender: "candidate",
+    text: "Hi! Thanks so much for reaching out. I'd love to learn more about the team and tech stack.",
+    timestamp: "2026-02-08T09:30:00",
+  },
+  {
+    id: "msg-008",
+    candidateId: "cand-002",
+    sender: "recruiter",
+    text: "We're using Next.js, TypeScript, and Tailwind. The team is about 8 engineers. Want to do a 30-min video call?",
+    timestamp: "2026-02-08T09:45:00",
+  },
+  // Marcus Chen
+  {
+    id: "msg-009",
+    candidateId: "cand-003",
+    sender: "recruiter",
+    text: "Hi Marcus, your application for the Backend Engineer role looks great. Your work on Datadog's ingestion pipeline is very relevant to what we're building.",
+    timestamp: "2026-02-08T14:00:00",
+  },
+  // James Okafor
+  {
+    id: "msg-010",
+    candidateId: "cand-007",
+    sender: "recruiter",
+    text: "James, thanks for applying! Your payments experience at Paystack is exactly what we're looking for.",
+    timestamp: "2026-02-07T15:00:00",
+  },
+  {
+    id: "msg-011",
+    candidateId: "cand-007",
+    sender: "candidate",
+    text: "Thanks for getting back to me! I'm very interested in the Backend Engineer position. Building payment infrastructure is my passion.",
+    timestamp: "2026-02-07T15:30:00",
+  },
+  {
+    id: "msg-012",
+    candidateId: "cand-007",
+    sender: "recruiter",
+    text: "That's great to hear. Can you tell me a bit more about the fraud detection system you built? We're tackling something similar.",
+    timestamp: "2026-02-07T15:45:00",
+  },
+  {
+    id: "msg-013",
+    candidateId: "cand-007",
+    sender: "candidate",
+    text: "Sure! We used a combination of rule-based checks and an ML model trained on historical chargeback data. It reduced chargebacks by 60% in the first quarter. Happy to walk through the architecture on a call.",
+    timestamp: "2026-02-07T16:10:00",
   },
 ];
 

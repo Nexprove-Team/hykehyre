@@ -165,6 +165,7 @@ export default function JobDetailPage({
   }
 
   const applications = MOCK_APPLICATIONS.filter((a) => a.jobId === job.id);
+  const applicantIds = applications.map((a) => a.candidateId);
   const statusConfig = JOB_STATUS_CONFIG[job.status];
   const StatusIcon = STATUS_ICON[job.status] ?? Clock;
   const salary = formatSalary(job.salaryMin, job.salaryMax, job.salaryCurrency);
@@ -384,7 +385,7 @@ export default function JobDetailPage({
                           initial={{ opacity: 0, y: 8 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: i * 0.05, duration: 0.2 }}
-                          onClick={() => openCandidate(app.candidateId)}
+                          onClick={() => openCandidate(app.candidateId, applicantIds)}
                           className="hover:bg-accent/50 flex w-full items-center gap-3 rounded-xl p-2.5 transition-colors text-left"
                         >
                           <Avatar className="h-8 w-8">

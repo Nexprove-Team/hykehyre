@@ -1,48 +1,47 @@
-"use client";
+'use client'
 
-import { usePathname } from "next/navigation";
-import { motion, AnimatePresence } from "motion/react";
-import { TooltipProvider } from "@hackhyre/ui/components/tooltip";
-import { Separator } from "@hackhyre/ui/components/separator";
+import { usePathname } from 'next/navigation'
+import { motion, AnimatePresence } from 'motion/react'
+import { TooltipProvider } from '@hackhyre/ui/components/tooltip'
+import { Separator } from '@hackhyre/ui/components/separator'
+import { Avatar, AvatarFallback } from '@hackhyre/ui/components/avatar'
+import { Sheet, SheetContent, SheetTitle } from '@hackhyre/ui/components/sheet'
 import {
-  Avatar,
-  AvatarFallback,
-} from "@hackhyre/ui/components/avatar";
-import {
-  Sheet,
-  SheetContent,
-  SheetTitle,
-} from "@hackhyre/ui/components/sheet";
-import { ArrowLeft, ArrowRight, LogoutCurve, AddCircle } from "@hackhyre/ui/icons";
-import { cn } from "@hackhyre/ui/lib/utils";
+  ArrowLeft,
+  ArrowRight,
+  LogoutCurve,
+  AddCircle,
+} from '@hackhyre/ui/icons'
+import { cn } from '@hackhyre/ui/lib/utils'
 
-import { SidebarNavItem } from "./sidebar-nav-item";
-import { useSidebar } from "@/hooks/use-sidebar";
-import { MOCK_USER } from "@/lib/mock-data";
+import { SidebarNavItem } from './sidebar-nav-item'
+import { useSidebar } from '@/hooks/use-sidebar'
+import { MOCK_USER } from '@/lib/mock-data'
+import Link from 'next/link'
 import {
   SIDEBAR_NAV_ITEMS,
   SIDEBAR_BOTTOM_ITEMS,
   SIDEBAR_WIDTH_EXPANDED,
   SIDEBAR_WIDTH_COLLAPSED,
-} from "@/lib/constants";
+} from '@/lib/constants'
 
 function SidebarContent({ isCollapsed }: { isCollapsed: boolean }) {
-  const pathname = usePathname();
-  const toggle = useSidebar((s) => s.toggle);
+  const pathname = usePathname()
+  const toggle = useSidebar((s) => s.toggle)
 
   const initials = MOCK_USER.name
-    .split(" ")
+    .split(' ')
     .map((n) => n[0])
-    .join("")
-    .toUpperCase();
+    .join('')
+    .toUpperCase()
 
   return (
     <div className="flex h-full flex-col">
       {/* Logo area */}
       <div
         className={cn(
-          "flex h-16 shrink-0 items-center px-5",
-          isCollapsed && "justify-center px-0",
+          'flex h-16 shrink-0 items-center px-5',
+          isCollapsed && 'justify-center px-0'
         )}
       >
         <AnimatePresence mode="wait">
@@ -70,10 +69,10 @@ function SidebarContent({ isCollapsed }: { isCollapsed: boolean }) {
                 <span className="text-sm font-extrabold text-white">H</span>
               </div>
               <div>
-                <p className="font-mono text-[15px] font-bold leading-none tracking-tight">
+                <p className="font-mono text-[15px] leading-none font-bold tracking-tight">
                   Hack<span className="text-primary">Hyre</span>
                 </p>
-                <p className="text-muted-foreground mt-0.5 text-[10px] font-medium uppercase tracking-widest">
+                <p className="text-muted-foreground mt-0.5 text-[10px] font-medium tracking-widest uppercase">
                   Recruiter
                 </p>
               </div>
@@ -87,17 +86,17 @@ function SidebarContent({ isCollapsed }: { isCollapsed: boolean }) {
         {!isCollapsed && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
+            animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             className="overflow-hidden px-4 pb-2"
           >
-            <a
+            <Link
               href="/jobs/create"
               className="bg-primary/5 border-primary/20 text-primary hover:bg-primary/10 flex items-center gap-2 rounded-xl border border-dashed px-3 py-2 text-[13px] font-medium transition-colors"
             >
               <AddCircle size={18} variant="Bulk" />
               New Job Listing
-            </a>
+            </Link>
           </motion.div>
         )}
       </AnimatePresence>
@@ -107,8 +106,8 @@ function SidebarContent({ isCollapsed }: { isCollapsed: boolean }) {
       {/* Main nav */}
       <nav
         className={cn(
-          "flex-1 space-y-1 overflow-y-auto py-4",
-          isCollapsed ? "px-2" : "px-3",
+          'flex-1 space-y-1 overflow-y-auto py-4',
+          isCollapsed ? 'px-2' : 'px-3'
         )}
       >
         <AnimatePresence>
@@ -117,7 +116,7 @@ function SidebarContent({ isCollapsed }: { isCollapsed: boolean }) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="text-muted-foreground mb-2 px-3 text-[10px] font-semibold uppercase tracking-widest"
+              className="text-muted-foreground mb-2 px-3 text-[10px] font-semibold tracking-widest uppercase"
             >
               Menu
             </motion.p>
@@ -133,15 +132,15 @@ function SidebarContent({ isCollapsed }: { isCollapsed: boolean }) {
             badge={item.badge}
             isCollapsed={isCollapsed}
             isActive={
-              item.href === "/"
-                ? pathname === "/"
+              item.href === '/'
+                ? pathname === '/'
                 : pathname.startsWith(item.href)
             }
           />
         ))}
 
         <div className="py-2">
-          <Separator className={isCollapsed ? "mx-1" : "mx-2"} />
+          <Separator className={isCollapsed ? 'mx-1' : 'mx-2'} />
         </div>
 
         <AnimatePresence>
@@ -150,7 +149,7 @@ function SidebarContent({ isCollapsed }: { isCollapsed: boolean }) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="text-muted-foreground mb-2 px-3 text-[10px] font-semibold uppercase tracking-widest"
+              className="text-muted-foreground mb-2 px-3 text-[10px] font-semibold tracking-widest uppercase"
             >
               System
             </motion.p>
@@ -172,17 +171,15 @@ function SidebarContent({ isCollapsed }: { isCollapsed: boolean }) {
       {/* User profile section at bottom */}
       <div
         className={cn(
-          "shrink-0 border-t p-3",
-          isCollapsed && "flex flex-col items-center p-2",
+          'shrink-0 border-t p-3',
+          isCollapsed && 'flex flex-col items-center p-2'
         )}
       >
         {/* User card */}
         <div
           className={cn(
-            "flex items-center rounded-xl transition-colors",
-            isCollapsed
-              ? "justify-center p-1"
-              : "hover:bg-accent gap-3 p-2",
+            'flex items-center rounded-xl transition-colors',
+            isCollapsed ? 'justify-center p-1' : 'hover:bg-accent gap-3 p-2'
           )}
         >
           <Avatar className="h-8 w-8 shrink-0">
@@ -229,8 +226,8 @@ function SidebarContent({ isCollapsed }: { isCollapsed: boolean }) {
         <button
           onClick={toggle}
           className={cn(
-            "text-muted-foreground hover:bg-accent hover:text-foreground mt-1 flex w-full items-center rounded-lg text-[12px] font-medium transition-colors",
-            isCollapsed ? "justify-center p-2" : "gap-2 px-3 py-1.5",
+            'text-muted-foreground hover:bg-accent hover:text-foreground mt-1 flex w-full items-center rounded-lg text-[12px] font-medium transition-colors',
+            isCollapsed ? 'justify-center p-2' : 'gap-2 px-3 py-1.5'
           )}
         >
           {isCollapsed ? (
@@ -244,17 +241,16 @@ function SidebarContent({ isCollapsed }: { isCollapsed: boolean }) {
         </button>
       </div>
     </div>
-  );
+  )
 }
 
 export function Sidebar() {
-  const isCollapsed = useSidebar((s) => s.isCollapsed);
-  const isMobileOpen = useSidebar((s) => s.isMobileOpen);
-  const closeMobile = useSidebar((s) => s.closeMobile);
+  const isCollapsed = useSidebar((s) => s.isCollapsed)
+  const isMobileOpen = useSidebar((s) => s.isMobileOpen)
+  const closeMobile = useSidebar((s) => s.closeMobile)
 
   return (
     <>
-      {/* Desktop sidebar */}
       <TooltipProvider>
         <motion.aside
           animate={{
@@ -262,7 +258,7 @@ export function Sidebar() {
               ? SIDEBAR_WIDTH_COLLAPSED
               : SIDEBAR_WIDTH_EXPANDED,
           }}
-          transition={{ type: "spring", stiffness: 320, damping: 28 }}
+          transition={{ type: 'spring', stiffness: 320, damping: 28 }}
           className="bg-card hidden h-full shrink-0 overflow-hidden border-r lg:block"
         >
           <SidebarContent isCollapsed={isCollapsed} />
@@ -270,8 +266,11 @@ export function Sidebar() {
       </TooltipProvider>
 
       {/* Mobile sidebar */}
-      <Sheet open={isMobileOpen} onOpenChange={(open) => !open && closeMobile()}>
-        <SheetContent side="left" className="w-[280px] p-0">
+      <Sheet
+        open={isMobileOpen}
+        onOpenChange={(open) => !open && closeMobile()}
+      >
+        <SheetContent side="left" className="w-70 p-0">
           <SheetTitle className="sr-only">Navigation</SheetTitle>
           <TooltipProvider>
             <SidebarContent isCollapsed={false} />
@@ -279,5 +278,5 @@ export function Sidebar() {
         </SheetContent>
       </Sheet>
     </>
-  );
+  )
 }

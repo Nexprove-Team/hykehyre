@@ -226,4 +226,8 @@
       'rlig' 1,
       'calt' 1;
   }
+
+  button {
+    @apply cursor-pointer;
+  }
 }
