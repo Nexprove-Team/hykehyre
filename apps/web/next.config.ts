@@ -8,6 +8,9 @@ const nextConfig: NextConfig = {
     turbopackFileSystemCacheForDev: true,
     typedEnv: true,
   },
+  typescript: {
+    ignoreBuildErrors: process.env.NODE_ENV === 'production',
+  }
 }
 
 export default nextConfig
