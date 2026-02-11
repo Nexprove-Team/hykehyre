@@ -54,8 +54,8 @@ const NAV_ITEMS = [
 
 function Logo({ isJobListing }: { isJobListing?: boolean }) {
   return (
-    <Link href="/" className="flex items-center gap-2.5">
-      <div className="bg-primary flex h-9 w-9 items-center justify-center rounded-xl shadow-sm">
+    <Link href="/" className="flex items-center gap-0.5">
+      <div className="flex h-9 w-9 items-center justify-center">
         <LogoIcon />
       </div>
       <p
