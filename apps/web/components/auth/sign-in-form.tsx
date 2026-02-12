@@ -11,6 +11,7 @@ import Link from "next/link";
 import { Eye, EyeSlash, Sms, Lock } from "@hackhyre/ui/icons";
 import { Loader2 } from "lucide-react";
 
+import { authClient } from "@/lib/auth-client";
 import { Button } from "@hackhyre/ui/components/button";
 import { Input } from "@hackhyre/ui/components/input";
 import {
@@ -43,10 +44,21 @@ export function SignInForm() {
     },
   });
 
-  async function onSubmit(_values: SignInValues) {
+  async function onSubmit(values: SignInValues) {
     setIsLoading(true);
-    await new Promise((r) => setTimeout(r, 1000));
+
+    const { error } = await authClient.signIn.email({
+      email: values.email,
+      password: values.password,
+    });
+
     setIsLoading(false);
+
+    if (error) {
+      toast.error(error.message ?? "Invalid credentials");
+      return;
+    }
+
     toast.success("Welcome back!");
     router.push("/");
   }

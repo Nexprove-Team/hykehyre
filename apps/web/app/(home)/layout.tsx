@@ -7,15 +7,9 @@ export default function HomeLayout({
 }: {
   children: React.ReactNode
 }) {
-  const user = {
-    name: 'John Doe',
-    email: 'phoenixdahdev@gmail.com',
-    image: 'https://i.pravatar.cc/150?img=3',
-    location: 'San Francisco, CA',
-  }
   return (
     <LayoutWrapper>
-      <Header user={user} />
+      <Header />
       <main className="flex-1">{children}</main>
       <Footer />
     </LayoutWrapper>

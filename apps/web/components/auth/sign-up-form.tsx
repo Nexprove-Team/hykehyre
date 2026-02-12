@@ -23,6 +23,7 @@ import {
 } from "@hackhyre/ui/icons";
 import { Loader2 } from "lucide-react";
 
+import { authClient } from "@/lib/auth-client";
 import { Button } from "@hackhyre/ui/components/button";
 import { Input } from "@hackhyre/ui/components/input";
 import {
@@ -108,11 +109,29 @@ export function SignUpForm() {
     form.reset();
   }
 
-  async function onSubmit(_values: FormValues) {
+  async function onSubmit(values: FormValues) {
     if (!selectedRole) return;
     setIsLoading(true);
-    await new Promise((r) => setTimeout(r, 1000));
+
+    const { error } = await authClient.signUp.email({
+      email: values.email,
+      password: values.password,
+      name: values.name,
+      username: values.username,
+      role: selectedRole,
+      companyName:
+        isRecruiter && "companyName" in values
+          ? values.companyName
+          : undefined,
+    });
+
     setIsLoading(false);
+
+    if (error) {
+      toast.error(error.message ?? "Something went wrong");
+      return;
+    }
+
     toast.success("Account created!");
     router.push(`/onboarding?role=${selectedRole}`);
   }

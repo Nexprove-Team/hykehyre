@@ -1,30 +1,25 @@
-"use client";
-
-import { Suspense } from "react";
-import { useSearchParams } from "next/navigation";
+import { redirect } from "next/navigation";
+import { getSession } from "@/lib/auth-session";
 import { OnboardingWizard } from "@/components/onboarding/onboarding-wizard";
+import type { User } from "@hackhyre/db/auth";
 
-function OnboardingContent() {
-  const searchParams = useSearchParams();
-  const role =
-    searchParams.get("role") === "recruiter" ? "recruiter" : "candidate";
+export default async function OnboardingPage() {
+  const session = await getSession();
+
+  if (!session) {
+    redirect("/sign-in");
+  }
+
+  const user = session.user as User;
 
   return (
     <OnboardingWizard
       user={{
-        id: "demo-user",
-        name: "Jane Doe",
-        email: "jane@example.com",
-        role,
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role === "recruiter" ? "recruiter" : "candidate",
       }}
     />
-  );
-}
-
-export default function OnboardingPage() {
-  return (
-    <Suspense>
-      <OnboardingContent />
-    </Suspense>
   );
 }
