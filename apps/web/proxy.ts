@@ -1,8 +1,8 @@
+import { auth } from "@hackhyre/db/auth";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { auth } from "@hackhyre/db/auth";
 
-const protectedRoutes = ["/dashboard", "/onboarding", "/messages"];
+const protectedRoutes = ["/dashboard", "/onboarding", "/messages", "/applications"];
 const authRoutes = ["/sign-in", "/sign-up"];
 
 export async function proxy(request: NextRequest) {
@@ -32,6 +32,7 @@ export const config = {
     "/dashboard/:path*",
     "/onboarding",
     "/messages/:path*",
+    "/applications/:path*",
     "/sign-in",
     "/sign-up",
   ],

@@ -1,53 +1,49 @@
-"use client";
+'use client'
 
-import { usePathname } from "next/navigation";
-import { motion, AnimatePresence } from "motion/react";
-import { TooltipProvider } from "@hackhyre/ui/components/tooltip";
-import { Separator } from "@hackhyre/ui/components/separator";
-import { Avatar, AvatarFallback } from "@hackhyre/ui/components/avatar";
-import { Sheet, SheetContent, SheetTitle } from "@hackhyre/ui/components/sheet";
+import { usePathname } from 'next/navigation'
+import { motion, AnimatePresence } from 'motion/react'
+import { TooltipProvider } from '@hackhyre/ui/components/tooltip'
+import { Separator } from '@hackhyre/ui/components/separator'
+import { Avatar, AvatarFallback } from '@hackhyre/ui/components/avatar'
+import { Sheet, SheetContent, SheetTitle } from '@hackhyre/ui/components/sheet'
 import {
   ArrowLeft,
   ArrowRight,
   LogoutCurve,
   SearchNormal,
-} from "@hackhyre/ui/icons";
-import { cn } from "@hackhyre/ui/lib/utils";
+} from '@hackhyre/ui/icons'
+import { cn } from '@hackhyre/ui/lib/utils'
 
-import { SidebarNavItem } from "./sidebar-nav-item";
-import { useCandidateSidebar } from "@/hooks/use-candidate-sidebar";
-import { MOCK_CANDIDATE_USER } from "@/lib/candidate-mock-data";
-import Link from "next/link";
+import { SidebarNavItem } from './sidebar-nav-item'
+import { useCandidateSidebar } from '@/hooks/use-candidate-sidebar'
+import { MOCK_CANDIDATE_USER } from '@/lib/candidate-mock-data'
+import Link from 'next/link'
 import {
   CANDIDATE_NAV_ITEMS,
   CANDIDATE_BOTTOM_ITEMS,
-} from "@/lib/candidate-constants";
+} from '@/lib/candidate-constants'
 import {
   SIDEBAR_WIDTH_EXPANDED,
   SIDEBAR_WIDTH_COLLAPSED,
-} from "@/lib/constants";
+} from '@/lib/constants'
 
-function CandidateSidebarContent({
-  isCollapsed,
-}: {
-  isCollapsed: boolean;
-}) {
-  const pathname = usePathname();
-  const toggle = useCandidateSidebar((s) => s.toggle);
+function CandidateSidebarContent({ isCollapsed }: { isCollapsed: boolean }) {
+  const pathname = usePathname()
+  const toggle = useCandidateSidebar((s) => s.toggle)
 
   const initials = MOCK_CANDIDATE_USER.name
-    .split(" ")
+    .split(' ')
     .map((n) => n[0])
-    .join("")
-    .toUpperCase();
+    .join('')
+    .toUpperCase()
 
   return (
     <div className="flex h-full flex-col">
       {/* Logo area */}
       <div
         className={cn(
-          "flex h-16 shrink-0 items-center px-5",
-          isCollapsed && "justify-center px-0"
+          'flex h-16 shrink-0 items-center px-5',
+          isCollapsed && 'justify-center px-0'
         )}
       >
         <AnimatePresence mode="wait">
@@ -92,7 +88,7 @@ function CandidateSidebarContent({
         {!isCollapsed && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
+            animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             className="overflow-hidden px-4 pb-2"
           >
@@ -112,8 +108,8 @@ function CandidateSidebarContent({
       {/* Main nav */}
       <nav
         className={cn(
-          "flex-1 space-y-1 overflow-y-auto py-4",
-          isCollapsed ? "px-2" : "px-3"
+          'flex-1 space-y-1 overflow-y-auto py-4',
+          isCollapsed ? 'px-2' : 'px-3'
         )}
       >
         <AnimatePresence>
@@ -138,15 +134,15 @@ function CandidateSidebarContent({
             badge={item.badge}
             isCollapsed={isCollapsed}
             isActive={
-              item.href === "/talent/dashboard"
-                ? pathname === "/talent/dashboard" || pathname === "/talent"
+              item.href === '/talent/dashboard'
+                ? pathname === '/talent/dashboard' || pathname === '/talent'
                 : pathname.startsWith(item.href)
             }
           />
         ))}
 
         <div className="py-2">
-          <Separator className={isCollapsed ? "mx-1" : "mx-2"} />
+          <Separator className={isCollapsed ? 'mx-1' : 'mx-2'} />
         </div>
 
         <AnimatePresence>
@@ -177,15 +173,15 @@ function CandidateSidebarContent({
       {/* User profile section at bottom */}
       <div
         className={cn(
-          "shrink-0 border-t p-3",
-          isCollapsed && "flex flex-col items-center p-2"
+          'shrink-0 border-t p-3',
+          isCollapsed && 'flex flex-col items-center p-2'
         )}
       >
         {/* User card */}
         <div
           className={cn(
-            "flex items-center rounded-xl transition-colors",
-            isCollapsed ? "justify-center p-1" : "hover:bg-accent gap-3 p-2"
+            'flex items-center rounded-xl transition-colors',
+            isCollapsed ? 'justify-center p-1' : 'hover:bg-accent gap-3 p-2'
           )}
         >
           <Avatar className="h-8 w-8 shrink-0">
@@ -232,8 +228,8 @@ function CandidateSidebarContent({
         <button
           onClick={toggle}
           className={cn(
-            "text-muted-foreground hover:bg-accent hover:text-foreground mt-1 flex w-full items-center rounded-lg text-[12px] font-medium transition-colors",
-            isCollapsed ? "justify-center p-2" : "gap-2 px-3 py-1.5"
+            'text-muted-foreground hover:bg-accent hover:text-foreground mt-1 flex w-full items-center rounded-lg text-[12px] font-medium transition-colors',
+            isCollapsed ? 'justify-center p-2' : 'gap-2 px-3 py-1.5'
           )}
         >
           {isCollapsed ? (
@@ -247,13 +243,13 @@ function CandidateSidebarContent({
         </button>
       </div>
     </div>
-  );
+  )
 }
 
 export function CandidateSidebar() {
-  const isCollapsed = useCandidateSidebar((s) => s.isCollapsed);
-  const isMobileOpen = useCandidateSidebar((s) => s.isMobileOpen);
-  const closeMobile = useCandidateSidebar((s) => s.closeMobile);
+  const isCollapsed = useCandidateSidebar((s) => s.isCollapsed)
+  const isMobileOpen = useCandidateSidebar((s) => s.isMobileOpen)
+  const closeMobile = useCandidateSidebar((s) => s.closeMobile)
 
   return (
     <>
@@ -264,14 +260,13 @@ export function CandidateSidebar() {
               ? SIDEBAR_WIDTH_COLLAPSED
               : SIDEBAR_WIDTH_EXPANDED,
           }}
-          transition={{ type: "spring", stiffness: 320, damping: 28 }}
+          transition={{ type: 'spring', stiffness: 320, damping: 28 }}
           className="bg-card hidden h-full shrink-0 overflow-hidden border-r lg:block"
         >
           <CandidateSidebarContent isCollapsed={isCollapsed} />
         </motion.aside>
       </TooltipProvider>
 
-      {/* Mobile sidebar */}
       <Sheet
         open={isMobileOpen}
         onOpenChange={(open) => !open && closeMobile()}
@@ -284,5 +279,5 @@ export function CandidateSidebar() {
         </SheetContent>
       </Sheet>
     </>
-  );
+  )
 }

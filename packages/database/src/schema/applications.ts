@@ -5,6 +5,7 @@ import {
   uuid,
   boolean,
   real,
+  jsonb,
   pgEnum,
 } from "drizzle-orm/pg-core";
 import { user } from "./auth";
@@ -48,6 +49,13 @@ export const applications = pgTable("applications", {
   relevanceScore: real("relevance_score"),
   relevanceFeedback: text("relevance_feedback"),
   isRelevant: boolean("is_relevant"),
+
+  // AI match analysis (strengths/gaps breakdown)
+  matchAnalysis: jsonb("match_analysis").$type<{
+    feedback: string;
+    strengths: string[];
+    gaps: string[];
+  }>(),
 
   // Talent pool consent (PRD §5.3)
   talentPoolOptIn: boolean("talent_pool_opt_in").notNull().default(false),

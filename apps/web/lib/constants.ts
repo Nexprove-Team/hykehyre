@@ -17,21 +17,21 @@ export interface NavItem {
 }
 
 export const SIDEBAR_NAV_ITEMS: NavItem[] = [
-  { label: "Dashboard", href: "/", icon: Home },
-  { label: "Jobs", href: "/jobs", icon: Briefcase, badge: 3 },
-  { label: "Candidates", href: "/candidates", icon: People },
+  { label: "Dashboard", href: "/recuriter/dashboard", icon: Home },
+  { label: "Jobs", href: "/recuriter/jobs", icon: Briefcase, badge: 3 },
+  { label: "Candidates", href: "/recuriter/candidates", icon: People },
   {
     label: "Applications",
-    href: "/applications",
+    href: "/recuriter/applications",
     icon: DocumentText,
     badge: 12,
   },
-  { label: "Interviews", href: "/interviews", icon: Calendar },
-  { label: "Analytics", href: "/analytics", icon: Chart },
+  { label: "Interviews", href: "/recuriter/interviews", icon: Calendar },
+  { label: "Analytics", href: "/recuriter/analytics", icon: Chart },
 ];
 
 export const SIDEBAR_BOTTOM_ITEMS: NavItem[] = [
-  { label: "Settings", href: "/settings", icon: Setting },
+  { label: "Settings", href: "/recuriter/settings", icon: Setting },
 ];
 
 export const JOB_STATUS_CONFIG: Record<
