@@ -7,6 +7,7 @@ import { Toaster } from '../components/sonner'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import ThemeSwitcher from '../components/theme-switcher'
 import { inDevEnvironment } from '../lib/utils'
+import { TooltipProvider } from '../components/tooltip'
 
 export function DefaultProvider({
   children,
@@ -21,7 +22,7 @@ export function DefaultProvider({
   return (
     <QueryProvider>
       <ThemeProvider defaultTheme={defaultTheme} {...rest}>
-        {children}
+        <TooltipProvider>{children}</TooltipProvider>
         <Toaster richColors />
         {showQueryDevtools && <ReactQueryDevtools initialIsOpen={false} />}
         {showThemeSwitcher && <ThemeSwitcher />}
