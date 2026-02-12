@@ -9,8 +9,7 @@
     "start": "next start",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
-    "typecheck": "tsc --noEmit",
-    "postinstall": "pnpm --filter @hackhyre/db db:migrate"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@ai-sdk/google": "^3.0.26",
