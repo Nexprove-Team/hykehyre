@@ -41,6 +41,8 @@ jobs:
           BETTER_AUTH_URL="http://localhost:3000"
           BETTER_AUTH_SECRET="somthingsecret"
           NEXT_PUBLIC_BETTER_AUTH_URL="http://localhost:3000"
+          GOOGLE_GENERATIVE_AI_API_KEY="placeholder"
+          BLOB_READ_WRITE_TOKEN="placeholder"
           EOF
 
           cat >> ./packages/database/.env <<EOF

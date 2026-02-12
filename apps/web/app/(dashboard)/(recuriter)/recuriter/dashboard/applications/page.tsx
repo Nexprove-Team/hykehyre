@@ -104,7 +104,7 @@ function ApplicationRow({
       <TableCell>
         <div className="flex items-center gap-1.5 text-[12px] text-muted-foreground">
           <Briefcase size={12} variant="Linear" />
-          <span className="truncate max-w-[180px]">{app.jobTitle}</span>
+          <span className="truncate max-w-45">{app.jobTitle}</span>
         </div>
       </TableCell>
       <TableCell>
@@ -238,7 +238,7 @@ export default function ApplicationsPage() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-[240px]">Candidate</TableHead>
+                  <TableHead className="w-60">Candidate</TableHead>
                   <TableHead>Applied For</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead className="hidden md:table-cell">Match</TableHead>
