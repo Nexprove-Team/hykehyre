@@ -23,7 +23,6 @@ export const sendVerificationEmail = schemaTask({
             subject: 'Your Verification Code',
             html,
         })
-
         if (error) {
             throw error
         }
