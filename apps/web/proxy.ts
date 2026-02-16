@@ -7,8 +7,13 @@ const protectedRoutes = [
   '/onboarding',
   '/messages',
   '/applications',
+  '/recuriter',
+  '/profile',
+  '/saved-jobs',
+  '/settings',
 ]
 const authRoutes = ['/sign-in', '/sign-up']
+const onboardingPath = '/onboarding'
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
@@ -20,6 +25,7 @@ export async function proxy(request: NextRequest) {
     (route) => pathname === route || pathname.startsWith(route + '/')
   )
   const isAuthRoute = authRoutes.some((route) => pathname === route)
+  const isOnboarding = pathname === onboardingPath
 
   if (isProtected && !session) {
     return NextResponse.redirect(new URL('/sign-in', request.url))
@@ -27,6 +33,11 @@ export async function proxy(request: NextRequest) {
 
   if (isAuthRoute && session) {
     return NextResponse.redirect(new URL('/', request.url))
+  }
+
+  // Redirect un-onboarded users to /onboarding (skip if already there)
+  if (session && !isOnboarding && isProtected && !session.user.onboardingCompleted) {
+    return NextResponse.redirect(new URL('/onboarding', request.url))
   }
 
   return NextResponse.next()
@@ -38,6 +49,10 @@ export const config = {
     '/onboarding',
     '/messages/:path*',
     '/applications/:path*',
+    '/recuriter/:path*',
+    '/profile/:path*',
+    '/saved-jobs/:path*',
+    '/settings/:path*',
     '/sign-in',
     '/sign-up',
   ],
