@@ -1,20 +1,18 @@
-"use client";
+'use client'
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from 'react'
+import { Sheet, SheetContent, SheetTitle } from '@hackhyre/ui/components/sheet'
+import { Avatar, AvatarFallback } from '@hackhyre/ui/components/avatar'
+import { Badge } from '@hackhyre/ui/components/badge'
+import { Button } from '@hackhyre/ui/components/button'
+import { Separator } from '@hackhyre/ui/components/separator'
 import {
-  Sheet,
-  SheetContent,
-  SheetTitle,
-} from "@hackhyre/ui/components/sheet";
-import {
-  Avatar,
-  AvatarFallback,
-} from "@hackhyre/ui/components/avatar";
-import { Badge } from "@hackhyre/ui/components/badge";
-import { Button } from "@hackhyre/ui/components/button";
-import { Separator } from "@hackhyre/ui/components/separator";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@hackhyre/ui/components/tabs";
-import { Input } from "@hackhyre/ui/components/input";
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@hackhyre/ui/components/tabs'
+import { Input } from '@hackhyre/ui/components/input'
 import {
   Sms,
   Call,
@@ -32,9 +30,9 @@ import {
   Cake,
   Book,
   Send,
-} from "@hackhyre/ui/icons";
-import { cn } from "@hackhyre/ui/lib/utils";
-import { useCandidateSheet } from "@/hooks/use-candidate-sheet";
+} from '@hackhyre/ui/icons'
+import { cn } from '@hackhyre/ui/lib/utils'
+import { useCandidateSheet } from '@/hooks/use-candidate-sheet'
 import {
   MOCK_CANDIDATES,
   MOCK_APPLICATIONS,
@@ -42,8 +40,8 @@ import {
   MOCK_USER,
   type MockCandidateProfile,
   type MockMessage,
-} from "@/lib/mock-data";
-import { APPLICATION_STATUS_CONFIG } from "@/lib/constants";
+} from '@/lib/mock-data'
+import { APPLICATION_STATUS_CONFIG } from '@/lib/constants'
 
 function InfoItem({
   icon: Icon,
@@ -51,24 +49,26 @@ function InfoItem({
   value,
   isLink,
 }: {
-  icon: typeof Sms;
-  label: string;
-  value: string;
-  isLink?: boolean;
+  icon: typeof Sms
+  label: string
+  value: string
+  isLink?: boolean
 }) {
   return (
     <div className="flex items-center gap-3 py-1.5">
-      <Icon size={14} variant="Linear" className="text-muted-foreground shrink-0" />
-      <span className="text-muted-foreground text-[12px] w-24 shrink-0">{label}</span>
+      <Icon
+        size={14}
+        variant="Linear"
+        className="text-muted-foreground shrink-0"
+      />
+      <span className="text-muted-foreground w-24 shrink-0 text-[12px]">
+        {label}
+      </span>
       <span className="text-[12px] font-medium">
-        {isLink ? (
-          <span className="text-primary">{value}</span>
-        ) : (
-          value
-        )}
+        {isLink ? <span className="text-primary">{value}</span> : value}
       </span>
     </div>
-  );
+  )
 }
 
 function CvTab({ candidate }: { candidate: MockCandidateProfile }) {
@@ -76,10 +76,10 @@ function CvTab({ candidate }: { candidate: MockCandidateProfile }) {
     <div className="space-y-5 pt-4">
       {/* Summary */}
       <div>
-        <h4 className="text-[12px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+        <h4 className="text-muted-foreground mb-2 text-[12px] font-semibold tracking-wider uppercase">
           Profile
         </h4>
-        <p className="text-[12px] leading-relaxed text-muted-foreground">
+        <p className="text-muted-foreground text-[12px] leading-relaxed">
           {candidate.summary}
         </p>
       </div>
@@ -88,21 +88,28 @@ function CvTab({ candidate }: { candidate: MockCandidateProfile }) {
 
       {/* Work Experience */}
       <div>
-        <h4 className="text-[12px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">
+        <h4 className="text-muted-foreground mb-3 text-[12px] font-semibold tracking-wider uppercase">
           Experience
         </h4>
         <div className="space-y-4">
           {candidate.workHistory.map((job, i) => (
-            <div key={i} className="relative pl-4 border-l-2 border-muted">
-              <div className="absolute -left-1.25 top-1 h-2 w-2 rounded-full bg-primary" />
-              <div className="flex items-center justify-between mb-1">
+            <div key={i} className="border-muted relative border-l-2 pl-4">
+              <div className="bg-primary absolute top-1 -left-1.25 h-2 w-2 rounded-full" />
+              <div className="mb-1 flex items-center justify-between">
                 <p className="text-[13px] font-semibold">{job.role}</p>
-                <span className="text-[10px] text-muted-foreground">{job.period}</span>
+                <span className="text-muted-foreground text-[10px]">
+                  {job.period}
+                </span>
               </div>
-              <p className="text-[12px] text-muted-foreground mb-2">{job.company}</p>
+              <p className="text-muted-foreground mb-2 text-[12px]">
+                {job.company}
+              </p>
               <ul className="space-y-1">
                 {job.highlights.map((h, j) => (
-                  <li key={j} className="text-[11px] text-muted-foreground flex items-start gap-2">
+                  <li
+                    key={j}
+                    className="text-muted-foreground flex items-start gap-2 text-[11px]"
+                  >
                     <span className="bg-muted-foreground/30 mt-1.5 h-1 w-1 shrink-0 rounded-full" />
                     {h}
                   </li>
@@ -117,19 +124,27 @@ function CvTab({ candidate }: { candidate: MockCandidateProfile }) {
 
       {/* Education */}
       <div>
-        <h4 className="text-[12px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">
+        <h4 className="text-muted-foreground mb-3 text-[12px] font-semibold tracking-wider uppercase">
           Education
         </h4>
         <div className="space-y-3">
           {candidate.education.map((edu, i) => (
             <div key={i} className="flex items-start gap-3">
               <div className="bg-muted flex h-8 w-8 shrink-0 items-center justify-center rounded-lg">
-                <Book size={14} variant="Bold" className="text-muted-foreground" />
+                <Book
+                  size={14}
+                  variant="Bold"
+                  className="text-muted-foreground"
+                />
               </div>
               <div>
                 <p className="text-[12px] font-semibold">{edu.degree}</p>
-                <p className="text-[11px] text-muted-foreground">{edu.institution}</p>
-                <p className="text-[10px] text-muted-foreground/60">{edu.years}</p>
+                <p className="text-muted-foreground text-[11px]">
+                  {edu.institution}
+                </p>
+                <p className="text-muted-foreground/60 text-[10px]">
+                  {edu.years}
+                </p>
               </div>
             </div>
           ))}
@@ -140,12 +155,16 @@ function CvTab({ candidate }: { candidate: MockCandidateProfile }) {
 
       {/* Skills */}
       <div>
-        <h4 className="text-[12px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+        <h4 className="text-muted-foreground mb-2 text-[12px] font-semibold tracking-wider uppercase">
           Skills
         </h4>
         <div className="flex flex-wrap gap-1.5">
           {candidate.skills.map((skill) => (
-            <Badge key={skill} variant="secondary" className="text-[11px] px-2 py-0.5 font-medium">
+            <Badge
+              key={skill}
+              variant="secondary"
+              className="px-2 py-0.5 text-[11px] font-medium"
+            >
               {skill}
             </Badge>
           ))}
@@ -156,52 +175,57 @@ function CvTab({ candidate }: { candidate: MockCandidateProfile }) {
 
       {/* Languages */}
       <div>
-        <h4 className="text-[12px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+        <h4 className="text-muted-foreground mb-2 text-[12px] font-semibold tracking-wider uppercase">
           Languages
         </h4>
         <div className="flex flex-wrap gap-1.5">
           {candidate.languages.map((lang) => (
-            <Badge key={lang} variant="outline" className="text-[11px] px-2 py-0.5 font-medium">
+            <Badge
+              key={lang}
+              variant="outline"
+              className="px-2 py-0.5 text-[11px] font-medium"
+            >
               {lang}
             </Badge>
           ))}
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 function AppliedJobsTab({ candidateId }: { candidateId: string }) {
-  const applications = MOCK_APPLICATIONS.filter((a) => a.candidateId === candidateId);
+  const applications = MOCK_APPLICATIONS.filter(
+    (a) => a.candidateId === candidateId
+  )
 
   return (
     <div className="space-y-3 pt-4">
       {applications.length === 0 ? (
-        <p className="text-[12px] text-muted-foreground py-8 text-center">No applications found</p>
+        <p className="text-muted-foreground py-8 text-center text-[12px]">
+          No applications found
+        </p>
       ) : (
         applications.map((app) => {
-          const config = APPLICATION_STATUS_CONFIG[app.status];
+          const config = APPLICATION_STATUS_CONFIG[app.status]
           return (
-            <div
-              key={app.id}
-              className="rounded-xl border p-3 space-y-2"
-            >
+            <div key={app.id} className="space-y-2 rounded-xl border p-3">
               <div className="flex items-center justify-between">
                 <p className="text-[13px] font-semibold">{app.jobTitle}</p>
                 <Badge
-                  variant={config?.variant as "default"}
-                  className={cn("text-[10px] font-medium", config?.className)}
+                  variant={config?.variant as 'default'}
+                  className={cn('text-[10px] font-medium', config?.className)}
                 >
                   {config?.label}
                 </Badge>
               </div>
-              <div className="flex items-center gap-3 text-[11px] text-muted-foreground">
+              <div className="text-muted-foreground flex items-center gap-3 text-[11px]">
                 <span className="flex items-center gap-1">
                   <Calendar size={11} variant="Linear" />
-                  {new Date(app.createdAt).toLocaleDateString("en-US", {
-                    month: "short",
-                    day: "numeric",
-                    year: "numeric",
+                  {new Date(app.createdAt).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric',
                   })}
                 </span>
                 {app.relevanceScore !== null && (
@@ -212,136 +236,143 @@ function AppliedJobsTab({ candidateId }: { candidateId: string }) {
                 )}
               </div>
             </div>
-          );
+          )
         })
       )}
     </div>
-  );
+  )
 }
 
 function formatMessageTime(timestamp: string) {
-  const date = new Date(timestamp);
-  const now = new Date("2026-02-09T00:00:00");
-  const diffMs = now.getTime() - date.getTime();
-  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  const date = new Date(timestamp)
+  const now = new Date('2026-02-09T00:00:00')
+  const diffMs = now.getTime() - date.getTime()
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24))
 
-  const time = date.toLocaleTimeString("en-US", {
-    hour: "numeric",
-    minute: "2-digit",
+  const time = date.toLocaleTimeString('en-US', {
+    hour: 'numeric',
+    minute: '2-digit',
     hour12: true,
-  });
+  })
 
-  if (diffDays === 0) return `Today ${time}`;
-  if (diffDays === 1) return `Yesterday ${time}`;
-  return `${date.toLocaleDateString("en-US", { month: "short", day: "numeric" })} ${time}`;
+  if (diffDays === 0) return `Today ${time}`
+  if (diffDays === 1) return `Yesterday ${time}`
+  return `${date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} ${time}`
 }
 
 function MessagesTab({
   candidateId,
   candidateName,
 }: {
-  candidateId: string;
-  candidateName: string;
+  candidateId: string
+  candidateName: string
 }) {
   const [messages, setMessages] = useState<MockMessage[]>(() =>
-    MOCK_MESSAGES.filter((m) => m.candidateId === candidateId),
-  );
-  const [draft, setDraft] = useState("");
-  const bottomRef = useRef<HTMLDivElement>(null);
+    MOCK_MESSAGES.filter((m) => m.candidateId === candidateId)
+  )
+  const [draft, setDraft] = useState('')
+  const bottomRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages.length]);
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [messages.length])
 
   useEffect(() => {
-    setMessages(MOCK_MESSAGES.filter((m) => m.candidateId === candidateId));
-    setDraft("");
-  }, [candidateId]);
+    setMessages(MOCK_MESSAGES.filter((m) => m.candidateId === candidateId))
+    setDraft('')
+  }, [candidateId])
 
   const handleSend = () => {
-    const text = draft.trim();
-    if (!text) return;
+    const text = draft.trim()
+    if (!text) return
     const newMsg: MockMessage = {
       id: `msg-local-${Date.now()}`,
       candidateId,
-      sender: "recruiter",
+      sender: 'recruiter',
       text,
       timestamp: new Date().toISOString(),
-    };
-    setMessages((prev) => [...prev, newMsg]);
-    setDraft("");
-  };
+    }
+    setMessages((prev) => [...prev, newMsg])
+    setDraft('')
+  }
 
   const candidateInitials = candidateName
-    .split(" ")
+    .split(' ')
     .map((n) => n[0])
-    .join("")
-    .toUpperCase();
+    .join('')
+    .toUpperCase()
 
   return (
-    <div className="flex flex-col pt-3 -mx-6 -mb-4">
+    <div className="-mx-6 -mb-4 flex flex-col pt-3">
       {/* Messages list */}
       <div className="flex-1 space-y-3 px-6 pb-3">
         {messages.length === 0 ? (
           <div className="flex flex-col items-center py-10 text-center">
-            <Messages size={32} variant="Linear" className="text-muted-foreground/30 mb-2" />
-            <p className="text-[12px] text-muted-foreground">No messages yet</p>
-            <p className="text-[11px] text-muted-foreground/60 mt-0.5">
+            <Messages
+              size={32}
+              variant="Linear"
+              className="text-muted-foreground/30 mb-2"
+            />
+            <p className="text-muted-foreground text-[12px]">No messages yet</p>
+            <p className="text-muted-foreground/60 mt-0.5 text-[11px]">
               Start the conversation below
             </p>
           </div>
         ) : (
           messages.map((msg) => {
-            const isRecruiter = msg.sender === "recruiter";
+            const isRecruiter = msg.sender === 'recruiter'
             return (
               <div
                 key={msg.id}
-                className={cn("flex gap-2.5", isRecruiter ? "flex-row-reverse" : "flex-row")}
+                className={cn(
+                  'flex gap-2.5',
+                  isRecruiter ? 'flex-row-reverse' : 'flex-row'
+                )}
               >
-                <Avatar className="h-6 w-6 shrink-0 mt-0.5">
+                <Avatar className="mt-0.5 h-6 w-6 shrink-0">
                   <AvatarFallback
                     className={cn(
-                      "text-[9px] font-bold",
+                      'text-[9px] font-bold',
                       isRecruiter
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-muted text-muted-foreground",
+                        ? 'bg-primary text-primary-foreground'
+                        : 'bg-muted text-muted-foreground'
                     )}
                   >
                     {isRecruiter
                       ? MOCK_USER.name
-                          .split(" ")
+                          .split(' ')
                           .map((n) => n[0])
-                          .join("")
+                          .join('')
                       : candidateInitials}
                   </AvatarFallback>
                 </Avatar>
                 <div
                   className={cn(
-                    "max-w-[75%] space-y-1",
-                    isRecruiter ? "items-end" : "items-start",
+                    'max-w-[75%] space-y-1',
+                    isRecruiter ? 'items-end' : 'items-start'
                   )}
                 >
                   <div
                     className={cn(
-                      "rounded-2xl px-3 py-2 text-[12px] leading-relaxed",
+                      'rounded-2xl px-3 py-2 text-[12px] leading-relaxed',
                       isRecruiter
-                        ? "bg-primary text-primary-foreground rounded-tr-sm"
-                        : "bg-muted rounded-tl-sm",
+                        ? 'bg-primary text-primary-foreground rounded-tr-sm'
+                        : 'bg-muted rounded-tl-sm'
                     )}
                   >
                     {msg.text}
                   </div>
                   <p
                     className={cn(
-                      "text-[9px] text-muted-foreground/60 px-1",
-                      isRecruiter ? "text-right" : "text-left",
+                      'text-muted-foreground/60 px-1 text-[9px]',
+                      isRecruiter ? 'text-right' : 'text-left'
                     )}
                   >
                     {formatMessageTime(msg.timestamp)}
                   </p>
                 </div>
               </div>
-            );
+            )
           })
         )}
         <div ref={bottomRef} />
@@ -351,8 +382,8 @@ function MessagesTab({
       <div className="shrink-0 border-t px-4 py-3">
         <form
           onSubmit={(e) => {
-            e.preventDefault();
-            handleSend();
+            e.preventDefault()
+            handleSend()
           }}
           className="flex items-center gap-2"
         >
@@ -360,7 +391,7 @@ function MessagesTab({
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
             placeholder="Type a message..."
-            className="h-9 flex-1 rounded-lg bg-muted/50 border-0 text-[12px] focus-visible:bg-background"
+            className="bg-muted/50 focus-visible:bg-background h-9 flex-1 rounded-lg border-0 text-[12px]"
           />
           <Button
             type="submit"
@@ -373,77 +404,101 @@ function MessagesTab({
         </form>
       </div>
     </div>
-  );
+  )
 }
 
 function ActivityTab() {
   const activities = [
-    { action: "Application submitted", time: "2 days ago", type: "submit" },
-    { action: "Resume reviewed by recruiter", time: "1 day ago", type: "review" },
-    { action: "Moved to under review", time: "1 day ago", type: "status" },
-    { action: "Interview scheduled", time: "5 hours ago", type: "interview" },
-  ];
+    { action: 'Application submitted', time: '2 days ago', type: 'submit' },
+    {
+      action: 'Resume reviewed by recruiter',
+      time: '1 day ago',
+      type: 'review',
+    },
+    { action: 'Moved to under review', time: '1 day ago', type: 'status' },
+    { action: 'Interview scheduled', time: '5 hours ago', type: 'interview' },
+  ]
 
   return (
     <div className="space-y-3 pt-4">
       {activities.map((activity, i) => (
         <div key={i} className="flex items-start gap-3">
-          <div className="bg-muted flex h-7 w-7 shrink-0 items-center justify-center rounded-full mt-0.5">
-            <Clock size={12} variant="Linear" className="text-muted-foreground" />
+          <div className="bg-muted mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full">
+            <Clock
+              size={12}
+              variant="Linear"
+              className="text-muted-foreground"
+            />
           </div>
           <div>
             <p className="text-[12px] font-medium">{activity.action}</p>
-            <p className="text-[10px] text-muted-foreground">{activity.time}</p>
+            <p className="text-muted-foreground text-[10px]">{activity.time}</p>
           </div>
         </div>
       ))}
     </div>
-  );
+  )
 }
 
 const SHEET_CLASSES =
-  "w-full sm:w-[480px] sm:max-w-[480px] p-0 flex flex-col inset-0 sm:inset-y-3 sm:right-3 sm:left-auto h-dvh sm:h-[calc(100dvh-1.5rem)] rounded-none sm:rounded-2xl border-0 sm:border";
+  'w-full sm:w-[480px] sm:max-w-[480px] p-0 flex flex-col inset-0 sm:inset-y-3 sm:right-3 sm:left-auto h-dvh sm:h-[calc(100dvh-1.5rem)] rounded-none sm:rounded-2xl border-0 sm:border'
 
 export function CandidateSheet() {
-  const { isOpen, candidateId, candidateIds, close, navigateNext, navigatePrev } =
-    useCandidateSheet();
-  const [activeTab, setActiveTab] = useState("cv");
+  const {
+    isOpen,
+    candidateId,
+    candidateIds,
+    close,
+    navigateNext,
+    navigatePrev,
+  } = useCandidateSheet()
+  const [activeTab, setActiveTab] = useState('cv')
 
   const candidate = candidateId
     ? MOCK_CANDIDATES.find((c) => c.id === candidateId)
-    : null;
+    : null
 
-  const currentIndex = candidateId ? candidateIds.indexOf(candidateId) : -1;
-  const hasPrev = currentIndex > 0;
-  const hasNext = currentIndex >= 0 && currentIndex < candidateIds.length - 1;
-  const showNav = candidateIds.length > 1;
+  const currentIndex = candidateId ? candidateIds.indexOf(candidateId) : -1
+  const hasPrev = currentIndex > 0
+  const hasNext = currentIndex >= 0 && currentIndex < candidateIds.length - 1
+  const showNav = candidateIds.length > 1
 
   if (!candidate) {
     return (
       <Sheet open={isOpen} onOpenChange={(open) => !open && close()}>
-        <SheetContent side="right" className={SHEET_CLASSES} showCloseButton={false}>
+        <SheetContent
+          side="right"
+          className={SHEET_CLASSES}
+          showCloseButton={false}
+        >
           <SheetTitle className="sr-only">Candidate Details</SheetTitle>
           <div className="flex h-full items-center justify-center">
-            <p className="text-muted-foreground text-[13px]">Candidate not found</p>
+            <p className="text-muted-foreground text-[13px]">
+              Candidate not found
+            </p>
           </div>
         </SheetContent>
       </Sheet>
-    );
+    )
   }
 
   const initials = candidate.name
-    .split(" ")
+    .split(' ')
     .map((n) => n[0])
-    .join("")
-    .toUpperCase();
+    .join('')
+    .toUpperCase()
 
   return (
     <Sheet open={isOpen} onOpenChange={(open) => !open && close()}>
-      <SheetContent side="right" className={SHEET_CLASSES} showCloseButton={false}>
+      <SheetContent
+        side="right"
+        className={SHEET_CLASSES}
+        showCloseButton={false}
+      >
         <SheetTitle className="sr-only">Candidate Detail</SheetTitle>
 
         {/* Top nav bar */}
-        <div className="shrink-0 flex items-center justify-between px-4 pt-4 pb-0">
+        <div className="flex shrink-0 items-center justify-between px-4 pt-4 pb-0">
           <h3 className="text-[13px] font-semibold">Candidate Detail</h3>
           <div className="flex items-center gap-1">
             {showNav && (
@@ -457,9 +512,9 @@ export function CandidateSheet() {
                 >
                   <ArrowLeft size={14} variant="Linear" />
                 </Button>
-                <span className="text-[11px] text-muted-foreground tabular-nums min-w-[4ch] text-center">
-                  {String(currentIndex + 1).padStart(2, "0")} of{" "}
-                  {String(candidateIds.length).padStart(2, "0")}
+                <span className="text-muted-foreground min-w-[4ch] text-center text-[11px] tabular-nums">
+                  {String(currentIndex + 1).padStart(2, '0')} of{' '}
+                  {String(candidateIds.length).padStart(2, '0')}
                 </span>
                 <Button
                   variant="ghost"
@@ -475,18 +530,29 @@ export function CandidateSheet() {
             <Button
               variant="ghost"
               size="icon"
-              className="h-7 w-7 rounded-lg ml-1"
+              className="ml-1 h-7 w-7 rounded-lg"
               onClick={close}
             >
-              <svg width="14" height="14" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M11.7816 4.03157C12.0062 3.80702 12.0062 3.44295 11.7816 3.2184C11.5571 2.99385 11.193 2.99385 10.9685 3.2184L7.50005 6.68682L4.03164 3.2184C3.80708 2.99385 3.44301 2.99385 3.21846 3.2184C2.99391 3.44295 2.99391 3.80702 3.21846 4.03157L6.68688 7.49999L3.21846 10.9684C2.99391 11.193 2.99391 11.557 3.21846 11.7816C3.44301 12.0061 3.80708 12.0061 4.03164 11.7816L7.50005 8.31316L10.9685 11.7816C11.193 12.0061 11.5571 12.0061 11.7816 11.7816C12.0062 11.557 12.0062 11.193 11.7816 10.9684L8.31322 7.49999L11.7816 4.03157Z" fill="currentColor" fillRule="evenodd" clipRule="evenodd" />
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 15 15"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M11.7816 4.03157C12.0062 3.80702 12.0062 3.44295 11.7816 3.2184C11.5571 2.99385 11.193 2.99385 10.9685 3.2184L7.50005 6.68682L4.03164 3.2184C3.80708 2.99385 3.44301 2.99385 3.21846 3.2184C2.99391 3.44295 2.99391 3.80702 3.21846 4.03157L6.68688 7.49999L3.21846 10.9684C2.99391 11.193 2.99391 11.557 3.21846 11.7816C3.44301 12.0061 3.80708 12.0061 4.03164 11.7816L7.50005 8.31316L10.9685 11.7816C11.193 12.0061 11.5571 12.0061 11.7816 11.7816C12.0062 11.557 12.0062 11.193 11.7816 10.9684L8.31322 7.49999L11.7816 4.03157Z"
+                  fill="currentColor"
+                  fillRule="evenodd"
+                  clipRule="evenodd"
+                />
               </svg>
             </Button>
           </div>
         </div>
 
         {/* Header */}
-        <div className="shrink-0 border-b px-6 pb-5 pt-3">
+        <div className="shrink-0 border-b px-6 pt-3 pb-5">
           <div className="flex items-start gap-4">
             <Avatar className="h-14 w-14">
               <AvatarFallback className="bg-primary/10 text-primary text-lg font-bold">
@@ -495,11 +561,15 @@ export function CandidateSheet() {
             </Avatar>
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-2">
-                <h2 className="text-[16px] font-bold truncate">{candidate.name}</h2>
+                <h2 className="truncate text-[16px] font-bold">
+                  {candidate.name}
+                </h2>
               </div>
-              <p className="text-muted-foreground text-[12px] mt-0.5">{candidate.title}</p>
+              <p className="text-muted-foreground mt-0.5 text-[12px]">
+                {candidate.title}
+              </p>
               {candidate.linkedinUrl && (
-                <span className="text-primary text-[11px] flex items-center gap-1 mt-1">
+                <span className="text-primary mt-1 flex items-center gap-1 text-[11px]">
                   <LinkIcon size={11} variant="Linear" />
                   {candidate.linkedinUrl}
                 </span>
@@ -508,7 +578,7 @@ export function CandidateSheet() {
           </div>
 
           {/* Action buttons */}
-          <div className="flex gap-2 mt-4">
+          <div className="mt-4 flex gap-2">
             <Button size="sm" className="flex-1 gap-2 rounded-lg text-[12px]">
               <Sms size={14} variant="Bold" />
               Send Email
@@ -517,7 +587,7 @@ export function CandidateSheet() {
               variant="outline"
               size="sm"
               className="flex-1 gap-2 rounded-lg text-[12px]"
-              onClick={() => setActiveTab("messages")}
+              onClick={() => setActiveTab('messages')}
             >
               <Messages size={14} variant="Linear" />
               Message
@@ -526,19 +596,45 @@ export function CandidateSheet() {
         </div>
 
         {/* Scrollable body */}
-        <div className="flex-1 overflow-y-auto min-h-0">
+        <div className="min-h-0 flex-1 overflow-y-auto">
           <div className="px-6 py-4">
             {/* Personal Info */}
             <div className="space-y-0.5">
-              <h3 className="text-[12px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+              <h3 className="text-muted-foreground mb-2 text-[12px] font-semibold tracking-wider uppercase">
                 Personal Information
               </h3>
-              <InfoItem icon={Cake} label="Date of Birth" value={candidate.dateOfBirth} />
-              <InfoItem icon={Flag} label="Nationality" value={candidate.nationality} />
-              <InfoItem icon={Briefcase} label="Experience" value={candidate.experience} />
-              <InfoItem icon={Location} label="Location" value={candidate.location} />
-              <InfoItem icon={Sms} label="Email" value={candidate.email} isLink />
-              <InfoItem icon={Call} label="Phone" value={candidate.phone} isLink />
+              <InfoItem
+                icon={Cake}
+                label="Date of Birth"
+                value={candidate.dateOfBirth}
+              />
+              <InfoItem
+                icon={Flag}
+                label="Nationality"
+                value={candidate.nationality}
+              />
+              <InfoItem
+                icon={Briefcase}
+                label="Experience"
+                value={candidate.experience}
+              />
+              <InfoItem
+                icon={Location}
+                label="Location"
+                value={candidate.location}
+              />
+              <InfoItem
+                icon={Sms}
+                label="Email"
+                value={candidate.email}
+                isLink
+              />
+              <InfoItem
+                icon={Call}
+                label="Phone"
+                value={candidate.phone}
+                isLink
+              />
             </div>
 
             <Separator className="my-4" />
@@ -571,7 +667,10 @@ export function CandidateSheet() {
                 <AppliedJobsTab candidateId={candidate.id} />
               </TabsContent>
               <TabsContent value="messages">
-                <MessagesTab candidateId={candidate.id} candidateName={candidate.name} />
+                <MessagesTab
+                  candidateId={candidate.id}
+                  candidateName={candidate.name}
+                />
               </TabsContent>
               <TabsContent value="activity">
                 <ActivityTab />
@@ -581,5 +680,5 @@ export function CandidateSheet() {
         </div>
       </SheetContent>
     </Sheet>
-  );
+  )
 }

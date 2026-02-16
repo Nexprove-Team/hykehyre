@@ -1,16 +1,15 @@
 /**
  * Centralized icon exports from Iconsax.
  * Import via: import { Icon } from "@hackhyre/ui/icons"
-*
-* Variants: "Linear" (default) | "Bold" | "Bulk" | "Broken" | "Outline" | "TwoTone"
-*/
+ *
+ * Variants: "Linear" (default) | "Bold" | "Bulk" | "Broken" | "Outline" | "TwoTone"
+ */
 export type { IconProps, Icon } from 'iconsax-reactjs'
 
 export { Logo } from './logo'
-export { InstagramIcon } from "./instagram-icon"
-export { GithubIcon } from "./github-icon"
-export { XIcon } from "./x-icon"
-
+export { InstagramIcon } from './instagram-icon'
+export { GithubIcon } from './github-icon'
+export { XIcon } from './x-icon'
 
 export {
   // Navigation

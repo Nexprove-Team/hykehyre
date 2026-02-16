@@ -1,14 +1,14 @@
 interface ProfileSnapshot {
-  headline?: string | null;
-  bio?: string | null;
-  skills?: string[] | null;
-  experienceYears?: number | null;
-  location?: string | null;
-  isOpenToWork?: boolean | null;
-  linkedinUrl?: string | null;
-  githubUrl?: string | null;
-  portfolioUrl?: string | null;
-  resumeUrl?: string | null;
+  headline?: string | null
+  bio?: string | null
+  skills?: string[] | null
+  experienceYears?: number | null
+  location?: string | null
+  isOpenToWork?: boolean | null
+  linkedinUrl?: string | null
+  githubUrl?: string | null
+  portfolioUrl?: string | null
+  resumeUrl?: string | null
 }
 
 export function buildOnboardingSystemPrompt(
@@ -17,7 +17,7 @@ export function buildOnboardingSystemPrompt(
 ): string {
   const existingContext = existingProfile
     ? `\n\nThe user already has a partial profile on file:\n${JSON.stringify(existingProfile, null, 2)}\nAsk them if they'd like to update this information or start fresh.`
-    : "";
+    : ''
 
   return `You are **Hyre**, a friendly and professional career coach helping ${userName} set up their candidate profile on HackHyre.
 
@@ -42,5 +42,5 @@ Collect the following information through natural conversation:
 - After saving successfully, call \`markOnboardingComplete\` to finish.
 - Be concise. No long paragraphs. Use a warm, professional tone.
 - If the user wants to skip optional fields, that's fine — don't push.
-- Never fabricate information. Only save what the user explicitly provides or confirms.`;
+- Never fabricate information. Only save what the user explicitly provides or confirms.`
 }

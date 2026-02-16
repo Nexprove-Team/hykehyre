@@ -39,21 +39,21 @@ Turborepo monorepo with pnpm@10.4.1 workspaces. Node >= 20.
 
 ### Apps (all Next.js 16.1.6 with Turbopack dev)
 
-| App | Port | Notes |
-|-----|------|-------|
-| `apps/web` | 3000 | Main app |
-| `apps/admin` | 3001 | Admin portal |
+| App             | Port | Notes                                          |
+| --------------- | ---- | ---------------------------------------------- |
+| `apps/web`      | 3000 | Main app                                       |
+| `apps/admin`    | 3001 | Admin portal                                   |
 | `apps/waitlist` | 3002 | Uses MongoDB (Mongoose), separate from main DB |
 
 ### Packages
 
-| Package | Import as | Purpose |
-|---------|-----------|---------|
-| `packages/ui` | `@hackhyre/ui` | Shared shadcn/ui components, Tailwind globals, hooks |
-| `packages/database` | `@hackhyre/db` | Neon PostgreSQL + Drizzle ORM + Better Auth |
-| `packages/eslint-config` | `@hackhyre/eslint-config` | ESLint configs (base, next-js, react-internal) |
-| `packages/typescript-config` | `@hackhyre/typescript-config` | Shared tsconfigs (base, nextjs, react-library) |
-| `scripts/` | `@hackhyre/scripts` | Standalone scraper CLI (own PostgreSQL DB) |
+| Package                      | Import as                     | Purpose                                              |
+| ---------------------------- | ----------------------------- | ---------------------------------------------------- |
+| `packages/ui`                | `@hackhyre/ui`                | Shared shadcn/ui components, Tailwind globals, hooks |
+| `packages/database`          | `@hackhyre/db`                | Neon PostgreSQL + Drizzle ORM + Better Auth          |
+| `packages/eslint-config`     | `@hackhyre/eslint-config`     | ESLint configs (base, next-js, react-internal)       |
+| `packages/typescript-config` | `@hackhyre/typescript-config` | Shared tsconfigs (base, nextjs, react-library)       |
+| `scripts/`                   | `@hackhyre/scripts`           | Standalone scraper CLI (own PostgreSQL DB)           |
 
 ### Three Separate Databases — Do Not Mix
 
@@ -64,6 +64,7 @@ Turborepo monorepo with pnpm@10.4.1 workspaces. Node >= 20.
 ## Database Package (`@hackhyre/db`)
 
 Exports:
+
 - `@hackhyre/db` — db client, env, all tables & enums
 - `@hackhyre/db/schema` — tables & enums only
 - `@hackhyre/db/auth` — Better Auth instance, `Session` and `User` types
@@ -80,6 +81,7 @@ Schema files in `src/schema/`: auth, companies, jobs, applications, candidate-pr
 shadcn/ui "new-york" style with RSC support. Components live in `src/components/`, hooks in `src/hooks/`, utilities in `src/lib/`.
 
 Apps import via package exports:
+
 ```typescript
 import { Button } from "@hackhyre/ui/components/button";
 import { cn } from "@hackhyre/ui/lib/utils";
@@ -103,11 +105,13 @@ CLI: `tsx src/index.ts --platform <linkedin|twitter|company-page> --query <searc
 ## Environment Variables
 
 Root `.env` (used by apps via turbo globalEnv):
+
 - `DATABASE_URL` — Neon PostgreSQL connection string
 - `BETTER_AUTH_SECRET` — min 32 chars
 - `BETTER_AUTH_URL` — e.g. `http://localhost:3000`
 
 Scripts `.env` (separate, in `scripts/`):
+
 - `SCRAPER_DATABASE_URL` — separate PostgreSQL
 - `NUBELA_API_KEY`, `TWITTER_BEARER_TOKEN` — optional API keys
 

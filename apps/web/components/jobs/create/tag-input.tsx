@@ -1,44 +1,44 @@
-"use client";
+'use client'
 
-import { useState, useCallback, type KeyboardEvent } from "react";
-import { motion, AnimatePresence } from "motion/react";
-import { Input } from "@hackhyre/ui/components/input";
-import { Badge } from "@hackhyre/ui/components/badge";
-import { CloseCircle } from "@hackhyre/ui/icons";
+import { useState, useCallback, type KeyboardEvent } from 'react'
+import { motion, AnimatePresence } from 'motion/react'
+import { Input } from '@hackhyre/ui/components/input'
+import { Badge } from '@hackhyre/ui/components/badge'
+import { CloseCircle } from '@hackhyre/ui/icons'
 
 interface TagInputProps {
-  value: string[];
-  onChange: (tags: string[]) => void;
-  placeholder?: string;
+  value: string[]
+  onChange: (tags: string[]) => void
+  placeholder?: string
 }
 
 export function TagInput({ value, onChange, placeholder }: TagInputProps) {
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState('')
 
   const addTag = useCallback(
     (tag: string) => {
-      const trimmed = tag.trim();
+      const trimmed = tag.trim()
       if (trimmed && !value.includes(trimmed)) {
-        onChange([...value, trimmed]);
+        onChange([...value, trimmed])
       }
-      setInput("");
+      setInput('')
     },
-    [value, onChange],
-  );
+    [value, onChange]
+  )
 
   const removeTag = useCallback(
     (tag: string) => {
-      onChange(value.filter((t) => t !== tag));
+      onChange(value.filter((t) => t !== tag))
     },
-    [value, onChange],
-  );
+    [value, onChange]
+  )
 
   function handleKeyDown(e: KeyboardEvent<HTMLInputElement>) {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      addTag(input);
-    } else if (e.key === "Backspace" && input === "" && value.length > 0) {
-      removeTag(value[value.length - 1]!);
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      addTag(input)
+    } else if (e.key === 'Backspace' && input === '' && value.length > 0) {
+      removeTag(value[value.length - 1]!)
     }
   }
 
@@ -48,7 +48,7 @@ export function TagInput({ value, onChange, placeholder }: TagInputProps) {
         value={input}
         onChange={(e) => setInput(e.target.value)}
         onKeyDown={handleKeyDown}
-        placeholder={placeholder ?? "Type and press Enter..."}
+        placeholder={placeholder ?? 'Type and press Enter...'}
       />
       {value.length > 0 && (
         <div className="flex flex-wrap gap-1.5">
@@ -67,7 +67,11 @@ export function TagInput({ value, onChange, placeholder }: TagInputProps) {
                   onClick={() => removeTag(tag)}
                 >
                   {tag}
-                  <CloseCircle size={14} variant="Bold" className="opacity-60" />
+                  <CloseCircle
+                    size={14}
+                    variant="Bold"
+                    className="opacity-60"
+                  />
                 </Badge>
               </motion.div>
             ))}
@@ -75,5 +79,5 @@ export function TagInput({ value, onChange, placeholder }: TagInputProps) {
         </div>
       )}
     </div>
-  );
+  )
 }

@@ -4,7 +4,7 @@ import type { ScrapeResult } from "../../base-scraper";
 export function parseLeverJobs(
   html: string,
   companyName: string,
-  sourceUrl: string
+  sourceUrl: string,
 ): ScrapeResult["jobs"] {
   const $ = cheerio.load(html);
   const jobs: ScrapeResult["jobs"] = [];

@@ -1,9 +1,6 @@
-"use client";
+'use client'
 
-import {
-  Avatar,
-  AvatarFallback,
-} from "@hackhyre/ui/components/avatar";
+import { Avatar, AvatarFallback } from '@hackhyre/ui/components/avatar'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,21 +8,21 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@hackhyre/ui/components/dropdown-menu";
-import { Badge } from "@hackhyre/ui/components/badge";
-import { Profile, Setting, LogoutCurve, Crown } from "@hackhyre/ui/icons";
-import { MOCK_USER } from "@/lib/mock-data";
+} from '@hackhyre/ui/components/dropdown-menu'
+import { Badge } from '@hackhyre/ui/components/badge'
+import { Profile, Setting, LogoutCurve, Crown } from '@hackhyre/ui/icons'
+import { MOCK_USER } from '@/lib/mock-data'
 
 export function UserNav() {
   const initials = MOCK_USER.name
-    .split(" ")
+    .split(' ')
     .map((n) => n[0])
-    .join("")
-    .toUpperCase();
+    .join('')
+    .toUpperCase()
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="focus-visible:ring-ring flex items-center gap-2 rounded-xl p-1.5 outline-none transition-colors hover:bg-accent focus-visible:ring-2">
+      <DropdownMenuTrigger className="focus-visible:ring-ring hover:bg-accent flex items-center gap-2 rounded-xl p-1.5 transition-colors outline-none focus-visible:ring-2">
         <Avatar className="h-8 w-8">
           <AvatarFallback className="bg-primary/10 text-primary text-[11px] font-bold">
             {initials}
@@ -45,8 +42,15 @@ export function UserNav() {
               <p className="text-muted-foreground truncate text-xs">
                 {MOCK_USER.email}
               </p>
-              <Badge variant="secondary" className="mt-1 text-[10px] px-1.5 py-0">
-                <Crown size={10} variant="Bold" className="mr-0.5 text-amber-500" />
+              <Badge
+                variant="secondary"
+                className="mt-1 px-1.5 py-0 text-[10px]"
+              >
+                <Crown
+                  size={10}
+                  variant="Bold"
+                  className="mr-0.5 text-amber-500"
+                />
                 Pro
               </Badge>
             </div>
@@ -68,5 +72,5 @@ export function UserNav() {
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  );
+  )
 }

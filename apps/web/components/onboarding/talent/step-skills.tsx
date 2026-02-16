@@ -1,16 +1,16 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod/v4";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Code, LinkIcon, Add, CloseCircle } from "@hackhyre/ui/icons";
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod/v4'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Code, LinkIcon, Add, CloseCircle } from '@hackhyre/ui/icons'
 
-import { Button } from "@hackhyre/ui/components/button";
-import { Input } from "@hackhyre/ui/components/input";
-import { Badge } from "@hackhyre/ui/components/badge";
-import { Slider } from "@hackhyre/ui/components/slider";
-import { Label } from "@hackhyre/ui/components/label";
+import { Button } from '@hackhyre/ui/components/button'
+import { Input } from '@hackhyre/ui/components/input'
+import { Badge } from '@hackhyre/ui/components/badge'
+import { Slider } from '@hackhyre/ui/components/slider'
+import { Label } from '@hackhyre/ui/components/label'
 import {
   Form,
   FormControl,
@@ -18,47 +18,52 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@hackhyre/ui/components/form";
-import type { StepProps } from "../onboarding-wizard";
+} from '@hackhyre/ui/components/form'
+import type { StepProps } from '../onboarding-wizard'
 
 const schema = z.object({
   linkedinUrl: z.string().optional(),
   githubUrl: z.string().optional(),
-});
+})
 
-type Values = z.infer<typeof schema>;
+type Values = z.infer<typeof schema>
 
-export function TalentStepSkills({ data, onUpdate, onNext, onBack }: StepProps) {
-  const [skills, setSkills] = useState<string[]>(data.skills ?? []);
-  const [skillInput, setSkillInput] = useState("");
+export function TalentStepSkills({
+  data,
+  onUpdate,
+  onNext,
+  onBack,
+}: StepProps) {
+  const [skills, setSkills] = useState<string[]>(data.skills ?? [])
+  const [skillInput, setSkillInput] = useState('')
   const [experienceYears, setExperienceYears] = useState(
     data.experienceYears ?? 2
-  );
+  )
 
   const form = useForm<Values>({
     resolver: zodResolver(schema),
     defaultValues: {
-      linkedinUrl: data.linkedinUrl ?? "",
-      githubUrl: data.githubUrl ?? "",
+      linkedinUrl: data.linkedinUrl ?? '',
+      githubUrl: data.githubUrl ?? '',
     },
-  });
+  })
 
   function addSkill() {
-    const trimmed = skillInput.trim();
+    const trimmed = skillInput.trim()
     if (trimmed && !skills.includes(trimmed)) {
-      setSkills((prev) => [...prev, trimmed]);
-      setSkillInput("");
+      setSkills((prev) => [...prev, trimmed])
+      setSkillInput('')
     }
   }
 
   function removeSkill(skill: string) {
-    setSkills((prev) => prev.filter((s) => s !== skill));
+    setSkills((prev) => prev.filter((s) => s !== skill))
   }
 
   function handleKeyDown(e: React.KeyboardEvent) {
-    if (e.key === "Enter" || e.key === ",") {
-      e.preventDefault();
-      addSkill();
+    if (e.key === 'Enter' || e.key === ',') {
+      e.preventDefault()
+      addSkill()
     }
   }
 
@@ -67,8 +72,8 @@ export function TalentStepSkills({ data, onUpdate, onNext, onBack }: StepProps) 
       ...values,
       skills,
       experienceYears,
-    });
-    onNext();
+    })
+    onNext()
   }
 
   return (
@@ -106,11 +111,7 @@ export function TalentStepSkills({ data, onUpdate, onNext, onBack }: StepProps) 
             {skills.length > 0 && (
               <div className="flex flex-wrap gap-2 pt-1">
                 {skills.map((skill) => (
-                  <Badge
-                    key={skill}
-                    variant="secondary"
-                    className="gap-1 pr-1"
-                  >
+                  <Badge key={skill} variant="secondary" className="gap-1 pr-1">
                     {skill}
                     <button
                       type="button"
@@ -129,13 +130,15 @@ export function TalentStepSkills({ data, onUpdate, onNext, onBack }: StepProps) 
             <div className="flex items-center justify-between">
               <Label>Years of Experience</Label>
               <span className="text-primary text-sm font-semibold">
-                {experienceYears === 20 ? "20+" : experienceYears}{" "}
-                {experienceYears === 1 ? "year" : "years"}
+                {experienceYears === 20 ? '20+' : experienceYears}{' '}
+                {experienceYears === 1 ? 'year' : 'years'}
               </span>
             </div>
             <Slider
               value={[experienceYears]}
-              onValueChange={([val]) => val !== undefined && setExperienceYears(val)}
+              onValueChange={([val]) =>
+                val !== undefined && setExperienceYears(val)
+              }
               min={0}
               max={20}
               step={1}
@@ -191,5 +194,5 @@ export function TalentStepSkills({ data, onUpdate, onNext, onBack }: StepProps) 
         </form>
       </Form>
     </div>
-  );
+  )
 }

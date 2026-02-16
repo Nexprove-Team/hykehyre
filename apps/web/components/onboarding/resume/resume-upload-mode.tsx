@@ -1,88 +1,86 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import { motion } from "motion/react";
-import { ArrowLeft } from "@hackhyre/ui/icons";
-import { Loader2 } from "lucide-react";
-import { Button } from "@hackhyre/ui/components/button";
-import { toast } from "sonner";
-import { ResumeDropzone } from "./resume-dropzone";
-import { ResumeReviewForm } from "./resume-review-form";
+import { useState } from 'react'
+import { motion } from 'motion/react'
+import { ArrowLeft } from '@hackhyre/ui/icons'
+import { Loader2 } from 'lucide-react'
+import { Button } from '@hackhyre/ui/components/button'
+import { toast } from 'sonner'
+import { ResumeDropzone } from './resume-dropzone'
+import { ResumeReviewForm } from './resume-review-form'
 
-type Phase = "upload" | "parsing" | "review";
+type Phase = 'upload' | 'parsing' | 'review'
 
 interface ResumeUploadModeProps {
-  onBack: () => void;
+  onBack: () => void
 }
 
 interface ParsedData {
-  headline?: string;
-  bio?: string;
-  skills?: string[];
-  experienceYears?: number;
-  location?: string;
-  linkedinUrl?: string;
-  githubUrl?: string;
-  portfolioUrl?: string;
+  headline?: string
+  bio?: string
+  skills?: string[]
+  experienceYears?: number
+  location?: string
+  linkedinUrl?: string
+  githubUrl?: string
+  portfolioUrl?: string
 }
 
 export function ResumeUploadMode({ onBack }: ResumeUploadModeProps) {
-  const [phase, setPhase] = useState<Phase>("upload");
-  const [resumeUrl, setResumeUrl] = useState<string | null>(null);
-  const [parsedData, setParsedData] = useState<ParsedData | null>(null);
+  const [phase, setPhase] = useState<Phase>('upload')
+  const [resumeUrl, setResumeUrl] = useState<string | null>(null)
+  const [parsedData, setParsedData] = useState<ParsedData | null>(null)
 
   async function handleFileSelect(file: File) {
-    setPhase("parsing");
+    setPhase('parsing')
 
     try {
       // Upload
-      const formData = new FormData();
-      formData.append("file", file);
+      const formData = new FormData()
+      formData.append('file', file)
 
-      const uploadRes = await fetch("/onboarding/api/resume/upload", {
-        method: "POST",
+      const uploadRes = await fetch('/onboarding/api/resume/upload', {
+        method: 'POST',
         body: formData,
-      });
+      })
 
       if (!uploadRes.ok) {
-        const { error } = await uploadRes.json();
-        throw new Error(error || "Upload failed");
+        const { error } = await uploadRes.json()
+        throw new Error(error || 'Upload failed')
       }
 
-      const { url } = await uploadRes.json();
-      setResumeUrl(url);
+      const { url } = await uploadRes.json()
+      setResumeUrl(url)
 
       // Parse
-      const parseRes = await fetch("/onboarding/api/resume/parse", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const parseRes = await fetch('/onboarding/api/resume/parse', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url }),
-      });
+      })
 
       if (!parseRes.ok) {
-        const { error } = await parseRes.json();
-        throw new Error(error || "Parse failed");
+        const { error } = await parseRes.json()
+        throw new Error(error || 'Parse failed')
       }
 
-      const parsed = await parseRes.json();
-      setParsedData(parsed);
-      setPhase("review");
+      const parsed = await parseRes.json()
+      setParsedData(parsed)
+      setPhase('review')
     } catch (err) {
-      toast.error(
-        err instanceof Error ? err.message : "Something went wrong"
-      );
-      setPhase("upload");
+      toast.error(err instanceof Error ? err.message : 'Something went wrong')
+      setPhase('upload')
     }
   }
 
-  if (phase === "review" && parsedData && resumeUrl) {
+  if (phase === 'review' && parsedData && resumeUrl) {
     return (
       <ResumeReviewForm
         parsed={parsedData}
         resumeUrl={resumeUrl}
-        onBack={() => setPhase("upload")}
+        onBack={() => setPhase('upload')}
       />
-    );
+    )
   }
 
   return (
@@ -112,11 +110,9 @@ export function ResumeUploadMode({ onBack }: ResumeUploadModeProps) {
         </div>
       </div>
 
-      {phase === "upload" && (
-        <ResumeDropzone onFileSelect={handleFileSelect} />
-      )}
+      {phase === 'upload' && <ResumeDropzone onFileSelect={handleFileSelect} />}
 
-      {phase === "parsing" && (
+      {phase === 'parsing' && (
         <div className="flex flex-col items-center gap-4 py-12">
           <Loader2 className="text-primary h-8 w-8 animate-spin" />
           <div className="text-center">
@@ -128,11 +124,11 @@ export function ResumeUploadMode({ onBack }: ResumeUploadModeProps) {
         </div>
       )}
 
-      {phase === "upload" && (
+      {phase === 'upload' && (
         <Button variant="outline" onClick={onBack} className="w-full">
           Choose a different method
         </Button>
       )}
     </motion.div>
-  );
+  )
 }

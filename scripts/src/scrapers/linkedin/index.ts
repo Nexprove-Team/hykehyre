@@ -16,7 +16,7 @@ export class LinkedInScraper implements Scraper {
     const allRecruiters: ScrapeResult["recruiters"] = [];
 
     const perSiteLimit = Math.ceil(
-      (options.maxResults ?? 50) / websites.length
+      (options.maxResults ?? 50) / websites.length,
     );
 
     for (const website of websites) {
@@ -24,11 +24,11 @@ export class LinkedInScraper implements Scraper {
         log.info(`Discovering companies via "${website}"...`);
         const { recruiters, companies } = await searchByCompanyWebsite(
           website,
-          perSiteLimit
+          perSiteLimit,
         );
         allRecruiters.push(...recruiters);
         log.info(
-          `Found ${recruiters.length} recruiter leads and ${companies.length} companies via "${website}"`
+          `Found ${recruiters.length} recruiter leads and ${companies.length} companies via "${website}"`,
         );
       } catch (err) {
         const msg = `NinjaPear search for "${website}": ${err instanceof Error ? err.message : String(err)}`;

@@ -1,22 +1,22 @@
-"use client";
+'use client'
 
-import Link from "next/link";
-import { motion, AnimatePresence } from "motion/react";
+import Link from 'next/link'
+import { motion, AnimatePresence } from 'motion/react'
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@hackhyre/ui/components/tooltip";
-import { cn } from "@hackhyre/ui/lib/utils";
-import type { Icon } from "@hackhyre/ui/icons";
+} from '@hackhyre/ui/components/tooltip'
+import { cn } from '@hackhyre/ui/lib/utils'
+import type { Icon } from '@hackhyre/ui/icons'
 
 interface SidebarNavItemProps {
-  icon: Icon;
-  label: string;
-  href: string;
-  badge?: number;
-  isCollapsed: boolean;
-  isActive: boolean;
+  icon: Icon
+  label: string
+  href: string
+  badge?: number
+  isCollapsed: boolean
+  isActive: boolean
 }
 
 export function SidebarNavItem({
@@ -31,11 +31,11 @@ export function SidebarNavItem({
     <Link
       href={href}
       className={cn(
-        "group/item relative flex items-center rounded-xl transition-all duration-200",
-        isCollapsed ? "justify-center p-2.5" : "gap-3 px-3 py-2.5",
+        'group/item relative flex items-center rounded-xl transition-all duration-200',
+        isCollapsed ? 'justify-center p-2.5' : 'gap-3 px-3 py-2.5',
         isActive
-          ? "bg-primary/10 text-primary"
-          : "text-muted-foreground hover:bg-accent hover:text-foreground",
+          ? 'bg-primary/10 text-primary'
+          : 'text-muted-foreground hover:bg-accent hover:text-foreground'
       )}
     >
       {/* Active left border indicator */}
@@ -43,17 +43,17 @@ export function SidebarNavItem({
         <motion.div
           layoutId="sidebar-active-indicator"
           className={cn(
-            "bg-primary absolute left-0 top-1/2 -translate-y-1/2 rounded-r-full",
-            isCollapsed ? "h-4 w-[2px]" : "h-5 w-[3px]",
+            'bg-primary absolute top-1/2 left-0 -translate-y-1/2 rounded-r-full',
+            isCollapsed ? 'h-4 w-[2px]' : 'h-5 w-[3px]'
           )}
-          transition={{ type: "spring", stiffness: 350, damping: 30 }}
+          transition={{ type: 'spring', stiffness: 350, damping: 30 }}
         />
       )}
 
       <div className="relative shrink-0">
         <Icon
           size={20}
-          variant={isActive ? "Bold" : "Linear"}
+          variant={isActive ? 'Bold' : 'Linear'}
           className="transition-transform duration-200 group-hover/item:scale-105"
         />
       </div>
@@ -64,7 +64,7 @@ export function SidebarNavItem({
             initial={{ opacity: 0, x: -4 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -4 }}
-            transition={{ duration: 0.12, ease: "easeOut" }}
+            transition={{ duration: 0.12, ease: 'easeOut' }}
             className="truncate text-[13px] font-medium"
           >
             {label}
@@ -80,10 +80,10 @@ export function SidebarNavItem({
             animate={{ scale: 1 }}
             exit={{ scale: 0 }}
             className={cn(
-              "ml-auto inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[10px] font-bold tabular-nums",
+              'ml-auto inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[10px] font-bold tabular-nums',
               isActive
-                ? "bg-primary/20 text-primary"
-                : "bg-primary/10 text-primary",
+                ? 'bg-primary/20 text-primary'
+                : 'bg-primary/10 text-primary'
             )}
           >
             {badge}
@@ -95,13 +95,13 @@ export function SidebarNavItem({
       {badge !== undefined && badge > 0 && isCollapsed && (
         <span
           className={cn(
-            "absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full border-2",
-            "bg-primary border-card",
+            'absolute -top-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2',
+            'bg-primary border-card'
           )}
         />
       )}
     </Link>
-  );
+  )
 
   if (isCollapsed) {
     return (
@@ -120,8 +120,8 @@ export function SidebarNavItem({
           )}
         </TooltipContent>
       </Tooltip>
-    );
+    )
   }
 
-  return inner;
+  return inner
 }

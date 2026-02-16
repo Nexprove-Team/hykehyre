@@ -1,11 +1,7 @@
 'use client'
 
 import { useState, useRef } from 'react'
-import {
-  Sheet,
-  SheetContent,
-  SheetTitle,
-} from '@hackhyre/ui/components/sheet'
+import { Sheet, SheetContent, SheetTitle } from '@hackhyre/ui/components/sheet'
 import { Button } from '@hackhyre/ui/components/button'
 import { Input } from '@hackhyre/ui/components/input'
 import { Label } from '@hackhyre/ui/components/label'
@@ -82,7 +78,9 @@ function generateMockRelevance(): RelevanceResult {
   const gaps =
     percentage >= 80
       ? allGaps.slice(0, 1)
-      : allGaps.sort(() => Math.random() - 0.5).slice(0, 1 + Math.floor(Math.random() * 2))
+      : allGaps
+          .sort(() => Math.random() - 0.5)
+          .slice(0, 1 + Math.floor(Math.random() * 2))
 
   let feedback: string
   if (percentage >= 85) {
@@ -104,7 +102,7 @@ function generateMockRelevance(): RelevanceResult {
 function ScoreRing({ score }: { score: number }) {
   const percentage = Math.round(score * 100)
   const circumference = 2 * Math.PI * 40
-  const offset = circumference - (score * circumference)
+  const offset = circumference - score * circumference
 
   const color =
     percentage >= 80
@@ -122,7 +120,12 @@ function ScoreRing({ score }: { score: number }) {
 
   return (
     <div className="relative flex h-28 w-28 items-center justify-center">
-      <svg className="-rotate-90" width="112" height="112" viewBox="0 0 100 100">
+      <svg
+        className="-rotate-90"
+        width="112"
+        height="112"
+        viewBox="0 0 100 100"
+      >
         <circle
           cx="50"
           cy="50"
@@ -223,9 +226,7 @@ export function ApplySheet() {
         style={LIGHT_VARS}
         showCloseButton={false}
       >
-        <SheetTitle className="sr-only">
-          Apply for {jobTitle}
-        </SheetTitle>
+        <SheetTitle className="sr-only">Apply for {jobTitle}</SheetTitle>
 
         {/* Top bar */}
         <div className="flex shrink-0 items-center justify-between border-b border-neutral-200 px-5 py-4">
@@ -312,7 +313,7 @@ function ApplicationForm({
             value={form.name}
             onChange={(e) => update({ name: e.target.value })}
             placeholder="John Doe"
-            className="h-10 rounded-lg border-neutral-200 bg-white text-[13px] text-neutral-900 placeholder:text-neutral-400 focus-visible:ring-primary"
+            className="focus-visible:ring-primary h-10 rounded-lg border-neutral-200 bg-white text-[13px] text-neutral-900 placeholder:text-neutral-400"
           />
         </div>
 
@@ -331,7 +332,7 @@ function ApplicationForm({
             value={form.email}
             onChange={(e) => update({ email: e.target.value })}
             placeholder="john@example.com"
-            className="h-10 rounded-lg border-neutral-200 bg-white text-[13px] text-neutral-900 placeholder:text-neutral-400 focus-visible:ring-primary"
+            className="focus-visible:ring-primary h-10 rounded-lg border-neutral-200 bg-white text-[13px] text-neutral-900 placeholder:text-neutral-400"
           />
         </div>
 
@@ -360,7 +361,7 @@ function ApplicationForm({
               <DocumentText
                 size={16}
                 variant="Bold"
-                className="shrink-0 text-primary"
+                className="text-primary shrink-0"
               />
               <div className="min-w-0 flex-1">
                 <p className="truncate text-[12px] font-medium text-neutral-900">
@@ -385,7 +386,7 @@ function ApplicationForm({
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className="flex w-full flex-col items-center gap-1.5 rounded-lg border border-dashed border-neutral-300 bg-neutral-50/50 px-4 py-5 transition-colors hover:border-primary hover:bg-primary/5"
+              className="hover:border-primary hover:bg-primary/5 flex w-full flex-col items-center gap-1.5 rounded-lg border border-dashed border-neutral-300 bg-neutral-50/50 px-4 py-5 transition-colors"
             >
               <DocumentText
                 size={20}
@@ -408,11 +409,7 @@ function ApplicationForm({
             htmlFor="linkedin"
             className="flex items-center gap-1.5 text-[12px] font-medium text-neutral-700"
           >
-            <LinkIcon
-              size={12}
-              variant="Linear"
-              className="text-neutral-400"
-            />
+            <LinkIcon size={12} variant="Linear" className="text-neutral-400" />
             LinkedIn Profile
           </Label>
           <Input
@@ -420,7 +417,7 @@ function ApplicationForm({
             value={form.linkedinUrl}
             onChange={(e) => update({ linkedinUrl: e.target.value })}
             placeholder="https://linkedin.com/in/yourprofile"
-            className="h-10 rounded-lg border-neutral-200 bg-white text-[13px] text-neutral-900 placeholder:text-neutral-400 focus-visible:ring-primary"
+            className="focus-visible:ring-primary h-10 rounded-lg border-neutral-200 bg-white text-[13px] text-neutral-900 placeholder:text-neutral-400"
           />
         </div>
 
@@ -443,7 +440,7 @@ function ApplicationForm({
             onChange={(e) => update({ coverLetter: e.target.value })}
             placeholder="Tell us why you're a great fit for this role..."
             rows={4}
-            className="resize-none rounded-lg border-neutral-200 bg-white text-[13px] text-neutral-900 placeholder:text-neutral-400 focus-visible:ring-primary"
+            className="focus-visible:ring-primary resize-none rounded-lg border-neutral-200 bg-white text-[13px] text-neutral-900 placeholder:text-neutral-400"
           />
         </div>
 
@@ -456,7 +453,7 @@ function ApplicationForm({
             onCheckedChange={(checked) =>
               update({ talentPoolOptIn: !!checked })
             }
-            className="mt-0.5 border-neutral-300 bg-white data-[state=checked]:border-primary data-[state=checked]:bg-primary"
+            className="data-[state=checked]:border-primary data-[state=checked]:bg-primary mt-0.5 border-neutral-300 bg-white"
           />
           <div>
             <p className="text-[12px] font-medium text-neutral-900">
@@ -473,7 +470,7 @@ function ApplicationForm({
         <Button
           type="submit"
           disabled={!isValid || submitting}
-          className="w-full gap-2 rounded-lg bg-primary py-2.5 text-[13px] font-semibold text-neutral-900 hover:bg-primary/90 disabled:opacity-50"
+          className="bg-primary hover:bg-primary/90 w-full gap-2 rounded-lg py-2.5 text-[13px] font-semibold text-neutral-900 disabled:opacity-50"
         >
           {submitting ? (
             <>
@@ -491,7 +488,8 @@ function ApplicationForm({
         <p className="text-center text-[10px] leading-relaxed text-neutral-400">
           By submitting, you agree to our privacy policy. Your data will only be
           shared with the hiring team for this position
-          {form.talentPoolOptIn ? ' and for future matching opportunities' : ''}.
+          {form.talentPoolOptIn ? ' and for future matching opportunities' : ''}
+          .
         </p>
       </div>
     </form>
@@ -607,14 +605,14 @@ function SuccessView({
         <div className="space-y-2.5">
           {[
             'Your application is being reviewed by the hiring team',
-            'You\'ll receive an email update within 5 business days',
-            'If shortlisted, you\'ll be contacted for next steps',
+            "You'll receive an email update within 5 business days",
+            "If shortlisted, you'll be contacted for next steps",
           ].map((step, i) => (
             <div
               key={i}
               className="flex items-start gap-2.5 text-[11px] text-neutral-600"
             >
-              <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-primary/15 text-[9px] font-bold text-primary">
+              <span className="bg-primary/15 text-primary flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-[9px] font-bold">
                 {i + 1}
               </span>
               {step}

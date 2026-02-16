@@ -1,61 +1,61 @@
-"use server";
+'use server'
 
-import { eq, desc } from "drizzle-orm";
-import { db, applications, jobs, companies } from "@hackhyre/db";
-import { getSession } from "@/lib/auth-session";
+import { eq, desc } from 'drizzle-orm'
+import { db, applications, jobs, companies } from '@hackhyre/db'
+import { getSession } from '@/lib/auth-session'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
 export interface CandidateApplicationListItem {
-  id: string;
-  status: string;
-  relevanceScore: number | null;
-  appliedAt: Date;
-  coverLetter: string | null;
-  resumeUrl: string | null;
-  linkedinUrl: string | null;
+  id: string
+  status: string
+  relevanceScore: number | null
+  appliedAt: Date
+  coverLetter: string | null
+  resumeUrl: string | null
+  linkedinUrl: string | null
   job: {
-    title: string;
-    description: string;
-    location: string | null;
-    isRemote: boolean;
-    employmentType: string;
-    experienceLevel: string;
-    salaryMin: number | null;
-    salaryMax: number | null;
-    salaryCurrency: string;
-    requirements: string[];
-    responsibilities: string[];
-    skills: string[];
-  };
+    title: string
+    description: string
+    location: string | null
+    isRemote: boolean
+    employmentType: string
+    experienceLevel: string
+    salaryMin: number | null
+    salaryMax: number | null
+    salaryCurrency: string
+    requirements: string[]
+    responsibilities: string[]
+    skills: string[]
+  }
   company: {
-    name: string;
-    website: string | null;
-    logoUrl: string | null;
-  } | null;
+    name: string
+    website: string | null
+    logoUrl: string | null
+  } | null
 }
 
 export interface CandidateApplicationDetail extends CandidateApplicationListItem {
   matchAnalysis: {
-    feedback: string;
-    strengths: string[];
-    gaps: string[];
-  } | null;
+    feedback: string
+    strengths: string[]
+    gaps: string[]
+  } | null
 }
 
 export interface ApplicationStats {
-  total: number;
-  active: number;
-  interviewing: number;
-  offers: number;
+  total: number
+  active: number
+  interviewing: number
+  offers: number
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 function mapRow(row: {
-  application: typeof applications.$inferSelect;
-  job: typeof jobs.$inferSelect;
-  company: typeof companies.$inferSelect | null;
+  application: typeof applications.$inferSelect
+  job: typeof jobs.$inferSelect
+  company: typeof companies.$inferSelect | null
 }): CandidateApplicationListItem {
   return {
     id: row.application.id,
@@ -86,18 +86,18 @@ function mapRow(row: {
           logoUrl: row.company.logoUrl,
         }
       : null,
-  };
+  }
 }
 
 // ── Server Actions ────────────────────────────────────────────────────────────
 
 export async function getCandidateApplications(): Promise<{
-  applications: CandidateApplicationListItem[];
-  stats: ApplicationStats;
+  applications: CandidateApplicationListItem[]
+  stats: ApplicationStats
 }> {
-  const session = await getSession();
+  const session = await getSession()
   if (!session) {
-    throw new Error("Unauthorized");
+    throw new Error('Unauthorized')
   }
 
   const rows = await db
@@ -110,28 +110,28 @@ export async function getCandidateApplications(): Promise<{
     .innerJoin(jobs, eq(applications.jobId, jobs.id))
     .leftJoin(companies, eq(jobs.companyId, companies.id))
     .where(eq(applications.candidateId, session.user.id))
-    .orderBy(desc(applications.createdAt));
+    .orderBy(desc(applications.createdAt))
 
-  const mapped = rows.map(mapRow);
+  const mapped = rows.map(mapRow)
 
   const stats: ApplicationStats = {
     total: mapped.length,
     active: mapped.filter(
-      (a) => a.status === "not_reviewed" || a.status === "under_review"
+      (a) => a.status === 'not_reviewed' || a.status === 'under_review'
     ).length,
-    interviewing: mapped.filter((a) => a.status === "interviewing").length,
-    offers: mapped.filter((a) => a.status === "hired").length,
-  };
+    interviewing: mapped.filter((a) => a.status === 'interviewing').length,
+    offers: mapped.filter((a) => a.status === 'hired').length,
+  }
 
-  return { applications: mapped, stats };
+  return { applications: mapped, stats }
 }
 
 export async function getCandidateApplication(
   id: string
 ): Promise<CandidateApplicationDetail | null> {
-  const session = await getSession();
+  const session = await getSession()
   if (!session) {
-    throw new Error("Unauthorized");
+    throw new Error('Unauthorized')
   }
 
   const rows = await db
@@ -144,16 +144,16 @@ export async function getCandidateApplication(
     .innerJoin(jobs, eq(applications.jobId, jobs.id))
     .leftJoin(companies, eq(jobs.companyId, companies.id))
     .where(eq(applications.id, id))
-    .limit(1);
+    .limit(1)
 
-  const row = rows[0];
-  if (!row) return null;
+  const row = rows[0]
+  if (!row) return null
 
   // Authorization: ensure this application belongs to the current user
-  if (row.application.candidateId !== session.user.id) return null;
+  if (row.application.candidateId !== session.user.id) return null
 
   return {
     ...mapRow(row),
     matchAnalysis: row.application.matchAnalysis ?? null,
-  };
+  }
 }

@@ -1,14 +1,14 @@
-"use client";
+'use client'
 
-import { useRouter } from "next/navigation";
-import { motion } from "motion/react";
-import { TickCircle, ArrowRight } from "@hackhyre/ui/icons";
+import { useRouter } from 'next/navigation'
+import { motion } from 'motion/react'
+import { TickCircle, ArrowRight } from '@hackhyre/ui/icons'
 
-import { Button } from "@hackhyre/ui/components/button";
-import type { StepProps } from "../onboarding-wizard";
+import { Button } from '@hackhyre/ui/components/button'
+import type { StepProps } from '../onboarding-wizard'
 
 export function RecruiterStepComplete({ data }: StepProps) {
-  const router = useRouter();
+  const router = useRouter()
 
   return (
     <div className="flex flex-col items-center space-y-6 py-8 text-center">
@@ -16,7 +16,7 @@ export function RecruiterStepComplete({ data }: StepProps) {
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
         transition={{
-          type: "spring",
+          type: 'spring',
           stiffness: 200,
           damping: 15,
           delay: 0.1,
@@ -37,7 +37,7 @@ export function RecruiterStepComplete({ data }: StepProps) {
         <p className="text-muted-foreground mx-auto max-w-sm text-sm">
           {data.companyName
             ? `${data.companyName} is all set up.`
-            : "Your company profile is ready."}{" "}
+            : 'Your company profile is ready.'}{' '}
           Start discovering talent and posting jobs.
         </p>
       </motion.div>
@@ -48,11 +48,11 @@ export function RecruiterStepComplete({ data }: StepProps) {
         transition={{ delay: 0.5 }}
         className="flex flex-col gap-3 pt-4"
       >
-        <Button size="lg" onClick={() => router.push("/")}>
+        <Button size="lg" onClick={() => router.push('/')}>
           Go to Dashboard
           <ArrowRight size={18} variant="Linear" className="ml-1" />
         </Button>
       </motion.div>
     </div>
-  );
+  )
 }

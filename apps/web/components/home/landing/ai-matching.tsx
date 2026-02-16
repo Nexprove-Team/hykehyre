@@ -85,7 +85,7 @@ function MatchCard() {
 
         {/* Match score */}
         <div className="my-5 text-center">
-          <p className="text-muted-foreground mb-1 text-xs font-medium uppercase tracking-wider">
+          <p className="text-muted-foreground mb-1 text-xs font-medium tracking-wider uppercase">
             Match Score
           </p>
           <p className="text-primary font-mono text-5xl font-bold">
@@ -161,10 +161,7 @@ export function AIMatching() {
               matches that actually work.
             </motion.p>
 
-            <motion.ul
-              variants={stagger}
-              className="mt-8 space-y-3"
-            >
+            <motion.ul variants={stagger} className="mt-8 space-y-3">
               {FEATURES.map((feature) => (
                 <motion.li
                   key={feature}

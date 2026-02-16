@@ -1,11 +1,11 @@
-import type { Metadata } from "next";
-import { SignInForm } from "@/components/auth/sign-in-form";
+import type { Metadata } from 'next'
+import { SignInForm } from '@/components/auth/sign-in-form'
 
 export const metadata: Metadata = {
-  title: "Sign In — HackHyre",
-  description: "Sign in to your HackHyre account",
-};
+  title: 'Sign In — HackHyre',
+  description: 'Sign in to your HackHyre account',
+}
 
 export default function SignInPage() {
-  return <SignInForm />;
+  return <SignInForm />
 }

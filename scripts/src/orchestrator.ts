@@ -1,14 +1,18 @@
 import { eq, and } from "drizzle-orm";
 import { getDB, closeDB } from "./db";
 import { recruiters, jobListings, scrapeRuns } from "./db/schema";
-import type { Scraper, ScraperOptions, ScrapeResult } from "./scrapers/base-scraper";
+import type {
+  Scraper,
+  ScraperOptions,
+  ScrapeResult,
+} from "./scrapers/base-scraper";
 import { createLogger } from "./utils/logger";
 
 const log = createLogger("orchestrator");
 
 async function isDuplicateRecruiter(
   db: ReturnType<typeof getDB>,
-  recruiter: ScrapeResult["recruiters"][number]
+  recruiter: ScrapeResult["recruiters"][number],
 ): Promise<boolean> {
   if (recruiter.linkedinUrl) {
     const existing = await db
@@ -26,8 +30,8 @@ async function isDuplicateRecruiter(
       .where(
         and(
           eq(recruiters.fullName, recruiter.fullName),
-          eq(recruiters.company, recruiter.company)
-        )
+          eq(recruiters.company, recruiter.company),
+        ),
       )
       .limit(1);
     if (existing.length > 0) return true;
@@ -38,7 +42,7 @@ async function isDuplicateRecruiter(
 
 async function isDuplicateJob(
   db: ReturnType<typeof getDB>,
-  job: ScrapeResult["jobs"][number]
+  job: ScrapeResult["jobs"][number],
 ): Promise<boolean> {
   if (job.sourceUrl) {
     const existing = await db
@@ -53,7 +57,7 @@ async function isDuplicateJob(
 
 export async function runScraper(
   scraper: Scraper,
-  options: ScraperOptions
+  options: ScraperOptions,
 ): Promise<void> {
   const db = getDB();
   const startTime = Date.now();
@@ -100,7 +104,9 @@ export async function runScraper(
           await db.insert(recruiters).values(recruiter);
         }
         totalSaved++;
-        log.info(`${options.dryRun ? "[DRY RUN] " : ""}Saved recruiter: ${recruiter.fullName} (${recruiter.company ?? "unknown"})`);
+        log.info(
+          `${options.dryRun ? "[DRY RUN] " : ""}Saved recruiter: ${recruiter.fullName} (${recruiter.company ?? "unknown"})`,
+        );
       } catch (err) {
         totalErrors++;
         const msg = err instanceof Error ? err.message : String(err);
@@ -122,7 +128,9 @@ export async function runScraper(
           await db.insert(jobListings).values(job);
         }
         totalSaved++;
-        log.info(`${options.dryRun ? "[DRY RUN] " : ""}Saved job: ${job.title} at ${job.company}`);
+        log.info(
+          `${options.dryRun ? "[DRY RUN] " : ""}Saved job: ${job.title} at ${job.company}`,
+        );
       } catch (err) {
         totalErrors++;
         const msg = err instanceof Error ? err.message : String(err);
@@ -148,7 +156,7 @@ export async function runScraper(
       .where(eq(scrapeRuns.id, run.id));
 
     log.info(
-      `Finished. Found=${totalFound} Saved=${totalSaved} Skipped=${totalSkipped} Errors=${totalErrors} Duration=${durationMs}ms`
+      `Finished. Found=${totalFound} Saved=${totalSaved} Skipped=${totalSkipped} Errors=${totalErrors} Duration=${durationMs}ms`,
     );
   } catch (error) {
     const msg = error instanceof Error ? error.message : String(error);

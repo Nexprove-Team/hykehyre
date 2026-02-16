@@ -1,13 +1,13 @@
-"use client";
+'use client'
 
-import { useForm } from "react-hook-form";
-import { z } from "zod/v4";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { LinkIcon } from "@hackhyre/ui/icons";
+import { useForm } from 'react-hook-form'
+import { z } from 'zod/v4'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { LinkIcon } from '@hackhyre/ui/icons'
 
-import { Button } from "@hackhyre/ui/components/button";
-import { Input } from "@hackhyre/ui/components/input";
-import { Textarea } from "@hackhyre/ui/components/textarea";
+import { Button } from '@hackhyre/ui/components/button'
+import { Input } from '@hackhyre/ui/components/input'
+import { Textarea } from '@hackhyre/ui/components/textarea'
 import {
   Form,
   FormControl,
@@ -15,16 +15,16 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@hackhyre/ui/components/form";
-import type { StepProps } from "../onboarding-wizard";
+} from '@hackhyre/ui/components/form'
+import type { StepProps } from '../onboarding-wizard'
 
 const schema = z.object({
   companyMission: z.string().optional(),
   companyLinkedinUrl: z.string().optional(),
   companyTwitterUrl: z.string().optional(),
-});
+})
 
-type Values = z.infer<typeof schema>;
+type Values = z.infer<typeof schema>
 
 export function RecruiterStepDetails({
   data,
@@ -35,15 +35,15 @@ export function RecruiterStepDetails({
   const form = useForm<Values>({
     resolver: zodResolver(schema),
     defaultValues: {
-      companyMission: data.companyMission ?? "",
-      companyLinkedinUrl: data.companyLinkedinUrl ?? "",
-      companyTwitterUrl: data.companyTwitterUrl ?? "",
+      companyMission: data.companyMission ?? '',
+      companyLinkedinUrl: data.companyLinkedinUrl ?? '',
+      companyTwitterUrl: data.companyTwitterUrl ?? '',
     },
-  });
+  })
 
   function onSubmit(values: Values) {
-    onUpdate(values);
-    onNext();
+    onUpdate(values)
+    onNext()
   }
 
   return (
@@ -107,10 +107,7 @@ export function RecruiterStepDetails({
                   Twitter / X
                 </FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder="https://twitter.com/acme"
-                    {...field}
-                  />
+                  <Input placeholder="https://twitter.com/acme" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -126,5 +123,5 @@ export function RecruiterStepDetails({
         </form>
       </Form>
     </div>
-  );
+  )
 }

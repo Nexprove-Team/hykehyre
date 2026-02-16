@@ -10,5 +10,5 @@ export default function SavedJobsPage() {
         </p>
       </div>
     </div>
-  );
+  )
 }

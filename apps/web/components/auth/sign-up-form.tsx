@@ -1,13 +1,13 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { z } from "zod/v4";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { motion, AnimatePresence } from "motion/react";
-import { toast } from "sonner";
-import Link from "next/link";
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod/v4'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { motion, AnimatePresence } from 'motion/react'
+import { toast } from 'sonner'
+import Link from 'next/link'
 import {
   UserSearch,
   Buildings2,
@@ -20,12 +20,12 @@ import {
   Briefcase,
   Hashtag,
   Profile,
-} from "@hackhyre/ui/icons";
-import { Loader2 } from "lucide-react";
+} from '@hackhyre/ui/icons'
+import { Loader2 } from 'lucide-react'
 
-import { authClient } from "@/lib/auth-client";
-import { Button } from "@hackhyre/ui/components/button";
-import { Input } from "@hackhyre/ui/components/input";
+import { authClient } from '@/lib/auth-client'
+import { Button } from '@hackhyre/ui/components/button'
+import { Input } from '@hackhyre/ui/components/input'
 import {
   Form,
   FormControl,
@@ -33,85 +33,85 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@hackhyre/ui/components/form";
-import { Separator } from "@hackhyre/ui/components/separator";
-import { cn } from "@hackhyre/ui/lib/utils";
+} from '@hackhyre/ui/components/form'
+import { Separator } from '@hackhyre/ui/components/separator'
+import { cn } from '@hackhyre/ui/lib/utils'
 
-type Role = "candidate" | "recruiter";
+type Role = 'candidate' | 'recruiter'
 
 const baseSchema = z
   .object({
-    name: z.string().min(2, "Name must be at least 2 characters"),
-    email: z.email("Please enter a valid email"),
+    name: z.string().min(2, 'Name must be at least 2 characters'),
+    email: z.email('Please enter a valid email'),
     username: z
       .string()
-      .min(3, "Username must be at least 3 characters")
-      .max(30, "Username must be less than 30 characters")
+      .min(3, 'Username must be at least 3 characters')
+      .max(30, 'Username must be less than 30 characters')
       .regex(
         /^[a-zA-Z0-9_]+$/,
-        "Only letters, numbers, and underscores allowed"
+        'Only letters, numbers, and underscores allowed'
       ),
-    password: z.string().min(8, "Password must be at least 8 characters"),
+    password: z.string().min(8, 'Password must be at least 8 characters'),
     confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
-  });
+    message: 'Passwords do not match',
+    path: ['confirmPassword'],
+  })
 
 const recruiterSchema = z
   .object({
-    name: z.string().min(2, "Name must be at least 2 characters"),
-    email: z.email("Please enter a valid email"),
+    name: z.string().min(2, 'Name must be at least 2 characters'),
+    email: z.email('Please enter a valid email'),
     username: z
       .string()
-      .min(3, "Username must be at least 3 characters")
-      .max(30, "Username must be less than 30 characters")
+      .min(3, 'Username must be at least 3 characters')
+      .max(30, 'Username must be less than 30 characters')
       .regex(
         /^[a-zA-Z0-9_]+$/,
-        "Only letters, numbers, and underscores allowed"
+        'Only letters, numbers, and underscores allowed'
       ),
-    password: z.string().min(8, "Password must be at least 8 characters"),
+    password: z.string().min(8, 'Password must be at least 8 characters'),
     confirmPassword: z.string(),
-    companyName: z.string().min(1, "Company name is required"),
+    companyName: z.string().min(1, 'Company name is required'),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
-  });
+    message: 'Passwords do not match',
+    path: ['confirmPassword'],
+  })
 
-type BaseValues = z.infer<typeof baseSchema>;
-type RecruiterValues = z.infer<typeof recruiterSchema>;
-type FormValues = BaseValues | RecruiterValues;
+type BaseValues = z.infer<typeof baseSchema>
+type RecruiterValues = z.infer<typeof recruiterSchema>
+type FormValues = BaseValues | RecruiterValues
 
 export function SignUpForm() {
-  const router = useRouter();
-  const [selectedRole, setSelectedRole] = useState<Role | null>(null);
-  const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter()
+  const [selectedRole, setSelectedRole] = useState<Role | null>(null)
+  const [showPassword, setShowPassword] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
-  const isRecruiter = selectedRole === "recruiter";
+  const isRecruiter = selectedRole === 'recruiter'
 
   const form = useForm<FormValues>({
     resolver: zodResolver(isRecruiter ? recruiterSchema : baseSchema),
     defaultValues: {
-      name: "",
-      email: "",
-      username: "",
-      password: "",
-      confirmPassword: "",
-      ...(isRecruiter ? { companyName: "" } : {}),
+      name: '',
+      email: '',
+      username: '',
+      password: '',
+      confirmPassword: '',
+      ...(isRecruiter ? { companyName: '' } : {}),
     },
-  });
+  })
 
   function handleRoleSelect(role: Role) {
-    setSelectedRole(role);
-    form.reset();
+    setSelectedRole(role)
+    form.reset()
   }
 
   async function onSubmit(values: FormValues) {
-    if (!selectedRole) return;
-    setIsLoading(true);
+    if (!selectedRole) return
+    setIsLoading(true)
 
     const { error } = await authClient.signUp.email({
       email: values.email,
@@ -120,27 +120,27 @@ export function SignUpForm() {
       username: values.username,
       role: selectedRole,
       companyName:
-        isRecruiter && "companyName" in values
-          ? values.companyName
-          : undefined,
-    });
+        isRecruiter && 'companyName' in values ? values.companyName : undefined,
+    })
 
-    setIsLoading(false);
+    setIsLoading(false)
 
     if (error) {
-      toast.error(error.message ?? "Something went wrong");
-      return;
+      toast.error(error.message ?? 'Something went wrong')
+      return
     }
 
-    toast.success("Account created! Check your email for a verification code.");
-    router.push(`/verify-email?email=${encodeURIComponent(values.email)}&role=${selectedRole}`);
+    toast.success('Account created! Check your email for a verification code.')
+    router.push(
+      `/verify-email?email=${encodeURIComponent(values.email)}&role=${selectedRole}`
+    )
   }
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, ease: "easeOut" }}
+      transition={{ duration: 0.4, ease: 'easeOut' }}
     >
       <AnimatePresence mode="wait">
         {!selectedRole ? (
@@ -173,10 +173,10 @@ export function SignUpForm() {
               {/* Talent card */}
               <button
                 type="button"
-                onClick={() => handleRoleSelect("candidate")}
+                onClick={() => handleRoleSelect('candidate')}
                 className={cn(
-                  "border-border bg-card flex w-full items-center gap-4 rounded-xl border p-5 text-left transition-all duration-200",
-                  "hover:border-primary/40 hover:shadow-[0_0_24px_oklch(0.82_0.22_155/0.1)]"
+                  'border-border bg-card flex w-full items-center gap-4 rounded-xl border p-5 text-left transition-all duration-200',
+                  'hover:border-primary/40 hover:shadow-[0_0_24px_oklch(0.82_0.22_155/0.1)]'
                 )}
               >
                 <div className="bg-primary/10 flex h-12 w-12 shrink-0 items-center justify-center rounded-xl">
@@ -204,10 +204,10 @@ export function SignUpForm() {
               {/* Recruiter card */}
               <button
                 type="button"
-                onClick={() => handleRoleSelect("recruiter")}
+                onClick={() => handleRoleSelect('recruiter')}
                 className={cn(
-                  "border-border bg-card flex w-full items-center gap-4 rounded-xl border p-5 text-left transition-all duration-200",
-                  "hover:border-primary/40 hover:shadow-[0_0_24px_oklch(0.82_0.22_155/0.1)]"
+                  'border-border bg-card flex w-full items-center gap-4 rounded-xl border p-5 text-left transition-all duration-200',
+                  'hover:border-primary/40 hover:shadow-[0_0_24px_oklch(0.82_0.22_155/0.1)]'
                 )}
               >
                 <div className="bg-primary/10 flex h-12 w-12 shrink-0 items-center justify-center rounded-xl">
@@ -234,7 +234,7 @@ export function SignUpForm() {
             </div>
 
             <p className="text-muted-foreground text-center text-sm">
-              Already have an account?{" "}
+              Already have an account?{' '}
               <Link
                 href="/sign-in"
                 className="text-primary hover:text-primary/80 font-medium underline-offset-4 hover:underline"
@@ -264,14 +264,22 @@ export function SignUpForm() {
               </button>
               <div className="flex items-center gap-2">
                 <div className="bg-primary/10 flex h-6 w-6 items-center justify-center rounded-md">
-                  {selectedRole === "candidate" ? (
-                    <Profile size={14} variant="Bulk" className="text-primary" />
+                  {selectedRole === 'candidate' ? (
+                    <Profile
+                      size={14}
+                      variant="Bulk"
+                      className="text-primary"
+                    />
                   ) : (
-                    <Briefcase size={14} variant="Bulk" className="text-primary" />
+                    <Briefcase
+                      size={14}
+                      variant="Bulk"
+                      className="text-primary"
+                    />
                   )}
                 </div>
                 <span className="text-muted-foreground text-xs font-medium">
-                  {selectedRole === "candidate" ? "Talent" : "Job Creator"}
+                  {selectedRole === 'candidate' ? 'Talent' : 'Job Creator'}
                 </span>
               </div>
             </div>
@@ -375,12 +383,12 @@ export function SignUpForm() {
                 {isRecruiter && (
                   <motion.div
                     initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
+                    animate={{ opacity: 1, height: 'auto' }}
                     transition={{ duration: 0.2 }}
                   >
                     <FormField
                       control={form.control}
-                      name={"companyName" as keyof FormValues}
+                      name={'companyName' as keyof FormValues}
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Company Name</FormLabel>
@@ -396,7 +404,7 @@ export function SignUpForm() {
                                 disabled={isLoading}
                                 className="pl-10"
                                 {...field}
-                                value={field.value ?? ""}
+                                value={field.value ?? ''}
                               />
                             </div>
                           </FormControl>
@@ -422,11 +430,11 @@ export function SignUpForm() {
                               className="text-muted-foreground absolute top-1/2 left-3 -translate-y-1/2"
                             />
                             <Input
-                              type={showPassword ? "text" : "password"}
+                              type={showPassword ? 'text' : 'password'}
                               placeholder="••••••••"
                               autoComplete="new-password"
                               disabled={isLoading}
-                              className="pl-10 pr-9"
+                              className="pr-9 pl-10"
                               {...field}
                             />
                             <button
@@ -462,7 +470,7 @@ export function SignUpForm() {
                               className="text-muted-foreground absolute top-1/2 left-3 -translate-y-1/2"
                             />
                             <Input
-                              type={showPassword ? "text" : "password"}
+                              type={showPassword ? 'text' : 'password'}
                               placeholder="••••••••"
                               autoComplete="new-password"
                               disabled={isLoading}
@@ -488,7 +496,7 @@ export function SignUpForm() {
                       Creating account...
                     </>
                   ) : (
-                    "Create account"
+                    'Create account'
                   )}
                 </Button>
               </form>
@@ -502,7 +510,7 @@ export function SignUpForm() {
             </div>
 
             <p className="text-muted-foreground text-center text-sm">
-              Already have an account?{" "}
+              Already have an account?{' '}
               <Link
                 href="/sign-in"
                 className="text-primary hover:text-primary/80 font-medium underline-offset-4 hover:underline"
@@ -514,5 +522,5 @@ export function SignUpForm() {
         )}
       </AnimatePresence>
     </motion.div>
-  );
+  )
 }

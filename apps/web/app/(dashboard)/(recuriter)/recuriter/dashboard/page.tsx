@@ -1,16 +1,16 @@
-"use client";
+'use client'
 
-import { Briefcase, People, DocumentText, Calendar } from "@hackhyre/ui/icons";
+import { Briefcase, People, DocumentText, Calendar } from '@hackhyre/ui/icons'
 
-import { StatCard } from "@/components/dashboard/stat-card";
-import { QuickActions } from "@/components/dashboard/quick-actions";
-import { ApplicationsChart } from "@/components/dashboard/applications-chart";
-import { RecentJobsTable } from "@/components/dashboard/recent-jobs-table";
-import { RecentApplicationsList } from "@/components/dashboard/recent-applications-list";
-import { MOCK_STATS, MOCK_USER } from "@/lib/mock-data";
+import { StatCard } from '@/components/dashboard/stat-card'
+import { QuickActions } from '@/components/dashboard/quick-actions'
+import { ApplicationsChart } from '@/components/dashboard/applications-chart'
+import { RecentJobsTable } from '@/components/dashboard/recent-jobs-table'
+import { RecentApplicationsList } from '@/components/dashboard/recent-applications-list'
+import { MOCK_STATS, MOCK_USER } from '@/lib/mock-data'
 
 export default function DashboardPage() {
-  const firstName = MOCK_USER.name.split(" ")[0];
+  const firstName = MOCK_USER.name.split(' ')[0]
 
   return (
     <div className="space-y-6">
@@ -70,5 +70,5 @@ export default function DashboardPage() {
         </div>
       </div>
     </div>
-  );
+  )
 }

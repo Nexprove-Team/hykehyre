@@ -91,9 +91,7 @@
         "companies_name_unique": {
           "name": "companies_name_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "name"
-          ]
+          "columns": ["name"]
         }
       },
       "policies": {},
@@ -293,12 +291,8 @@
           "name": "job_listings_recruiter_id_recruiters_id_fk",
           "tableFrom": "job_listings",
           "tableTo": "recruiters",
-          "columnsFrom": [
-            "recruiter_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["recruiter_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -580,14 +574,7 @@
     "public.company_size": {
       "name": "company_size",
       "schema": "public",
-      "values": [
-        "1-10",
-        "11-50",
-        "51-200",
-        "201-500",
-        "501-1000",
-        "1000+"
-      ]
+      "values": ["1-10", "11-50", "51-200", "201-500", "501-1000", "1000+"]
     },
     "public.employment_type": {
       "name": "employment_type",
@@ -603,60 +590,32 @@
     "public.experience_level": {
       "name": "experience_level",
       "schema": "public",
-      "values": [
-        "entry",
-        "mid",
-        "senior",
-        "lead",
-        "executive"
-      ]
+      "values": ["entry", "mid", "senior", "lead", "executive"]
     },
     "public.job_status": {
       "name": "job_status",
       "schema": "public",
-      "values": [
-        "open",
-        "paused",
-        "filled"
-      ]
+      "values": ["open", "paused", "filled"]
     },
     "public.location_type": {
       "name": "location_type",
       "schema": "public",
-      "values": [
-        "remote",
-        "hybrid",
-        "onsite"
-      ]
+      "values": ["remote", "hybrid", "onsite"]
     },
     "public.scrape_platform": {
       "name": "scrape_platform",
       "schema": "public",
-      "values": [
-        "linkedin",
-        "twitter",
-        "company-page"
-      ]
+      "values": ["linkedin", "twitter", "company-page"]
     },
     "public.scrape_status": {
       "name": "scrape_status",
       "schema": "public",
-      "values": [
-        "running",
-        "completed",
-        "failed",
-        "partial"
-      ]
+      "values": ["running", "completed", "failed", "partial"]
     },
     "public.source": {
       "name": "source",
       "schema": "public",
-      "values": [
-        "linkedin",
-        "twitter",
-        "company-page",
-        "manual"
-      ]
+      "values": ["linkedin", "twitter", "company-page", "manual"]
     }
   },
   "schemas": {},

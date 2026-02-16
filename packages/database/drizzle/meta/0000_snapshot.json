@@ -118,12 +118,8 @@
           "name": "applications_job_id_jobs_id_fk",
           "tableFrom": "applications",
           "tableTo": "jobs",
-          "columnsFrom": [
-            "job_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["job_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -131,12 +127,8 @@
           "name": "applications_candidate_id_user_id_fk",
           "tableFrom": "applications",
           "tableTo": "user",
-          "columnsFrom": [
-            "candidate_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["candidate_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -238,12 +230,8 @@
           "name": "account_user_id_user_id_fk",
           "tableFrom": "account",
           "tableTo": "user",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -315,12 +303,8 @@
           "name": "session_user_id_user_id_fk",
           "tableFrom": "session",
           "tableTo": "user",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -330,9 +314,7 @@
         "session_token_unique": {
           "name": "session_token_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "token"
-          ]
+          "columns": ["token"]
         }
       },
       "policies": {},
@@ -434,16 +416,12 @@
         "user_email_unique": {
           "name": "user_email_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
+          "columns": ["email"]
         },
         "user_username_unique": {
           "name": "user_username_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "username"
-          ]
+          "columns": ["username"]
         }
       },
       "policies": {},
@@ -607,12 +585,8 @@
           "name": "candidate_profiles_user_id_user_id_fk",
           "tableFrom": "candidate_profiles",
           "tableTo": "user",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -622,9 +596,7 @@
         "candidate_profiles_user_id_unique": {
           "name": "candidate_profiles_user_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "user_id"
-          ]
+          "columns": ["user_id"]
         }
       },
       "policies": {},
@@ -693,12 +665,8 @@
           "name": "companies_created_by_user_id_fk",
           "tableFrom": "companies",
           "tableTo": "user",
-          "columnsFrom": [
-            "created_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["created_by"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -778,12 +746,8 @@
           "name": "interview_availability_job_id_jobs_id_fk",
           "tableFrom": "interview_availability",
           "tableTo": "jobs",
-          "columnsFrom": [
-            "job_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["job_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -791,12 +755,8 @@
           "name": "interview_availability_recruiter_id_user_id_fk",
           "tableFrom": "interview_availability",
           "tableTo": "user",
-          "columnsFrom": [
-            "recruiter_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["recruiter_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -872,12 +832,8 @@
           "name": "job_distributions_job_id_jobs_id_fk",
           "tableFrom": "job_distributions",
           "tableTo": "jobs",
-          "columnsFrom": [
-            "job_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["job_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -885,12 +841,8 @@
           "name": "job_distributions_posted_by_user_id_fk",
           "tableFrom": "job_distributions",
           "tableTo": "user",
-          "columnsFrom": [
-            "posted_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["posted_by"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -950,12 +902,8 @@
           "name": "job_transparency_log_job_id_jobs_id_fk",
           "tableFrom": "job_transparency_log",
           "tableTo": "jobs",
-          "columnsFrom": [
-            "job_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["job_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1165,12 +1113,8 @@
           "name": "jobs_company_id_companies_id_fk",
           "tableFrom": "jobs",
           "tableTo": "companies",
-          "columnsFrom": [
-            "company_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["company_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         },
@@ -1178,12 +1122,8 @@
           "name": "jobs_recruiter_id_user_id_fk",
           "tableFrom": "jobs",
           "tableTo": "user",
-          "columnsFrom": [
-            "recruiter_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["recruiter_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1193,9 +1133,7 @@
         "jobs_slug_unique": {
           "name": "jobs_slug_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "slug"
-          ]
+          "columns": ["slug"]
         }
       },
       "policies": {},
@@ -1276,12 +1214,8 @@
           "name": "talent_pool_candidate_id_user_id_fk",
           "tableFrom": "talent_pool",
           "tableTo": "user",
-          "columnsFrom": [
-            "candidate_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["candidate_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         },
@@ -1289,12 +1223,8 @@
           "name": "talent_pool_source_job_id_jobs_id_fk",
           "tableFrom": "talent_pool",
           "tableTo": "jobs",
-          "columnsFrom": [
-            "source_job_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["source_job_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -1321,61 +1251,32 @@
     "public.user_role": {
       "name": "user_role",
       "schema": "public",
-      "values": [
-        "recruiter",
-        "candidate",
-        "admin"
-      ]
+      "values": ["recruiter", "candidate", "admin"]
     },
     "public.distribution_channel": {
       "name": "distribution_channel",
       "schema": "public",
-      "values": [
-        "hackhyre",
-        "linkedin",
-        "twitter",
-        "company_page",
-        "other"
-      ]
+      "values": ["hackhyre", "linkedin", "twitter", "company_page", "other"]
     },
     "public.distribution_status": {
       "name": "distribution_status",
       "schema": "public",
-      "values": [
-        "active",
-        "removed"
-      ]
+      "values": ["active", "removed"]
     },
     "public.employment_type": {
       "name": "employment_type",
       "schema": "public",
-      "values": [
-        "full_time",
-        "part_time",
-        "contract",
-        "internship"
-      ]
+      "values": ["full_time", "part_time", "contract", "internship"]
     },
     "public.experience_level": {
       "name": "experience_level",
       "schema": "public",
-      "values": [
-        "entry",
-        "mid",
-        "senior",
-        "lead",
-        "executive"
-      ]
+      "values": ["entry", "mid", "senior", "lead", "executive"]
     },
     "public.job_status": {
       "name": "job_status",
       "schema": "public",
-      "values": [
-        "draft",
-        "open",
-        "paused",
-        "filled"
-      ]
+      "values": ["draft", "open", "paused", "filled"]
     }
   },
   "schemas": {},

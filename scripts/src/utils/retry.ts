@@ -6,7 +6,7 @@ export interface RetryOptions {
 
 export async function withRetry<T>(
   fn: () => Promise<T>,
-  options: RetryOptions = {}
+  options: RetryOptions = {},
 ): Promise<T> {
   const { maxAttempts = 3, baseDelayMs = 1000, maxDelayMs = 30_000 } = options;
 
@@ -18,11 +18,11 @@ export async function withRetry<T>(
 
       const delay = Math.min(
         baseDelayMs * Math.pow(2, attempt - 1) + Math.random() * 500,
-        maxDelayMs
+        maxDelayMs,
       );
       console.warn(
         `  Attempt ${attempt}/${maxAttempts} failed. Retrying in ${Math.round(delay)}ms...`,
-        error instanceof Error ? error.message : error
+        error instanceof Error ? error.message : error,
       );
       await new Promise((resolve) => setTimeout(resolve, delay));
     }

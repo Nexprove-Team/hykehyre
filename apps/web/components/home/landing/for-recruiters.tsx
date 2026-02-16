@@ -30,8 +30,7 @@ interface FeatureCard {
 const CARDS: FeatureCard[] = [
   {
     title: 'AI-Ranked Candidates',
-    description:
-      'Pre-scored by relevance so you review the best fits first.',
+    description: 'Pre-scored by relevance so you review the best fits first.',
     icon: Ranking,
   },
   {
@@ -86,7 +85,7 @@ export function ForRecruiters() {
           transition={{ duration: 0.5 }}
           className="mb-14 text-center"
         >
-          <p className="mb-2 text-xs font-semibold tracking-widest uppercase text-[oklch(0.82_0.22_155)]">
+          <p className="mb-2 text-xs font-semibold tracking-widest text-[oklch(0.82_0.22_155)] uppercase">
             For Employers
           </p>
           <h2 className="font-mono text-3xl font-bold tracking-tight text-white sm:text-4xl">

@@ -7,7 +7,7 @@ const JOB_KEYWORDS =
 export function parseGenericJobs(
   html: string,
   companyName: string,
-  sourceUrl: string
+  sourceUrl: string,
 ): ScrapeResult["jobs"] {
   const $ = cheerio.load(html);
   const jobs: ScrapeResult["jobs"] = [];

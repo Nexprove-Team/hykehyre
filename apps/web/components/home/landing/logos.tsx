@@ -19,7 +19,7 @@ function LogoPlaceholder({ name }: { name: string }) {
   return (
     <div className="text-muted-foreground/40 flex items-center gap-2 px-6 select-none">
       <div className="bg-muted-foreground/10 h-7 w-7 shrink-0 rounded-lg" />
-      <span className="whitespace-nowrap text-sm font-semibold tracking-tight">
+      <span className="text-sm font-semibold tracking-tight whitespace-nowrap">
         {name}
       </span>
     </div>

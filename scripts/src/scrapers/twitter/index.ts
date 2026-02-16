@@ -16,7 +16,7 @@ export class TwitterScraper implements Scraper {
     const allRecruiters: ScrapeResult["recruiters"] = [];
 
     const perQueryLimit = Math.ceil(
-      (options.maxResults ?? 50) / queries.length
+      (options.maxResults ?? 50) / queries.length,
     );
 
     for (const query of queries) {

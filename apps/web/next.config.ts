@@ -1,5 +1,5 @@
-import "./env/server"
-import "./env/client"
+import './env/server'
+import './env/client'
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
@@ -12,7 +12,7 @@ const nextConfig: NextConfig = {
   },
   typescript: {
     ignoreBuildErrors: process.env.NODE_ENV === 'production',
-  }
+  },
 }
 
 export default nextConfig

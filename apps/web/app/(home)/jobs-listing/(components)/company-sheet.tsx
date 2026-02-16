@@ -1,11 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import {
-  Sheet,
-  SheetContent,
-  SheetTitle,
-} from '@hackhyre/ui/components/sheet'
+import { Sheet, SheetContent, SheetTitle } from '@hackhyre/ui/components/sheet'
 import { Badge } from '@hackhyre/ui/components/badge'
 import { Button } from '@hackhyre/ui/components/button'
 import { Separator } from '@hackhyre/ui/components/separator'
@@ -73,7 +69,7 @@ const MOCK_COMPANIES: Record<string, CompanyProfile> = {
     name: 'Google',
     industry: 'Technology & Search',
     description:
-      'Google is a global technology leader specializing in search, online advertising, cloud computing, and software. Our mission is to organize the world\'s information and make it universally accessible and useful.',
+      "Google is a global technology leader specializing in search, online advertising, cloud computing, and software. Our mission is to organize the world's information and make it universally accessible and useful.",
     founded: '1998',
     employees: '180,000+',
     headquarters: 'Mountain View, CA',
@@ -133,7 +129,7 @@ const MOCK_COMPANIES: Record<string, CompanyProfile> = {
     name: 'Spotify',
     industry: 'Music & Audio',
     description:
-      'Spotify is the world\'s largest audio streaming platform, offering millions of songs, podcasts, and audiobooks. We are transforming how people discover and enjoy audio content.',
+      "Spotify is the world's largest audio streaming platform, offering millions of songs, podcasts, and audiobooks. We are transforming how people discover and enjoy audio content.",
     founded: '2006',
     employees: '9,000+',
     headquarters: 'Stockholm, Sweden',
@@ -157,7 +153,7 @@ const MOCK_COMPANIES: Record<string, CompanyProfile> = {
     name: 'Netflix',
     industry: 'Entertainment & Streaming',
     description:
-      'Netflix is the world\'s leading streaming entertainment service with over 230 million paid memberships. We offer a wide variety of TV series, documentaries, feature films, and games across genres.',
+      "Netflix is the world's leading streaming entertainment service with over 230 million paid memberships. We offer a wide variety of TV series, documentaries, feature films, and games across genres.",
     founded: '1997',
     employees: '13,000+',
     headquarters: 'Los Gatos, CA',
@@ -302,9 +298,7 @@ export function CompanySheet() {
         >
           <SheetTitle className="sr-only">Company Profile</SheetTitle>
           <div className="flex h-full items-center justify-center">
-            <p className="text-[13px] text-neutral-500">
-              Company not found
-            </p>
+            <p className="text-[13px] text-neutral-500">Company not found</p>
           </div>
         </SheetContent>
       </Sheet>
@@ -389,7 +383,7 @@ export function CompanySheet() {
             <div className="mt-4 flex gap-2">
               <Button
                 size="sm"
-                className="flex-1 gap-2 rounded-lg bg-primary text-[12px] font-semibold text-neutral-900 hover:bg-primary/90"
+                className="bg-primary hover:bg-primary/90 flex-1 gap-2 rounded-lg text-[12px] font-semibold text-neutral-900"
               >
                 <Global size={14} variant="Linear" />
                 Visit Website

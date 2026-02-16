@@ -1,52 +1,52 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import { toast } from "sonner";
-import { motion } from "motion/react";
+import { useState } from 'react'
+import { toast } from 'sonner'
+import { motion } from 'motion/react'
 
-import { Button } from "@hackhyre/ui/components/button";
-import { Input } from "@hackhyre/ui/components/input";
-import { Textarea } from "@hackhyre/ui/components/textarea";
-import { Switch } from "@hackhyre/ui/components/switch";
-import { Label } from "@hackhyre/ui/components/label";
+import { Button } from '@hackhyre/ui/components/button'
+import { Input } from '@hackhyre/ui/components/input'
+import { Textarea } from '@hackhyre/ui/components/textarea'
+import { Switch } from '@hackhyre/ui/components/switch'
+import { Label } from '@hackhyre/ui/components/label'
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
-} from "@hackhyre/ui/components/card";
+} from '@hackhyre/ui/components/card'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@hackhyre/ui/components/select";
-import { Edit, TickCircle, ArrowLeft } from "@hackhyre/ui/icons";
+} from '@hackhyre/ui/components/select'
+import { Edit, TickCircle, ArrowLeft } from '@hackhyre/ui/icons'
 
-import { TagInput } from "./tag-input";
-import { SalaryRangeInput } from "./salary-range-input";
-import type { MOCK_AI_PARSED_JOB } from "@/lib/mock-data";
+import { TagInput } from './tag-input'
+import { SalaryRangeInput } from './salary-range-input'
+import type { MOCK_AI_PARSED_JOB } from '@/lib/mock-data'
 
-type ParsedJob = typeof MOCK_AI_PARSED_JOB;
+type ParsedJob = typeof MOCK_AI_PARSED_JOB
 
 interface AiParseResultProps {
-  data: ParsedJob;
-  onBack: () => void;
+  data: ParsedJob
+  onBack: () => void
 }
 
 export function AiParseResult({ data, onBack }: AiParseResultProps) {
-  const [editData, setEditData] = useState(data);
-  const [isEditing, setIsEditing] = useState(false);
+  const [editData, setEditData] = useState(data)
+  const [isEditing, setIsEditing] = useState(false)
 
   function handleCreate() {
-    toast.success("Job created successfully!", {
+    toast.success('Job created successfully!', {
       description: `"${editData.title}" has been saved as a draft.`,
-    });
+    })
   }
 
   function update<K extends keyof ParsedJob>(key: K, value: ParsedJob[K]) {
-    setEditData((prev) => ({ ...prev, [key]: value }));
+    setEditData((prev) => ({ ...prev, [key]: value }))
   }
 
   return (
@@ -62,7 +62,9 @@ export function AiParseResult({ data, onBack }: AiParseResultProps) {
             <ArrowLeft size={18} variant="Linear" />
           </Button>
           <div>
-            <h3 className="font-mono text-lg font-bold">AI Analysis Complete</h3>
+            <h3 className="font-mono text-lg font-bold">
+              AI Analysis Complete
+            </h3>
             <p className="text-muted-foreground text-sm">
               Review and edit the extracted job details
             </p>
@@ -74,7 +76,7 @@ export function AiParseResult({ data, onBack }: AiParseResultProps) {
           onClick={() => setIsEditing(!isEditing)}
         >
           <Edit size={14} variant="Linear" className="mr-1.5" />
-          {isEditing ? "Done Editing" : "Edit Fields"}
+          {isEditing ? 'Done Editing' : 'Edit Fields'}
         </Button>
       </div>
 
@@ -90,7 +92,7 @@ export function AiParseResult({ data, onBack }: AiParseResultProps) {
               {isEditing ? (
                 <Input
                   value={editData.title}
-                  onChange={(e) => update("title", e.target.value)}
+                  onChange={(e) => update('title', e.target.value)}
                 />
               ) : (
                 <p className="font-medium">{editData.title}</p>
@@ -101,7 +103,7 @@ export function AiParseResult({ data, onBack }: AiParseResultProps) {
               {isEditing ? (
                 <Textarea
                   value={editData.description}
-                  onChange={(e) => update("description", e.target.value)}
+                  onChange={(e) => update('description', e.target.value)}
                   rows={4}
                 />
               ) : (
@@ -124,7 +126,9 @@ export function AiParseResult({ data, onBack }: AiParseResultProps) {
               {isEditing ? (
                 <Select
                   value={editData.employmentType}
-                  onValueChange={(v) => update("employmentType", v as ParsedJob["employmentType"])}
+                  onValueChange={(v) =>
+                    update('employmentType', v as ParsedJob['employmentType'])
+                  }
                 >
                   <SelectTrigger>
                     <SelectValue />
@@ -138,7 +142,7 @@ export function AiParseResult({ data, onBack }: AiParseResultProps) {
                 </Select>
               ) : (
                 <p className="text-sm capitalize">
-                  {editData.employmentType.replace("_", " ")}
+                  {editData.employmentType.replace('_', ' ')}
                 </p>
               )}
             </div>
@@ -147,7 +151,9 @@ export function AiParseResult({ data, onBack }: AiParseResultProps) {
               {isEditing ? (
                 <Select
                   value={editData.experienceLevel}
-                  onValueChange={(v) => update("experienceLevel", v as ParsedJob["experienceLevel"])}
+                  onValueChange={(v) =>
+                    update('experienceLevel', v as ParsedJob['experienceLevel'])
+                  }
                 >
                   <SelectTrigger>
                     <SelectValue />
@@ -178,7 +184,7 @@ export function AiParseResult({ data, onBack }: AiParseResultProps) {
               {isEditing ? (
                 <Input
                   value={editData.location}
-                  onChange={(e) => update("location", e.target.value)}
+                  onChange={(e) => update('location', e.target.value)}
                 />
               ) : (
                 <p className="text-sm">{editData.location}</p>
@@ -188,7 +194,7 @@ export function AiParseResult({ data, onBack }: AiParseResultProps) {
               <Label className="text-xs">Remote</Label>
               <Switch
                 checked={editData.isRemote}
-                onCheckedChange={(v) => update("isRemote", v)}
+                onCheckedChange={(v) => update('isRemote', v)}
                 disabled={!isEditing}
               />
             </div>
@@ -196,8 +202,8 @@ export function AiParseResult({ data, onBack }: AiParseResultProps) {
               <SalaryRangeInput
                 minValue={editData.salaryMin}
                 maxValue={editData.salaryMax}
-                onMinChange={(v) => update("salaryMin", v ?? 0)}
-                onMaxChange={(v) => update("salaryMax", v ?? 0)}
+                onMinChange={(v) => update('salaryMin', v ?? 0)}
+                onMaxChange={(v) => update('salaryMax', v ?? 0)}
               />
             ) : (
               <div>
@@ -222,7 +228,7 @@ export function AiParseResult({ data, onBack }: AiParseResultProps) {
               {isEditing ? (
                 <TagInput
                   value={editData.requirements}
-                  onChange={(v) => update("requirements", v)}
+                  onChange={(v) => update('requirements', v)}
                 />
               ) : (
                 <ul className="text-muted-foreground list-inside list-disc space-y-0.5 text-sm">
@@ -237,7 +243,7 @@ export function AiParseResult({ data, onBack }: AiParseResultProps) {
               {isEditing ? (
                 <TagInput
                   value={editData.responsibilities}
-                  onChange={(v) => update("responsibilities", v)}
+                  onChange={(v) => update('responsibilities', v)}
                 />
               ) : (
                 <ul className="text-muted-foreground list-inside list-disc space-y-0.5 text-sm">
@@ -252,7 +258,7 @@ export function AiParseResult({ data, onBack }: AiParseResultProps) {
               {isEditing ? (
                 <TagInput
                   value={editData.skills}
-                  onChange={(v) => update("skills", v)}
+                  onChange={(v) => update('skills', v)}
                 />
               ) : (
                 <div className="flex flex-wrap gap-1.5">
@@ -281,5 +287,5 @@ export function AiParseResult({ data, onBack }: AiParseResultProps) {
         </Button>
       </div>
     </motion.div>
-  );
+  )
 }

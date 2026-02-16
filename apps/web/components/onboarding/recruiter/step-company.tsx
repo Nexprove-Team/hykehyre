@@ -1,13 +1,13 @@
-"use client";
+'use client'
 
-import { useForm } from "react-hook-form";
-import { z } from "zod/v4";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Global, Gallery, DocumentText } from "@hackhyre/ui/icons";
+import { useForm } from 'react-hook-form'
+import { z } from 'zod/v4'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Global, Gallery, DocumentText } from '@hackhyre/ui/icons'
 
-import { Button } from "@hackhyre/ui/components/button";
-import { Input } from "@hackhyre/ui/components/input";
-import { Textarea } from "@hackhyre/ui/components/textarea";
+import { Button } from '@hackhyre/ui/components/button'
+import { Input } from '@hackhyre/ui/components/input'
+import { Textarea } from '@hackhyre/ui/components/textarea'
 import {
   Form,
   FormControl,
@@ -15,17 +15,17 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@hackhyre/ui/components/form";
-import type { StepProps } from "../onboarding-wizard";
+} from '@hackhyre/ui/components/form'
+import type { StepProps } from '../onboarding-wizard'
 
 const schema = z.object({
-  companyName: z.string().min(1, "Company name is required"),
+  companyName: z.string().min(1, 'Company name is required'),
   companyWebsite: z.string().optional(),
   companyLogoUrl: z.string().optional(),
   companyDescription: z.string().optional(),
-});
+})
 
-type Values = z.infer<typeof schema>;
+type Values = z.infer<typeof schema>
 
 export function RecruiterStepCompany({
   user,
@@ -36,16 +36,16 @@ export function RecruiterStepCompany({
   const form = useForm<Values>({
     resolver: zodResolver(schema),
     defaultValues: {
-      companyName: data.companyName ?? "",
-      companyWebsite: data.companyWebsite ?? "",
-      companyLogoUrl: data.companyLogoUrl ?? "",
-      companyDescription: data.companyDescription ?? "",
+      companyName: data.companyName ?? '',
+      companyWebsite: data.companyWebsite ?? '',
+      companyLogoUrl: data.companyLogoUrl ?? '',
+      companyDescription: data.companyDescription ?? '',
     },
-  });
+  })
 
   function onSubmit(values: Values) {
-    onUpdate(values);
-    onNext();
+    onUpdate(values)
+    onNext()
   }
 
   return (
@@ -55,8 +55,8 @@ export function RecruiterStepCompany({
           Tell us about your company
         </h2>
         <p className="text-muted-foreground text-sm">
-          Help candidates learn about your organization,{" "}
-          {user.name.split(" ")[0]}
+          Help candidates learn about your organization,{' '}
+          {user.name.split(' ')[0]}
         </p>
       </div>
 
@@ -103,10 +103,7 @@ export function RecruiterStepCompany({
                   Logo URL
                 </FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder="https://acme.com/logo.png"
-                    {...field}
-                  />
+                  <Input placeholder="https://acme.com/logo.png" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -140,5 +137,5 @@ export function RecruiterStepCompany({
         </form>
       </Form>
     </div>
-  );
+  )
 }

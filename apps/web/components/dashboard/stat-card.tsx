@@ -1,22 +1,25 @@
-"use client";
+'use client'
 
-import { motion } from "motion/react";
-import {
-  Card,
-  CardContent,
-} from "@hackhyre/ui/components/card";
-import { TrendUp } from "@hackhyre/ui/icons";
-import type { Icon } from "@hackhyre/ui/icons";
+import { motion } from 'motion/react'
+import { Card, CardContent } from '@hackhyre/ui/components/card'
+import { TrendUp } from '@hackhyre/ui/icons'
+import type { Icon } from '@hackhyre/ui/icons'
 
 interface StatCardProps {
-  icon: Icon;
-  label: string;
-  value: string;
-  trend: string;
-  index?: number;
+  icon: Icon
+  label: string
+  value: string
+  trend: string
+  index?: number
 }
 
-export function StatCard({ icon: Icon, label, value, trend, index = 0 }: StatCardProps) {
+export function StatCard({
+  icon: Icon,
+  label,
+  value,
+  trend,
+  index = 0,
+}: StatCardProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -41,5 +44,5 @@ export function StatCard({ icon: Icon, label, value, trend, index = 0 }: StatCar
         </CardContent>
       </Card>
     </motion.div>
-  );
+  )
 }

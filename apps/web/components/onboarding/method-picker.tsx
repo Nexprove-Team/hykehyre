@@ -1,34 +1,34 @@
-"use client";
+'use client'
 
-import { motion } from "motion/react";
-import { MagicStar, DocumentText, Edit, ArrowLeft } from "@hackhyre/ui/icons";
-import { cn } from "@hackhyre/ui/lib/utils";
-import type { OnboardingMethod } from "@/actions/onboarding";
+import { motion } from 'motion/react'
+import { MagicStar, DocumentText, Edit, ArrowLeft } from '@hackhyre/ui/icons'
+import { cn } from '@hackhyre/ui/lib/utils'
+import type { OnboardingMethod } from '@/actions/onboarding'
 
 interface MethodPickerProps {
-  onSelect: (method: OnboardingMethod) => void;
+  onSelect: (method: OnboardingMethod) => void
 }
 
 const methods = [
   {
-    id: "ai-chat" as const,
+    id: 'ai-chat' as const,
     icon: MagicStar,
-    title: "Chat with Hyre",
-    description: "Our AI coach will guide you through a quick conversation",
+    title: 'Chat with Hyre',
+    description: 'Our AI coach will guide you through a quick conversation',
   },
   {
-    id: "resume" as const,
+    id: 'resume' as const,
     icon: DocumentText,
-    title: "Upload Resume",
+    title: 'Upload Resume',
     description: "We'll extract your info from a PDF or Word doc",
   },
   {
-    id: "manual" as const,
+    id: 'manual' as const,
     icon: Edit,
-    title: "Fill in Manually",
-    description: "Complete a step-by-step form at your own pace",
+    title: 'Fill in Manually',
+    description: 'Complete a step-by-step form at your own pace',
   },
-];
+]
 
 export function MethodPicker({ onSelect }: MethodPickerProps) {
   return (
@@ -55,16 +55,12 @@ export function MethodPicker({ onSelect }: MethodPickerProps) {
             type="button"
             onClick={() => onSelect(method.id)}
             className={cn(
-              "border-border bg-card flex w-full items-center gap-4 rounded-xl border p-5 text-left transition-all duration-200",
-              "hover:border-primary/40 hover:shadow-[0_0_24px_oklch(0.82_0.22_155/0.1)]"
+              'border-border bg-card flex w-full items-center gap-4 rounded-xl border p-5 text-left transition-all duration-200',
+              'hover:border-primary/40 hover:shadow-[0_0_24px_oklch(0.82_0.22_155/0.1)]'
             )}
           >
             <div className="bg-primary/10 flex h-12 w-12 shrink-0 items-center justify-center rounded-xl">
-              <method.icon
-                size={24}
-                variant="Bulk"
-                className="text-primary"
-              />
+              <method.icon size={24} variant="Bulk" className="text-primary" />
             </div>
             <div className="min-w-0">
               <p className="font-mono text-sm font-semibold">{method.title}</p>
@@ -81,5 +77,5 @@ export function MethodPicker({ onSelect }: MethodPickerProps) {
         ))}
       </div>
     </motion.div>
-  );
+  )
 }

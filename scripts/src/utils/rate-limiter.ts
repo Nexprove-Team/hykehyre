@@ -10,7 +10,7 @@ function refill(): void {
   const rate = config.RATE_LIMIT_REQUESTS_PER_MINUTE / 60_000;
   tokens = Math.min(
     config.RATE_LIMIT_REQUESTS_PER_MINUTE,
-    (tokens ?? config.RATE_LIMIT_REQUESTS_PER_MINUTE) + elapsed * rate
+    (tokens ?? config.RATE_LIMIT_REQUESTS_PER_MINUTE) + elapsed * rate,
   );
   lastRefill = now;
 }

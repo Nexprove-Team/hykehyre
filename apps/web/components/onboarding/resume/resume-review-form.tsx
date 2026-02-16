@@ -1,31 +1,31 @@
-"use client";
+'use client'
 
-import { useState, useTransition } from "react";
-import { motion } from "motion/react";
-import { Loader2 } from "lucide-react";
-import { Button } from "@hackhyre/ui/components/button";
-import { Input } from "@hackhyre/ui/components/input";
-import { Label } from "@hackhyre/ui/components/label";
-import { Textarea } from "@hackhyre/ui/components/textarea";
-import { Switch } from "@hackhyre/ui/components/switch";
-import { saveCandidateProfile } from "@/actions/onboarding";
-import type { SaveCandidateProfileInput } from "@/actions/onboarding";
+import { useState, useTransition } from 'react'
+import { motion } from 'motion/react'
+import { Loader2 } from 'lucide-react'
+import { Button } from '@hackhyre/ui/components/button'
+import { Input } from '@hackhyre/ui/components/input'
+import { Label } from '@hackhyre/ui/components/label'
+import { Textarea } from '@hackhyre/ui/components/textarea'
+import { Switch } from '@hackhyre/ui/components/switch'
+import { saveCandidateProfile } from '@/actions/onboarding'
+import type { SaveCandidateProfileInput } from '@/actions/onboarding'
 
 interface ParsedData {
-  headline?: string;
-  bio?: string;
-  skills?: string[];
-  experienceYears?: number;
-  location?: string;
-  linkedinUrl?: string;
-  githubUrl?: string;
-  portfolioUrl?: string;
+  headline?: string
+  bio?: string
+  skills?: string[]
+  experienceYears?: number
+  location?: string
+  linkedinUrl?: string
+  githubUrl?: string
+  portfolioUrl?: string
 }
 
 interface ResumeReviewFormProps {
-  parsed: ParsedData;
-  resumeUrl: string;
-  onBack: () => void;
+  parsed: ParsedData
+  resumeUrl: string
+  onBack: () => void
 }
 
 export function ResumeReviewForm({
@@ -33,29 +33,30 @@ export function ResumeReviewForm({
   resumeUrl,
   onBack,
 }: ResumeReviewFormProps) {
-  const [isPending, startTransition] = useTransition();
-  const [headline, setHeadline] = useState(parsed.headline ?? "");
-  const [bio, setBio] = useState(parsed.bio ?? "");
-  const [skillsText, setSkillsText] = useState(
-    (parsed.skills ?? []).join(", ")
-  );
+  const [isPending, startTransition] = useTransition()
+  const [headline, setHeadline] = useState(parsed.headline ?? '')
+  const [bio, setBio] = useState(parsed.bio ?? '')
+  const [skillsText, setSkillsText] = useState((parsed.skills ?? []).join(', '))
   const [experienceYears, setExperienceYears] = useState(
-    parsed.experienceYears?.toString() ?? ""
-  );
-  const [location, setLocation] = useState(parsed.location ?? "");
-  const [isOpenToWork, setIsOpenToWork] = useState(true);
-  const [linkedinUrl, setLinkedinUrl] = useState(parsed.linkedinUrl ?? "");
-  const [githubUrl, setGithubUrl] = useState(parsed.githubUrl ?? "");
-  const [portfolioUrl, setPortfolioUrl] = useState(parsed.portfolioUrl ?? "");
+    parsed.experienceYears?.toString() ?? ''
+  )
+  const [location, setLocation] = useState(parsed.location ?? '')
+  const [isOpenToWork, setIsOpenToWork] = useState(true)
+  const [linkedinUrl, setLinkedinUrl] = useState(parsed.linkedinUrl ?? '')
+  const [githubUrl, setGithubUrl] = useState(parsed.githubUrl ?? '')
+  const [portfolioUrl, setPortfolioUrl] = useState(parsed.portfolioUrl ?? '')
 
   function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
+    e.preventDefault()
 
     const input: SaveCandidateProfileInput = {
       headline: headline || undefined,
       bio: bio || undefined,
       skills: skillsText
-        ? skillsText.split(",").map((s) => s.trim()).filter(Boolean)
+        ? skillsText
+            .split(',')
+            .map((s) => s.trim())
+            .filter(Boolean)
         : undefined,
       experienceYears: experienceYears
         ? parseInt(experienceYears, 10)
@@ -66,11 +67,11 @@ export function ResumeReviewForm({
       githubUrl: githubUrl || undefined,
       portfolioUrl: portfolioUrl || undefined,
       resumeUrl,
-    };
+    }
 
     startTransition(() => {
-      saveCandidateProfile(input);
-    });
+      saveCandidateProfile(input)
+    })
   }
 
   return (
@@ -201,11 +202,11 @@ export function ResumeReviewForm({
                 Saving...
               </>
             ) : (
-              "Save Profile"
+              'Save Profile'
             )}
           </Button>
         </div>
       </form>
     </motion.div>
-  );
+  )
 }

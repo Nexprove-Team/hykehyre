@@ -48,7 +48,9 @@ export function FeaturedSidebar() {
       <div>
         <div className="mb-3 flex items-center gap-2">
           <Star size={16} variant="Bold" className="text-amber-500" />
-          <h3 className="text-sm font-semibold text-neutral-900">Featured Jobs</h3>
+          <h3 className="text-sm font-semibold text-neutral-900">
+            Featured Jobs
+          </h3>
         </div>
         <div className="space-y-2.5">
           {featuredJobs.map((job) => (
@@ -61,7 +63,9 @@ export function FeaturedSidebar() {
       <div>
         <div className="mb-3 flex items-center gap-2">
           <TrendUp size={16} variant="Bold" className="text-primary" />
-          <h3 className="text-sm font-semibold text-neutral-900">Top Recruiters</h3>
+          <h3 className="text-sm font-semibold text-neutral-900">
+            Top Recruiters
+          </h3>
         </div>
         <div className="space-y-1.5">
           {TOP_RECRUITERS.map((recruiter) => (
@@ -84,7 +88,9 @@ export function FeaturedSidebar() {
                 {recruiter.name === 'Apple' ? (
                   <AppleLogoSmall />
                 ) : (
-                  <span className="text-[11px] font-bold">{recruiter.logoLetter}</span>
+                  <span className="text-[11px] font-bold">
+                    {recruiter.logoLetter}
+                  </span>
                 )}
               </div>
               <div className="min-w-0 flex-1">

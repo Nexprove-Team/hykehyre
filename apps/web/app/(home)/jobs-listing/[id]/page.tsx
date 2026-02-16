@@ -359,7 +359,7 @@ export default function JobDetailPage({
               </Button>
               <Button
                 size="sm"
-                className="gap-2 rounded-lg bg-primary text-[13px] font-semibold text-neutral-900 hover:bg-primary/90"
+                className="bg-primary hover:bg-primary/90 gap-2 rounded-lg text-[13px] font-semibold text-neutral-900"
                 onClick={() => openApplySheet(job.id, job.title, job.company)}
               >
                 <Send size={14} variant="Linear" />
@@ -667,8 +667,10 @@ export default function JobDetailPage({
                       We&apos;ll review your application and get back to you.
                     </p>
                     <Button
-                      className="w-full gap-2 rounded-lg bg-primary font-semibold text-neutral-900 hover:bg-primary/90"
-                      onClick={() => openApplySheet(job.id, job.title, job.company)}
+                      className="bg-primary hover:bg-primary/90 w-full gap-2 rounded-lg font-semibold text-neutral-900"
+                      onClick={() =>
+                        openApplySheet(job.id, job.title, job.company)
+                      }
                     >
                       <Send size={16} variant="Linear" />
                       Apply Now

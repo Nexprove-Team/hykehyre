@@ -32,7 +32,7 @@ interface NubelaCustomerListingResponse {
  */
 export async function searchByCompanyWebsite(
   website: string,
-  maxResults: number
+  maxResults: number,
 ): Promise<{
   recruiters: ScrapeResult["recruiters"];
   companies: Array<{
@@ -58,22 +58,21 @@ export async function searchByCompanyWebsite(
 
   const data = await withRetry(() =>
     rateLimited(async () => {
-      const res = await fetch(
-        `${NUBELA_BASE}/customer/listing?${params}`,
-        {
-          headers: {
-            Authorization: `Bearer ${config.NUBELA_API_KEY}`,
-          },
-        }
-      );
+      const res = await fetch(`${NUBELA_BASE}/customer/listing?${params}`, {
+        headers: {
+          Authorization: `Bearer ${config.NUBELA_API_KEY}`,
+        },
+      });
       if (!res.ok) {
         throw new Error(`NinjaPear ${res.status}: ${await res.text()}`);
       }
       return res.json() as Promise<NubelaCustomerListingResponse>;
-    })
+    }),
   );
 
-  log.info(`Found ${data.total_count ?? data.customers?.length ?? 0} customers`);
+  log.info(
+    `Found ${data.total_count ?? data.customers?.length ?? 0} customers`,
+  );
 
   const customers = (data.customers ?? []).slice(0, maxResults);
   const companies: Array<{

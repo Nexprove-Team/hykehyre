@@ -44,11 +44,7 @@ export const experienceLevelEnum = pgEnum("experience_level", [
   "executive",
 ]);
 
-export const jobStatusEnum = pgEnum("job_status", [
-  "open",
-  "paused",
-  "filled",
-]);
+export const jobStatusEnum = pgEnum("job_status", ["open", "paused", "filled"]);
 
 export const companySizeEnum = pgEnum("company_size", [
   "1-10",
@@ -98,7 +94,7 @@ export const recruiters = pgTable(
     uniqueIndex("recruiters_linkedin_url_idx").on(table.linkedinUrl),
     index("recruiters_full_name_company_idx").on(table.fullName, table.company),
     index("recruiters_company_idx").on(table.company),
-  ]
+  ],
 );
 
 // ── Companies ──────────────────────────────────────────────
@@ -149,7 +145,7 @@ export const jobListings = pgTable(
     uniqueIndex("job_listings_source_url_idx").on(table.sourceUrl),
     index("job_listings_title_idx").on(table.title),
     index("job_listings_company_idx").on(table.company),
-  ]
+  ],
 );
 
 // ── Scrape Runs (audit trail) ──────────────────────────────

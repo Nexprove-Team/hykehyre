@@ -21,7 +21,7 @@ export function getConfig(): Config {
       console.error(
         result.error.issues
           .map((i) => `  ${i.path.join(".")}: ${i.message}`)
-          .join("\n")
+          .join("\n"),
       );
       process.exit(1);
     }

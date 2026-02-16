@@ -105,7 +105,9 @@ export default function JobsPage() {
 
   // Intersection observer for infinite scroll
   const loadMore = useCallback(() => {
-    setVisibleCount((prev) => Math.min(prev + PAGE_SIZE, jobsWithSaveState.length))
+    setVisibleCount((prev) =>
+      Math.min(prev + PAGE_SIZE, jobsWithSaveState.length)
+    )
   }, [jobsWithSaveState.length])
 
   useEffect(() => {

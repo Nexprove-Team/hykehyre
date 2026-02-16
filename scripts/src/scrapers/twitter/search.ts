@@ -78,7 +78,7 @@ function extractJobTypes(bio: string): string[] {
 
 export async function searchHiringTweets(
   query: string,
-  maxResults: number
+  maxResults: number,
 ): Promise<ScrapeResult["recruiters"]> {
   const config = getConfig();
   if (!config.TWITTER_BEARER_TOKEN) {
@@ -99,23 +99,22 @@ export async function searchHiringTweets(
 
   const data = await withRetry(() =>
     rateLimited(async () => {
-      const res = await fetch(
-        `${X_API_BASE}/tweets/search/recent?${params}`,
-        {
-          headers: {
-            Authorization: `Bearer ${config.TWITTER_BEARER_TOKEN}`,
-          },
-        }
-      );
+      const res = await fetch(`${X_API_BASE}/tweets/search/recent?${params}`, {
+        headers: {
+          Authorization: `Bearer ${config.TWITTER_BEARER_TOKEN}`,
+        },
+      });
       if (!res.ok) {
         throw new Error(`X API ${res.status}: ${await res.text()}`);
       }
       return res.json() as Promise<XSearchResponse>;
-    })
+    }),
   );
 
   const users = data.includes?.users ?? [];
-  log.info(`Found ${users.length} unique users from ${data.meta?.result_count ?? 0} tweets`);
+  log.info(
+    `Found ${users.length} unique users from ${data.meta?.result_count ?? 0} tweets`,
+  );
 
   // Deduplicate by username
   const seen = new Set<string>();

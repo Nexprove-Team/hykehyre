@@ -67,7 +67,12 @@ function MatchingIllustration() {
             className="fill-white stroke-neutral-200 dark:fill-neutral-900 dark:stroke-neutral-700"
             strokeWidth="1.5"
           />
-          <circle cx="100" cy="188" r="14" className="fill-neutral-300 dark:fill-neutral-600" />
+          <circle
+            cx="100"
+            cy="188"
+            r="14"
+            className="fill-neutral-300 dark:fill-neutral-600"
+          />
           <path
             d="M78 218c0-12.15 9.85-22 22-22s22 9.85 22 22"
             className="stroke-neutral-300 dark:stroke-neutral-600"
@@ -253,7 +258,7 @@ export function Hero() {
             <motion.p
               variants={fadeUp}
               transition={{ duration: 0.5 }}
-              className="text-muted-foreground mt-6 max-w-lg text-base leading-relaxed sm:text-lg lg:mx-0 mx-auto"
+              className="text-muted-foreground mx-auto mt-6 max-w-lg text-base leading-relaxed sm:text-lg lg:mx-0"
             >
               HackHyre uses AI to connect ambitious professionals with
               forward-thinking companies. No keyword games, no guesswork — just

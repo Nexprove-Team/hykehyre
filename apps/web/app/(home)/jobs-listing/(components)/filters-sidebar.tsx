@@ -5,10 +5,7 @@ import { Button } from '@hackhyre/ui/components/button'
 import { Checkbox } from '@hackhyre/ui/components/checkbox'
 import { ArrowLeft } from '@hackhyre/ui/icons'
 import { useJobListingFilter } from './use-job-listing-filter'
-import {
-  WORKING_SCHEDULE_OPTIONS,
-  EMPLOYMENT_TYPE_OPTIONS,
-} from './mock-data'
+import { WORKING_SCHEDULE_OPTIONS, EMPLOYMENT_TYPE_OPTIONS } from './mock-data'
 
 // ── Promo Card ─────────────────────────────────────────────────────────
 
@@ -24,8 +21,22 @@ function PromoCard() {
         <circle cx="150" cy="50" r="160" stroke="white" strokeWidth="0.5" />
         <circle cx="150" cy="50" r="200" stroke="white" strokeWidth="0.5" />
         <circle cx="150" cy="50" r="240" stroke="white" strokeWidth="0.5" />
-        <line x1="0" y1="180" x2="300" y2="120" stroke="white" strokeWidth="0.5" />
-        <line x1="0" y1="220" x2="300" y2="160" stroke="white" strokeWidth="0.5" />
+        <line
+          x1="0"
+          y1="180"
+          x2="300"
+          y2="120"
+          stroke="white"
+          strokeWidth="0.5"
+        />
+        <line
+          x1="0"
+          y1="220"
+          x2="300"
+          y2="160"
+          stroke="white"
+          strokeWidth="0.5"
+        />
       </svg>
 
       <div className="bg-primary/20 mb-5 h-20 w-20 rounded-2xl" />
@@ -35,7 +46,11 @@ function PromoCard() {
         <span className="text-primary">HackHyre</span>
       </h3>
 
-      <Button className="mt-4 rounded-full font-semibold" size="default" asChild>
+      <Button
+        className="mt-4 rounded-full font-semibold"
+        size="default"
+        asChild
+      >
         <Link href="/sign-up">Learn more</Link>
       </Button>
     </div>
@@ -65,7 +80,7 @@ function FilterCheckboxGroup({
             className="flex cursor-pointer items-center gap-2.5"
           >
             <Checkbox
-              className="border-neutral-300 bg-white shadow-none data-[state=checked]:border-primary data-[state=checked]:bg-primary dark:border-neutral-300 dark:bg-white dark:data-[state=checked]:border-primary dark:data-[state=checked]:bg-primary"
+              className="data-[state=checked]:border-primary data-[state=checked]:bg-primary dark:data-[state=checked]:border-primary dark:data-[state=checked]:bg-primary border-neutral-300 bg-white shadow-none dark:border-neutral-300 dark:bg-white"
               checked={activeValues.includes(option.label)}
               onCheckedChange={(checked) => onToggle(option.label, !!checked)}
             />

@@ -1,77 +1,72 @@
-"use client";
+'use client'
 
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence } from 'motion/react'
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
-} from "@hackhyre/ui/components/card";
-import { Badge } from "@hackhyre/ui/components/badge";
-import { Skeleton } from "@hackhyre/ui/components/skeleton";
-import { Separator } from "@hackhyre/ui/components/separator";
-import {
-  Briefcase,
-  Location,
-  DollarCircle,
-  Global,
-} from "@hackhyre/ui/icons";
+} from '@hackhyre/ui/components/card'
+import { Badge } from '@hackhyre/ui/components/badge'
+import { Skeleton } from '@hackhyre/ui/components/skeleton'
+import { Separator } from '@hackhyre/ui/components/separator'
+import { Briefcase, Location, DollarCircle, Global } from '@hackhyre/ui/icons'
 
 interface JobPreviewData {
-  title?: string;
-  description?: string;
-  employmentType?: string;
-  experienceLevel?: string;
-  location?: string;
-  isRemote?: boolean;
-  salaryMin?: number;
-  salaryMax?: number;
-  salaryCurrency?: string;
-  requirements?: string[];
-  responsibilities?: string[];
-  skills?: string[];
+  title?: string
+  description?: string
+  employmentType?: string
+  experienceLevel?: string
+  location?: string
+  isRemote?: boolean
+  salaryMin?: number
+  salaryMax?: number
+  salaryCurrency?: string
+  requirements?: string[]
+  responsibilities?: string[]
+  skills?: string[]
 }
 
 interface JobPreviewProps {
-  data: JobPreviewData;
+  data: JobPreviewData
 }
 
 const TYPE_LABELS: Record<string, string> = {
-  full_time: "Full-time",
-  part_time: "Part-time",
-  contract: "Contract",
-  internship: "Internship",
-};
+  full_time: 'Full-time',
+  part_time: 'Part-time',
+  contract: 'Contract',
+  internship: 'Internship',
+}
 
 const LEVEL_LABELS: Record<string, string> = {
-  entry: "Entry",
-  mid: "Mid-level",
-  senior: "Senior",
-  lead: "Lead",
-  executive: "Executive",
-};
+  entry: 'Entry',
+  mid: 'Mid-level',
+  senior: 'Senior',
+  lead: 'Lead',
+  executive: 'Executive',
+}
 
 function PreviewField({
   label,
   children,
   show,
 }: {
-  label: string;
-  children: React.ReactNode;
-  show: boolean;
+  label: string
+  children: React.ReactNode
+  show: boolean
 }) {
   return (
     <AnimatePresence>
       {show && (
         <motion.div
           initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: "auto" }}
+          animate={{ opacity: 1, height: 'auto' }}
           exit={{ opacity: 0, height: 0 }}
           transition={{ duration: 0.2 }}
           className="overflow-hidden"
         >
           <div className="py-1">
-            <p className="text-muted-foreground mb-0.5 text-[11px] font-medium uppercase tracking-wider">
+            <p className="text-muted-foreground mb-0.5 text-[11px] font-medium tracking-wider uppercase">
               {label}
             </p>
             {children}
@@ -79,27 +74,24 @@ function PreviewField({
         </motion.div>
       )}
     </AnimatePresence>
-  );
+  )
 }
 
 export function JobPreview({ data }: JobPreviewProps) {
   const hasAnyData = Object.values(data).some(
-    (v) =>
-      v !== undefined &&
-      v !== "" &&
-      !(Array.isArray(v) && v.length === 0),
-  );
+    (v) => v !== undefined && v !== '' && !(Array.isArray(v) && v.length === 0)
+  )
 
   const salary =
     data.salaryMin && data.salaryMax
-      ? `${new Intl.NumberFormat("en-US", { style: "currency", currency: data.salaryCurrency || "USD", minimumFractionDigits: 0 }).format(data.salaryMin)} – ${new Intl.NumberFormat("en-US", { style: "currency", currency: data.salaryCurrency || "USD", minimumFractionDigits: 0 }).format(data.salaryMax)}`
-      : null;
+      ? `${new Intl.NumberFormat('en-US', { style: 'currency', currency: data.salaryCurrency || 'USD', minimumFractionDigits: 0 }).format(data.salaryMin)} – ${new Intl.NumberFormat('en-US', { style: 'currency', currency: data.salaryCurrency || 'USD', minimumFractionDigits: 0 }).format(data.salaryMax)}`
+      : null
 
   return (
     <div className="sticky top-0">
       <Card>
         <CardHeader className="pb-3">
-          <CardTitle className="text-sm font-semibold text-muted-foreground">
+          <CardTitle className="text-muted-foreground text-sm font-semibold">
             Job Preview
           </CardTitle>
         </CardHeader>
@@ -200,5 +192,5 @@ export function JobPreview({ data }: JobPreviewProps) {
         </CardContent>
       </Card>
     </div>
-  );
+  )
 }

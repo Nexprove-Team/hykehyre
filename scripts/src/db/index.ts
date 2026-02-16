@@ -11,7 +11,7 @@ export function getDB(connectionUrl?: string) {
   const url = connectionUrl ?? process.env["SCRAPER_DATABASE_URL"];
   if (!url) {
     throw new Error(
-      "SCRAPER_DATABASE_URL is not defined. Pass it as argument or set as env variable."
+      "SCRAPER_DATABASE_URL is not defined. Pass it as argument or set as env variable.",
     );
   }
 

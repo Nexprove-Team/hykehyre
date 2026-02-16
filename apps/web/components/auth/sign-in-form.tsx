@@ -1,19 +1,19 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { z } from "zod/v4";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { motion } from "motion/react";
-import { toast } from "sonner";
-import Link from "next/link";
-import { Eye, EyeSlash, Sms, Lock } from "@hackhyre/ui/icons";
-import { Loader2 } from "lucide-react";
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod/v4'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { motion } from 'motion/react'
+import { toast } from 'sonner'
+import Link from 'next/link'
+import { Eye, EyeSlash, Sms, Lock } from '@hackhyre/ui/icons'
+import { Loader2 } from 'lucide-react'
 
-import { authClient } from "@/lib/auth-client";
-import { Button } from "@hackhyre/ui/components/button";
-import { Input } from "@hackhyre/ui/components/input";
+import { authClient } from '@/lib/auth-client'
+import { Button } from '@hackhyre/ui/components/button'
+import { Input } from '@hackhyre/ui/components/input'
 import {
   Form,
   FormControl,
@@ -21,53 +21,53 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@hackhyre/ui/components/form";
-import { Separator } from "@hackhyre/ui/components/separator";
+} from '@hackhyre/ui/components/form'
+import { Separator } from '@hackhyre/ui/components/separator'
 
 const signInSchema = z.object({
-  email: z.email("Please enter a valid email address"),
-  password: z.string().min(1, "Password is required"),
-});
+  email: z.email('Please enter a valid email address'),
+  password: z.string().min(1, 'Password is required'),
+})
 
-type SignInValues = z.infer<typeof signInSchema>;
+type SignInValues = z.infer<typeof signInSchema>
 
 export function SignInForm() {
-  const router = useRouter();
-  const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter()
+  const [showPassword, setShowPassword] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   const form = useForm<SignInValues>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
-      email: "",
-      password: "",
+      email: '',
+      password: '',
     },
-  });
+  })
 
   async function onSubmit(values: SignInValues) {
-    setIsLoading(true);
+    setIsLoading(true)
 
     const { error } = await authClient.signIn.email({
       email: values.email,
       password: values.password,
-    });
+    })
 
-    setIsLoading(false);
+    setIsLoading(false)
 
     if (error) {
-      toast.error(error.message ?? "Invalid credentials");
-      return;
+      toast.error(error.message ?? 'Invalid credentials')
+      return
     }
 
-    toast.success("Welcome back!");
-    router.push("/");
+    toast.success('Welcome back!')
+    router.push('/')
   }
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, ease: "easeOut" }}
+      transition={{ duration: 0.4, ease: 'easeOut' }}
       className="space-y-8"
     >
       {/* Mobile logo */}
@@ -130,11 +130,11 @@ export function SignInForm() {
                       className="text-muted-foreground absolute top-1/2 left-3 -translate-y-1/2"
                     />
                     <Input
-                      type={showPassword ? "text" : "password"}
+                      type={showPassword ? 'text' : 'password'}
                       placeholder="••••••••"
                       autoComplete="current-password"
                       disabled={isLoading}
-                      className="pl-10 pr-10"
+                      className="pr-10 pl-10"
                       {...field}
                     />
                     <button
@@ -163,7 +163,7 @@ export function SignInForm() {
                 Signing in...
               </>
             ) : (
-              "Sign in"
+              'Sign in'
             )}
           </Button>
         </form>
@@ -177,7 +177,7 @@ export function SignInForm() {
       </div>
 
       <p className="text-muted-foreground text-center text-sm">
-        Don&apos;t have an account?{" "}
+        Don&apos;t have an account?{' '}
         <Link
           href="/sign-up"
           className="text-primary hover:text-primary/80 font-medium underline-offset-4 hover:underline"
@@ -186,5 +186,5 @@ export function SignInForm() {
         </Link>
       </p>
     </motion.div>
-  );
+  )
 }

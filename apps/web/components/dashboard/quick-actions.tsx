@@ -1,8 +1,8 @@
-"use client";
+'use client'
 
-import Link from "next/link";
-import { Button } from "@hackhyre/ui/components/button";
-import { AddCircle, People } from "@hackhyre/ui/icons";
+import Link from 'next/link'
+import { Button } from '@hackhyre/ui/components/button'
+import { AddCircle, People } from '@hackhyre/ui/icons'
 
 export function QuickActions() {
   return (
@@ -20,5 +20,5 @@ export function QuickActions() {
         </Link>
       </Button>
     </div>
-  );
+  )
 }

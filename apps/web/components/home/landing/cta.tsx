@@ -30,7 +30,7 @@ export function CTA() {
 
       {/* Glow orbs */}
       <div className="pointer-events-none absolute -top-24 left-1/4 h-72 w-72 rounded-full bg-[oklch(0.82_0.22_155)] opacity-[0.06] blur-[100px]" />
-      <div className="pointer-events-none absolute -bottom-20 right-1/4 h-56 w-56 rounded-full bg-[oklch(0.82_0.22_155)] opacity-[0.05] blur-[80px]" />
+      <div className="pointer-events-none absolute right-1/4 -bottom-20 h-56 w-56 rounded-full bg-[oklch(0.82_0.22_155)] opacity-[0.05] blur-[80px]" />
 
       <div className="relative mx-auto max-w-375 px-4 sm:px-6 lg:px-8">
         <motion.div
@@ -53,8 +53,8 @@ export function CTA() {
             transition={{ duration: 0.5 }}
             className="mx-auto mt-5 max-w-lg text-base leading-relaxed text-neutral-400"
           >
-            Join thousands of professionals and companies already using
-            HackHyre to find their perfect match.
+            Join thousands of professionals and companies already using HackHyre
+            to find their perfect match.
           </motion.p>
 
           <motion.div

@@ -1,17 +1,14 @@
-"use client";
+'use client'
 
-import { useForm } from "react-hook-form";
-import { z } from "zod/v4";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Location, User, DocumentText } from "@hackhyre/ui/icons";
+import { useForm } from 'react-hook-form'
+import { z } from 'zod/v4'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Location, User, DocumentText } from '@hackhyre/ui/icons'
 
-import { Button } from "@hackhyre/ui/components/button";
-import { Input } from "@hackhyre/ui/components/input";
-import { Textarea } from "@hackhyre/ui/components/textarea";
-import {
-  Avatar,
-  AvatarFallback,
-} from "@hackhyre/ui/components/avatar";
+import { Button } from '@hackhyre/ui/components/button'
+import { Input } from '@hackhyre/ui/components/input'
+import { Textarea } from '@hackhyre/ui/components/textarea'
+import { Avatar, AvatarFallback } from '@hackhyre/ui/components/avatar'
 import {
   Form,
   FormControl,
@@ -19,38 +16,38 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@hackhyre/ui/components/form";
-import type { StepProps } from "../onboarding-wizard";
+} from '@hackhyre/ui/components/form'
+import type { StepProps } from '../onboarding-wizard'
 
 const schema = z.object({
   headline: z.string().optional(),
   bio: z.string().optional(),
   location: z.string().optional(),
-});
+})
 
-type Values = z.infer<typeof schema>;
+type Values = z.infer<typeof schema>
 
 export function TalentStepProfile({ user, data, onUpdate, onNext }: StepProps) {
   const form = useForm<Values>({
     resolver: zodResolver(schema),
     defaultValues: {
-      headline: data.headline ?? "",
-      bio: data.bio ?? "",
-      location: data.location ?? "",
+      headline: data.headline ?? '',
+      bio: data.bio ?? '',
+      location: data.location ?? '',
     },
-  });
+  })
 
   function onSubmit(values: Values) {
-    onUpdate(values);
-    onNext();
+    onUpdate(values)
+    onNext()
   }
 
   const initials = user.name
-    .split(" ")
+    .split(' ')
     .map((n) => n[0])
-    .join("")
+    .join('')
     .toUpperCase()
-    .slice(0, 2);
+    .slice(0, 2)
 
   return (
     <div className="space-y-6">
@@ -59,7 +56,7 @@ export function TalentStepProfile({ user, data, onUpdate, onNext }: StepProps) {
           Let&apos;s set up your profile
         </h2>
         <p className="text-muted-foreground text-sm">
-          Tell companies who you are, {user.name.split(" ")[0]}
+          Tell companies who you are, {user.name.split(' ')[0]}
         </p>
       </div>
 
@@ -137,5 +134,5 @@ export function TalentStepProfile({ user, data, onUpdate, onNext }: StepProps) {
         </form>
       </Form>
     </div>
-  );
+  )
 }

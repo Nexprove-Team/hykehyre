@@ -1,13 +1,13 @@
-import { create } from "zustand";
+import { create } from 'zustand'
 
 interface CandidateSidebarState {
-  isCollapsed: boolean;
-  isMobileOpen: boolean;
-  toggle: () => void;
-  collapse: () => void;
-  expand: () => void;
-  openMobile: () => void;
-  closeMobile: () => void;
+  isCollapsed: boolean
+  isMobileOpen: boolean
+  toggle: () => void
+  collapse: () => void
+  expand: () => void
+  openMobile: () => void
+  closeMobile: () => void
 }
 
 export const useCandidateSidebar = create<CandidateSidebarState>((set) => ({
@@ -18,4 +18,4 @@ export const useCandidateSidebar = create<CandidateSidebarState>((set) => ({
   expand: () => set({ isCollapsed: false }),
   openMobile: () => set({ isMobileOpen: true }),
   closeMobile: () => set({ isMobileOpen: false }),
-}));
+}))

@@ -1,11 +1,11 @@
-import { Sidebar } from "@/components/dashboard/sidebar";
-import { Header } from "@/components/dashboard/header";
-import { CandidateSheet } from "@/components/dashboard/candidate-sheet";
+import { Sidebar } from '@/components/dashboard/sidebar'
+import { Header } from '@/components/dashboard/header'
+import { CandidateSheet } from '@/components/dashboard/candidate-sheet'
 
 export default function DashboardLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: React.ReactNode
 }) {
   return (
     <div className="flex h-svh overflow-hidden">
@@ -16,5 +16,5 @@ export default function DashboardLayout({
       </div>
       <CandidateSheet />
     </div>
-  );
+  )
 }

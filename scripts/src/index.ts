@@ -13,14 +13,12 @@ async function getScraperForPlatform(platform: string) {
       return new TwitterScraper();
     }
     case "company-page": {
-      const { CompanyPageScraper } = await import(
-        "./scrapers/company-page"
-      );
+      const { CompanyPageScraper } = await import("./scrapers/company-page");
       return new CompanyPageScraper();
     }
     default:
       console.error(
-        `Unknown platform: "${platform}". Use: linkedin, twitter, company-page`
+        `Unknown platform: "${platform}". Use: linkedin, twitter, company-page`,
       );
       process.exit(1);
   }

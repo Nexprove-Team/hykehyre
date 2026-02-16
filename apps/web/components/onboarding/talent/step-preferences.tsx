@@ -1,31 +1,31 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import { ArrowRight } from "@hackhyre/ui/icons";
+import { useState } from 'react'
+import { ArrowRight } from '@hackhyre/ui/icons'
 
-import { Button } from "@hackhyre/ui/components/button";
-import { Input } from "@hackhyre/ui/components/input";
-import { Label } from "@hackhyre/ui/components/label";
-import { Checkbox } from "@hackhyre/ui/components/checkbox";
-import { RadioGroup, RadioGroupItem } from "@hackhyre/ui/components/radio-group";
-import { Switch } from "@hackhyre/ui/components/switch";
-import { cn } from "@hackhyre/ui/lib/utils";
-import type { StepProps } from "../onboarding-wizard";
+import { Button } from '@hackhyre/ui/components/button'
+import { Input } from '@hackhyre/ui/components/input'
+import { Label } from '@hackhyre/ui/components/label'
+import { Checkbox } from '@hackhyre/ui/components/checkbox'
+import { RadioGroup, RadioGroupItem } from '@hackhyre/ui/components/radio-group'
+import { Switch } from '@hackhyre/ui/components/switch'
+import { cn } from '@hackhyre/ui/lib/utils'
+import type { StepProps } from '../onboarding-wizard'
 
 const EMPLOYMENT_TYPES = [
-  { value: "full_time", label: "Full-time" },
-  { value: "part_time", label: "Part-time" },
-  { value: "contract", label: "Contract" },
-  { value: "internship", label: "Internship" },
-];
+  { value: 'full_time', label: 'Full-time' },
+  { value: 'part_time', label: 'Part-time' },
+  { value: 'contract', label: 'Contract' },
+  { value: 'internship', label: 'Internship' },
+]
 
 const EXPERIENCE_LEVELS = [
-  { value: "entry", label: "Entry" },
-  { value: "mid", label: "Mid" },
-  { value: "senior", label: "Senior" },
-  { value: "lead", label: "Lead" },
-  { value: "executive", label: "Executive" },
-];
+  { value: 'entry', label: 'Entry' },
+  { value: 'mid', label: 'Mid' },
+  { value: 'senior', label: 'Senior' },
+  { value: 'lead', label: 'Lead' },
+  { value: 'executive', label: 'Executive' },
+]
 
 export function TalentStepPreferences({
   data,
@@ -34,28 +34,20 @@ export function TalentStepPreferences({
   onBack,
 }: StepProps) {
   const [employmentTypes, setEmploymentTypes] = useState<string[]>(
-    data.preferredEmploymentTypes ?? ["full_time"]
-  );
+    data.preferredEmploymentTypes ?? ['full_time']
+  )
   const [experienceLevel, setExperienceLevel] = useState(
-    data.preferredExperienceLevel ?? "mid"
-  );
-  const [isRemote, setIsRemote] = useState(data.isRemotePreferred ?? true);
-  const [isOpenToWork, setIsOpenToWork] = useState(
-    data.isOpenToWork ?? true
-  );
-  const [salaryMin, setSalaryMin] = useState(
-    data.salaryMin?.toString() ?? ""
-  );
-  const [salaryMax, setSalaryMax] = useState(
-    data.salaryMax?.toString() ?? ""
-  );
+    data.preferredExperienceLevel ?? 'mid'
+  )
+  const [isRemote, setIsRemote] = useState(data.isRemotePreferred ?? true)
+  const [isOpenToWork, setIsOpenToWork] = useState(data.isOpenToWork ?? true)
+  const [salaryMin, setSalaryMin] = useState(data.salaryMin?.toString() ?? '')
+  const [salaryMax, setSalaryMax] = useState(data.salaryMax?.toString() ?? '')
 
   function toggleEmploymentType(value: string) {
     setEmploymentTypes((prev) =>
-      prev.includes(value)
-        ? prev.filter((t) => t !== value)
-        : [...prev, value]
-    );
+      prev.includes(value) ? prev.filter((t) => t !== value) : [...prev, value]
+    )
   }
 
   function handleContinue() {
@@ -66,8 +58,8 @@ export function TalentStepPreferences({
       isOpenToWork,
       salaryMin: salaryMin ? parseInt(salaryMin, 10) : undefined,
       salaryMax: salaryMax ? parseInt(salaryMax, 10) : undefined,
-    });
-    onNext();
+    })
+    onNext()
   }
 
   return (
@@ -88,9 +80,8 @@ export function TalentStepPreferences({
             <label
               key={value}
               className={cn(
-                "border-input flex cursor-pointer items-center gap-3 rounded-lg border p-3 transition-colors",
-                employmentTypes.includes(value) &&
-                  "border-primary bg-primary/5"
+                'border-input flex cursor-pointer items-center gap-3 rounded-lg border p-3 transition-colors',
+                employmentTypes.includes(value) && 'border-primary bg-primary/5'
               )}
             >
               <Checkbox
@@ -114,15 +105,11 @@ export function TalentStepPreferences({
             <label
               key={value}
               className={cn(
-                "border-input flex cursor-pointer flex-col items-center justify-center rounded-lg border p-2.5 text-center transition-colors",
-                experienceLevel === value &&
-                  "border-primary bg-primary/5"
+                'border-input flex cursor-pointer flex-col items-center justify-center rounded-lg border p-2.5 text-center transition-colors',
+                experienceLevel === value && 'border-primary bg-primary/5'
               )}
             >
-              <RadioGroupItem
-                value={value}
-                className="sr-only"
-              />
+              <RadioGroupItem value={value} className="sr-only" />
               <span className="text-xs font-medium">{label}</span>
             </label>
           ))}
@@ -147,10 +134,7 @@ export function TalentStepPreferences({
               Let recruiters know you&apos;re available
             </p>
           </div>
-          <Switch
-            checked={isOpenToWork}
-            onCheckedChange={setIsOpenToWork}
-          />
+          <Switch checked={isOpenToWork} onCheckedChange={setIsOpenToWork} />
         </div>
       </div>
 
@@ -188,5 +172,5 @@ export function TalentStepPreferences({
         </Button>
       </div>
     </div>
-  );
+  )
 }

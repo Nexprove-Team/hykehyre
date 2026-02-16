@@ -1,17 +1,17 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import Link from "next/link";
-import { motion } from "motion/react";
+import { useState } from 'react'
+import Link from 'next/link'
+import { motion } from 'motion/react'
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
-} from "@hackhyre/ui/components/card";
-import { Button } from "@hackhyre/ui/components/button";
-import { Badge } from "@hackhyre/ui/components/badge";
-import { Input } from "@hackhyre/ui/components/input";
+} from '@hackhyre/ui/components/card'
+import { Button } from '@hackhyre/ui/components/button'
+import { Badge } from '@hackhyre/ui/components/badge'
+import { Input } from '@hackhyre/ui/components/input'
 import {
   Table,
   TableBody,
@@ -19,13 +19,13 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@hackhyre/ui/components/table";
+} from '@hackhyre/ui/components/table'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@hackhyre/ui/components/dropdown-menu";
+} from '@hackhyre/ui/components/dropdown-menu'
 import {
   SearchNormal,
   AddCircle,
@@ -42,68 +42,72 @@ import {
   Clock,
   PauseCircle,
   CloseCircle,
-} from "@hackhyre/ui/icons";
-import { cn } from "@hackhyre/ui/lib/utils";
-import { MOCK_JOBS, type JobStatus, type MockJob } from "@/lib/mock-data";
-import { JOB_STATUS_CONFIG } from "@/lib/constants";
+} from '@hackhyre/ui/icons'
+import { cn } from '@hackhyre/ui/lib/utils'
+import { MOCK_JOBS, type JobStatus, type MockJob } from '@/lib/mock-data'
+import { JOB_STATUS_CONFIG } from '@/lib/constants'
 
-const STATUS_FILTERS: { label: string; value: JobStatus | "all" }[] = [
-  { label: "All Jobs", value: "all" },
-  { label: "Open", value: "open" },
-  { label: "Draft", value: "draft" },
-  { label: "Paused", value: "paused" },
-  { label: "Filled", value: "filled" },
-];
+const STATUS_FILTERS: { label: string; value: JobStatus | 'all' }[] = [
+  { label: 'All Jobs', value: 'all' },
+  { label: 'Open', value: 'open' },
+  { label: 'Draft', value: 'draft' },
+  { label: 'Paused', value: 'paused' },
+  { label: 'Filled', value: 'filled' },
+]
 
 const STATUS_ICON: Record<string, typeof TickCircle> = {
   open: TickCircle,
   draft: Clock,
   paused: PauseCircle,
   filled: CloseCircle,
-};
+}
 
-function formatSalary(min: number | null, max: number | null, currency: string) {
-  if (!min && !max) return null;
+function formatSalary(
+  min: number | null,
+  max: number | null,
+  currency: string
+) {
+  if (!min && !max) return null
   const fmt = (v: number) =>
-    new Intl.NumberFormat("en-US", {
-      style: "currency",
+    new Intl.NumberFormat('en-US', {
+      style: 'currency',
       currency,
       maximumFractionDigits: 0,
-    }).format(v);
-  if (min && max) return `${fmt(min)} – ${fmt(max)}`;
-  if (min) return `From ${fmt(min)}`;
-  return `Up to ${fmt(max!)}`;
+    }).format(v)
+  if (min && max) return `${fmt(min)} – ${fmt(max)}`
+  if (min) return `From ${fmt(min)}`
+  return `Up to ${fmt(max!)}`
 }
 
 function formatDate(dateStr: string) {
-  return new Date(dateStr).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
+  return new Date(dateStr).toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  })
 }
 
 function formatEmploymentType(type: string) {
   return type
-    .split("_")
+    .split('_')
     .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-    .join(" ");
+    .join(' ')
 }
 
 function JobRow({ job, index }: { job: MockJob; index: number }) {
-  const config = JOB_STATUS_CONFIG[job.status];
-  const StatusIcon = STATUS_ICON[job.status] ?? Clock;
+  const config = JOB_STATUS_CONFIG[job.status]
+  const StatusIcon = STATUS_ICON[job.status] ?? Clock
 
   return (
     <motion.tr
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.04, duration: 0.25 }}
-      className="group border-b transition-colors hover:bg-accent/50"
+      className="group hover:bg-accent/50 border-b transition-colors"
     >
       <TableCell className="py-4">
         <Link href={`/jobs/${job.id}`} className="block">
-          <p className="text-[13px] font-semibold group-hover:text-primary transition-colors">
+          <p className="group-hover:text-primary text-[13px] font-semibold transition-colors">
             {job.title}
           </p>
           <div className="text-muted-foreground mt-1 flex items-center gap-3 text-[11px]">
@@ -117,11 +121,8 @@ function JobRow({ job, index }: { job: MockJob; index: number }) {
       </TableCell>
       <TableCell>
         <Badge
-          variant={config?.variant as "default"}
-          className={cn(
-            "gap-1 text-[11px] font-medium",
-            config?.className,
-          )}
+          variant={config?.variant as 'default'}
+          className={cn('gap-1 text-[11px] font-medium', config?.className)}
         >
           <StatusIcon size={11} variant="Bold" />
           {config?.label}
@@ -133,7 +134,7 @@ function JobRow({ job, index }: { job: MockJob; index: number }) {
             <Location size={12} variant="Bold" />
             {job.location}
             {job.isRemote && (
-              <Badge variant="outline" className="ml-1 text-[9px] px-1 py-0">
+              <Badge variant="outline" className="ml-1 px-1 py-0 text-[9px]">
                 Remote
               </Badge>
             )}
@@ -154,7 +155,8 @@ function JobRow({ job, index }: { job: MockJob; index: number }) {
       </TableCell>
       <TableCell className="hidden lg:table-cell">
         <span className="text-muted-foreground text-[12px]">
-          {formatSalary(job.salaryMin, job.salaryMax, job.salaryCurrency) ?? "—"}
+          {formatSalary(job.salaryMin, job.salaryMax, job.salaryCurrency) ??
+            '—'}
         </span>
       </TableCell>
       <TableCell>
@@ -163,7 +165,7 @@ function JobRow({ job, index }: { job: MockJob; index: number }) {
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
+              className="h-8 w-8 opacity-0 transition-opacity group-hover:opacity-100"
             >
               <More size={16} variant="Linear" />
             </Button>
@@ -191,30 +193,29 @@ function JobRow({ job, index }: { job: MockJob; index: number }) {
         </DropdownMenu>
       </TableCell>
     </motion.tr>
-  );
+  )
 }
 
 export default function JobsPage() {
-  const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState<JobStatus | "all">("all");
+  const [search, setSearch] = useState('')
+  const [statusFilter, setStatusFilter] = useState<JobStatus | 'all'>('all')
 
   const filtered = MOCK_JOBS.filter((job) => {
     const matchesSearch =
       !search ||
       job.title.toLowerCase().includes(search.toLowerCase()) ||
-      job.location?.toLowerCase().includes(search.toLowerCase());
-    const matchesStatus =
-      statusFilter === "all" || job.status === statusFilter;
-    return matchesSearch && matchesStatus;
-  });
+      job.location?.toLowerCase().includes(search.toLowerCase())
+    const matchesStatus = statusFilter === 'all' || job.status === statusFilter
+    return matchesSearch && matchesStatus
+  })
 
   const counts = {
     all: MOCK_JOBS.length,
-    open: MOCK_JOBS.filter((j) => j.status === "open").length,
-    draft: MOCK_JOBS.filter((j) => j.status === "draft").length,
-    paused: MOCK_JOBS.filter((j) => j.status === "paused").length,
-    filled: MOCK_JOBS.filter((j) => j.status === "filled").length,
-  };
+    open: MOCK_JOBS.filter((j) => j.status === 'open').length,
+    draft: MOCK_JOBS.filter((j) => j.status === 'draft').length,
+    paused: MOCK_JOBS.filter((j) => j.status === 'paused').length,
+    filled: MOCK_JOBS.filter((j) => j.status === 'filled').length,
+  }
 
   return (
     <div className="space-y-6">
@@ -241,19 +242,19 @@ export default function JobsPage() {
             key={filter.value}
             onClick={() => setStatusFilter(filter.value)}
             className={cn(
-              "flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[12px] font-medium transition-colors whitespace-nowrap",
+              'flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[12px] font-medium whitespace-nowrap transition-colors',
               statusFilter === filter.value
-                ? "bg-primary/10 text-primary"
-                : "text-muted-foreground hover:bg-accent hover:text-foreground",
+                ? 'bg-primary/10 text-primary'
+                : 'text-muted-foreground hover:bg-accent hover:text-foreground'
             )}
           >
             {filter.label}
             <span
               className={cn(
-                "rounded-full px-1.5 py-0.5 text-[10px] font-bold tabular-nums",
+                'rounded-full px-1.5 py-0.5 text-[10px] font-bold tabular-nums',
                 statusFilter === filter.value
-                  ? "bg-primary/20 text-primary"
-                  : "bg-muted text-muted-foreground",
+                  ? 'bg-primary/20 text-primary'
+                  : 'bg-muted text-muted-foreground'
               )}
             >
               {counts[filter.value]}
@@ -267,7 +268,9 @@ export default function JobsPage() {
         <CardHeader className="pb-3">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <CardTitle className="text-[15px] font-semibold">
-              {statusFilter === "all" ? "All Jobs" : JOB_STATUS_CONFIG[statusFilter]?.label + " Jobs"}
+              {statusFilter === 'all'
+                ? 'All Jobs'
+                : JOB_STATUS_CONFIG[statusFilter]?.label + ' Jobs'}
               <span className="text-muted-foreground ml-2 text-[12px] font-normal">
                 ({filtered.length})
               </span>
@@ -276,13 +279,13 @@ export default function JobsPage() {
               <SearchNormal
                 size={14}
                 variant="Linear"
-                className="text-muted-foreground absolute left-3 top-1/2 -translate-y-1/2"
+                className="text-muted-foreground absolute top-1/2 left-3 -translate-y-1/2"
               />
               <Input
                 placeholder="Search jobs..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="h-8 rounded-lg bg-muted/50 border-0 pl-8 text-[12px] focus-visible:bg-background"
+                className="bg-muted/50 focus-visible:bg-background h-8 rounded-lg border-0 pl-8 text-[12px]"
               />
             </div>
           </div>
@@ -290,9 +293,15 @@ export default function JobsPage() {
         <CardContent className="pb-2">
           {filtered.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 text-center">
-              <Briefcase size={40} variant="Linear" className="text-muted-foreground/30 mb-3" />
-              <p className="text-[13px] font-medium text-muted-foreground">No jobs found</p>
-              <p className="text-[12px] text-muted-foreground/70 mt-1">
+              <Briefcase
+                size={40}
+                variant="Linear"
+                className="text-muted-foreground/30 mb-3"
+              />
+              <p className="text-muted-foreground text-[13px] font-medium">
+                No jobs found
+              </p>
+              <p className="text-muted-foreground/70 mt-1 text-[12px]">
                 Try adjusting your search or filter
               </p>
             </div>
@@ -302,7 +311,9 @@ export default function JobsPage() {
                 <TableRow>
                   <TableHead className="w-65">Job Title</TableHead>
                   <TableHead>Status</TableHead>
-                  <TableHead className="hidden sm:table-cell">Location</TableHead>
+                  <TableHead className="hidden sm:table-cell">
+                    Location
+                  </TableHead>
                   <TableHead className="text-center">Applicants</TableHead>
                   <TableHead className="hidden md:table-cell">Posted</TableHead>
                   <TableHead className="hidden lg:table-cell">Salary</TableHead>
@@ -319,5 +330,5 @@ export default function JobsPage() {
         </CardContent>
       </Card>
     </div>
-  );
+  )
 }

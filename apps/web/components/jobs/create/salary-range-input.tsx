@@ -1,14 +1,14 @@
-"use client";
+'use client'
 
-import { Input } from "@hackhyre/ui/components/input";
-import { DollarCircle } from "@hackhyre/ui/icons";
+import { Input } from '@hackhyre/ui/components/input'
+import { DollarCircle } from '@hackhyre/ui/icons'
 
 interface SalaryRangeInputProps {
-  minValue: number | undefined;
-  maxValue: number | undefined;
-  onMinChange: (value: number | undefined) => void;
-  onMaxChange: (value: number | undefined) => void;
-  currency?: string;
+  minValue: number | undefined
+  maxValue: number | undefined
+  onMinChange: (value: number | undefined) => void
+  onMaxChange: (value: number | undefined) => void
+  currency?: string
 }
 
 export function SalaryRangeInput({
@@ -16,14 +16,14 @@ export function SalaryRangeInput({
   maxValue,
   onMinChange,
   onMaxChange,
-  currency = "USD",
+  currency = 'USD',
 }: SalaryRangeInputProps) {
-  const formatter = new Intl.NumberFormat("en-US", {
-    style: "currency",
+  const formatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
     currency,
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
-  });
+  })
 
   return (
     <div className="space-y-3">
@@ -36,13 +36,13 @@ export function SalaryRangeInput({
             <DollarCircle
               size={16}
               variant="Bulk"
-              className="text-muted-foreground absolute left-3 top-1/2 -translate-y-1/2"
+              className="text-muted-foreground absolute top-1/2 left-3 -translate-y-1/2"
             />
             <Input
               type="number"
               className="pl-9"
               placeholder="80,000"
-              value={minValue ?? ""}
+              value={minValue ?? ''}
               onChange={(e) =>
                 onMinChange(e.target.value ? Number(e.target.value) : undefined)
               }
@@ -57,13 +57,13 @@ export function SalaryRangeInput({
             <DollarCircle
               size={16}
               variant="Bulk"
-              className="text-muted-foreground absolute left-3 top-1/2 -translate-y-1/2"
+              className="text-muted-foreground absolute top-1/2 left-3 -translate-y-1/2"
             />
             <Input
               type="number"
               className="pl-9"
               placeholder="120,000"
-              value={maxValue ?? ""}
+              value={maxValue ?? ''}
               onChange={(e) =>
                 onMaxChange(e.target.value ? Number(e.target.value) : undefined)
               }
@@ -77,5 +77,5 @@ export function SalaryRangeInput({
         </p>
       )}
     </div>
-  );
+  )
 }

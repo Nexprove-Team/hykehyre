@@ -1,19 +1,19 @@
-"use client";
+'use client'
 
-import type { LucideProps } from "lucide-react";
-import type { ComponentProps, HTMLAttributes } from "react";
+import type { LucideProps } from 'lucide-react'
+import type { ComponentProps, HTMLAttributes } from 'react'
 
-import { Button } from "@hackhyre/ui/components/button";
-import { Separator } from "@hackhyre/ui/components/separator";
+import { Button } from '@hackhyre/ui/components/button'
+import { Separator } from '@hackhyre/ui/components/separator'
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@hackhyre/ui/components/tooltip";
-import { cn } from "@hackhyre/ui/lib/utils";
-import { BookmarkIcon } from "lucide-react";
+} from '@hackhyre/ui/components/tooltip'
+import { cn } from '@hackhyre/ui/lib/utils'
+import { BookmarkIcon } from 'lucide-react'
 
-export type CheckpointProps = HTMLAttributes<HTMLDivElement>;
+export type CheckpointProps = HTMLAttributes<HTMLDivElement>
 
 export const Checkpoint = ({
   className,
@@ -22,7 +22,7 @@ export const Checkpoint = ({
 }: CheckpointProps) => (
   <div
     className={cn(
-      "flex items-center gap-0.5 overflow-hidden text-muted-foreground",
+      'text-muted-foreground flex items-center gap-0.5 overflow-hidden',
       className
     )}
     {...props}
@@ -30,9 +30,9 @@ export const Checkpoint = ({
     {children}
     <Separator />
   </div>
-);
+)
 
-export type CheckpointIconProps = LucideProps;
+export type CheckpointIconProps = LucideProps
 
 export const CheckpointIcon = ({
   className,
@@ -40,17 +40,17 @@ export const CheckpointIcon = ({
   ...props
 }: CheckpointIconProps) =>
   children ?? (
-    <BookmarkIcon className={cn("size-4 shrink-0", className)} {...props} />
-  );
+    <BookmarkIcon className={cn('size-4 shrink-0', className)} {...props} />
+  )
 
 export type CheckpointTriggerProps = ComponentProps<typeof Button> & {
-  tooltip?: string;
-};
+  tooltip?: string
+}
 
 export const CheckpointTrigger = ({
   children,
-  variant = "ghost",
-  size = "sm",
+  variant = 'ghost',
+  size = 'sm',
   tooltip,
   ...props
 }: CheckpointTriggerProps) =>
@@ -69,4 +69,4 @@ export const CheckpointTrigger = ({
     <Button size={size} type="button" variant={variant} {...props}>
       {children}
     </Button>
-  );
+  )

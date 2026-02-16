@@ -101,11 +101,7 @@ export function ForCandidates() {
               className="group rounded-2xl border p-6 transition-colors hover:border-neutral-300 dark:hover:border-neutral-700"
             >
               <div className="bg-primary/10 mb-4 flex h-10 w-10 items-center justify-center rounded-xl transition-transform group-hover:scale-110">
-                <card.icon
-                  size={20}
-                  variant="Bold"
-                  className="text-primary"
-                />
+                <card.icon size={20} variant="Bold" className="text-primary" />
               </div>
               <h3 className="font-mono text-[15px] font-semibold tracking-tight">
                 {card.title}

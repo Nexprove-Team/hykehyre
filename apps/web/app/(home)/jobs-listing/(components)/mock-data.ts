@@ -32,15 +32,30 @@ export interface Recruiter {
 // ── Card color palette (cycles) ────────────────────────────────────────
 
 const CARD_STYLES = [
-  { cardColor: 'bg-orange-50/70', dateBadgeColor: 'bg-orange-100 text-orange-700' },
-  { cardColor: 'bg-emerald-50/70', dateBadgeColor: 'bg-emerald-100 text-emerald-700' },
-  { cardColor: 'bg-purple-50/70', dateBadgeColor: 'bg-purple-100 text-purple-700' },
+  {
+    cardColor: 'bg-orange-50/70',
+    dateBadgeColor: 'bg-orange-100 text-orange-700',
+  },
+  {
+    cardColor: 'bg-emerald-50/70',
+    dateBadgeColor: 'bg-emerald-100 text-emerald-700',
+  },
+  {
+    cardColor: 'bg-purple-50/70',
+    dateBadgeColor: 'bg-purple-100 text-purple-700',
+  },
   { cardColor: 'bg-sky-50/70', dateBadgeColor: 'bg-sky-100 text-sky-700' },
   { cardColor: 'bg-rose-50/70', dateBadgeColor: 'bg-rose-100 text-rose-700' },
   { cardColor: 'bg-zinc-50/70', dateBadgeColor: 'bg-zinc-100 text-zinc-600' },
-  { cardColor: 'bg-amber-50/70', dateBadgeColor: 'bg-amber-100 text-amber-700' },
+  {
+    cardColor: 'bg-amber-50/70',
+    dateBadgeColor: 'bg-amber-100 text-amber-700',
+  },
   { cardColor: 'bg-teal-50/70', dateBadgeColor: 'bg-teal-100 text-teal-700' },
-  { cardColor: 'bg-indigo-50/70', dateBadgeColor: 'bg-indigo-100 text-indigo-700' },
+  {
+    cardColor: 'bg-indigo-50/70',
+    dateBadgeColor: 'bg-indigo-100 text-indigo-700',
+  },
 ]
 
 // ── Mock Jobs ──────────────────────────────────────────────────────────
@@ -71,7 +86,13 @@ export const MOCK_JOBS: Job[] = [
     title: 'Junior UI/UX Designer',
     logoColor: 'bg-blue-500',
     logoLetter: 'G',
-    tags: ['Full time', 'Junior level', 'Distant', 'Project work', 'Flexible Schedule'],
+    tags: [
+      'Full time',
+      'Junior level',
+      'Distant',
+      'Project work',
+      'Flexible Schedule',
+    ],
     salary: '$150/hr',
     salaryHourly: 150,
     location: 'California, CA',
@@ -343,12 +364,48 @@ export const EMPLOYMENT_TYPE_OPTIONS = [
 // ── Top Recruiters ─────────────────────────────────────────────────────
 
 export const TOP_RECRUITERS: Recruiter[] = [
-  { id: 'r1', name: 'Google', logoColor: 'bg-blue-500', logoLetter: 'G', jobCount: 42 },
-  { id: 'r2', name: 'Amazon', logoColor: 'bg-black', logoLetter: 'a', jobCount: 38 },
-  { id: 'r3', name: 'Apple', logoColor: 'bg-zinc-800', logoLetter: '', jobCount: 31 },
-  { id: 'r4', name: 'Meta', logoColor: 'bg-blue-600', logoLetter: 'M', jobCount: 27 },
-  { id: 'r5', name: 'Spotify', logoColor: 'bg-green-600', logoLetter: 'S', jobCount: 19 },
-  { id: 'r6', name: 'Netflix', logoColor: 'bg-red-600', logoLetter: 'N', jobCount: 15 },
+  {
+    id: 'r1',
+    name: 'Google',
+    logoColor: 'bg-blue-500',
+    logoLetter: 'G',
+    jobCount: 42,
+  },
+  {
+    id: 'r2',
+    name: 'Amazon',
+    logoColor: 'bg-black',
+    logoLetter: 'a',
+    jobCount: 38,
+  },
+  {
+    id: 'r3',
+    name: 'Apple',
+    logoColor: 'bg-zinc-800',
+    logoLetter: '',
+    jobCount: 31,
+  },
+  {
+    id: 'r4',
+    name: 'Meta',
+    logoColor: 'bg-blue-600',
+    logoLetter: 'M',
+    jobCount: 27,
+  },
+  {
+    id: 'r5',
+    name: 'Spotify',
+    logoColor: 'bg-green-600',
+    logoLetter: 'S',
+    jobCount: 19,
+  },
+  {
+    id: 'r6',
+    name: 'Netflix',
+    logoColor: 'bg-red-600',
+    logoLetter: 'N',
+    jobCount: 15,
+  },
 ]
 
 // ── Experience label mapping ───────────────────────────────────────────

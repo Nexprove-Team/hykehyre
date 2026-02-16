@@ -1,9 +1,9 @@
-
 # Entity-Relationship Diagram (ERD)
 
 ## 1. Core Entities
 
 ### 1.1 Users
+
 Stores recruiter and admin accounts.
 
 ```
@@ -20,16 +20,19 @@ users
 ```
 
 **Indexes:**
+
 - `PRIMARY KEY (id)`
 - `UNIQUE INDEX (email)`
 
 **Notes:**
+
 - Recruiters can optionally display social profiles on job posts
 - Admins have elevated permissions (create jobs for others, import, moderate)
 
 ---
 
 ### 1.2 Jobs
+
 Job postings created by recruiters or admins.
 
 ```
@@ -55,18 +58,21 @@ jobs
 ```
 
 **Indexes:**
+
 - `PRIMARY KEY (id)`
 - `INDEX (recruiter_id)`
 - `INDEX (status)`
 - `INDEX (posted_date DESC)`
 
 **Notes:**
+
 - `requirements` and `responsibilities` stored as JSON arrays for flexibility
 - `first_posted_on_quiet_aya` = false if imported from external source
 
 ---
 
 ### 1.3 Applications
+
 Candidate submissions to jobs.
 
 ```
@@ -88,6 +94,7 @@ applications
 ```
 
 **Indexes:**
+
 - `PRIMARY KEY (id)`
 - `INDEX (job_id, status)`
 - `INDEX (relevance_score DESC)`
@@ -95,6 +102,7 @@ applications
 - `INDEX (candidate_email)` -- For future "my applications" feature
 
 **Business Rules:**
+
 - `relevance_score >= 60` → `status` = 'under_review' (visible to recruiter)
 - `relevance_score < 60` → `status` = 'not_reviewed' (hidden from recruiter)
 - Recruiter can manually override status
@@ -102,6 +110,7 @@ applications
 ---
 
 ### 1.4 Job Transparency Log
+
 Snapshots of applicant counts for historical tracking.
 
 ```
@@ -115,10 +124,12 @@ job_transparency_log
 ```
 
 **Indexes:**
+
 - `PRIMARY KEY (id)`
 - `INDEX (job_id, snapshot_date DESC)`
 
 **Notes:**
+
 - Updated daily via cron job (or on-demand for real-time accuracy)
 - Enables historical charts (post-MVP: "Applicants over time")
 
@@ -138,6 +149,7 @@ jobs (1) ──< (N) job_transparency_log
 ```
 
 **Referential Integrity:**
+
 - `ON DELETE CASCADE` for `applications` when `jobs` deleted (soft delete in app logic)
 - `ON DELETE SET NULL` for `jobs.recruiter_id` if `users` deleted (preserve job data)
 
@@ -157,8 +169,9 @@ CREATE TYPE application_status AS ENUM ('not_reviewed', 'under_review', 'intervi
 ## 4. Sample Queries
 
 ### 4.1 Get Job with Transparency Data
+
 ```sql
-SELECT 
+SELECT
   j.*,
   COUNT(DISTINCT a.id) AS total_applicants,
   COUNT(DISTINCT CASE WHEN a.status = 'under_review' THEN a.id END) AS under_review,
@@ -170,7 +183,8 @@ GROUP BY j.id;
 ```
 
 ### 4.2 Get Shortlisted Candidates for Recruiter
-```sql
+
+````sql
 SELECT a.*
 FROM applications a
 JOIN jobs j ON j.id = a.job_id
@@ -183,7 +197,7 @@ BY a.relevance_score DESC, a.applied_at DESC;
 
 ### 4.3 Admin Analytics
 ```sql
-SELECT 
+SELECT
   COUNT(DISTINCT j.id) FILTER (WHERE j.status = 'open') AS open_jobs,
   COUNT(DISTINCT j.id) FILTER (WHERE j.status = 'filled') AS filled_jobs,
   COUNT(DISTINCT a.id) AS total_applications,
@@ -230,43 +244,45 @@ WHERE j.deleted_at IS NULL;
 
 ## 7. Schema Visualization
 
-```
+````
+
 ┌─────────────┐
-│    users    │
+│ users │
 │─────────────│
-│ id (PK)     │
-│ email       │
-│ role        │
+│ id (PK) │
+│ email │
+│ role │
 └──────┬──────┘
-       │
-       │ recruiter_id (FK)
-       │
-       ▼
+│
+│ recruiter*id (FK)
+│
+▼
 ┌─────────────────┐
-│      jobs       │
+│ jobs │
 │─────────────────│
-│ id (PK)         │
-│ recruiter_id    │
-│ title           │
-│ status          │
-│ posted_date     │
+│ id (PK) │
+│ recruiter_id │
+│ title │
+│ status │
+│ posted_date │
 └────────┬────────┘
-         │
-         │ job_id (FK)
-         │
-    ┌────┴─────────────────────┐
-    │                          │
-    ▼                          ▼
-┌──────────────┐  ┌─────────────────────────┐
-│ applications │  │ job_transparency_log    │
-│──────────────│  │─────────────────────────│
-│ id (PK)      │  │ id (PK)                 │
-│ job_id       │  │ job_id                  │
-│ relevance_   │  │ total_applicants        │
-│   score      │  │ snapshot_date           │
-│ status       │  └─────────────────────────┘
+│
+│ job_id (FK)
+│
+┌────┴─────────────────────┐
+│ │
+▼ ▼
+┌──────────────┐ ┌─────────────────────────┐
+│ applications │ │ job_transparency_log │
+│──────────────│ │─────────────────────────│
+│ id (PK) │ │ id (PK) │
+│ job_id │ │ job_id │
+│ relevance* │ │ total_applicants │
+│ score │ │ snapshot_date │
+│ status │ └─────────────────────────┘
 └──────────────┘
 
 ```
 
 ---
+```

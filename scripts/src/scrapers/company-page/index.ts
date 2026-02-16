@@ -77,7 +77,9 @@ export class CompanyPageScraper implements Scraper {
           : jobs;
 
         allJobs.push(...limited);
-        log.info(`Found ${jobs.length} jobs at ${companyName} (keeping ${limited.length})`);
+        log.info(
+          `Found ${jobs.length} jobs at ${companyName} (keeping ${limited.length})`,
+        );
       } catch (err) {
         const msg = `Failed to scrape ${url}: ${err instanceof Error ? err.message : String(err)}`;
         errors.push(msg);

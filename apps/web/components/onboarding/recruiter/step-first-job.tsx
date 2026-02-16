@@ -1,23 +1,23 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod/v4";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowRight } from "@hackhyre/ui/icons";
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod/v4'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { ArrowRight } from '@hackhyre/ui/icons'
 
-import { Button } from "@hackhyre/ui/components/button";
-import { Input } from "@hackhyre/ui/components/input";
-import { Textarea } from "@hackhyre/ui/components/textarea";
+import { Button } from '@hackhyre/ui/components/button'
+import { Input } from '@hackhyre/ui/components/input'
+import { Textarea } from '@hackhyre/ui/components/textarea'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@hackhyre/ui/components/select";
-import { Switch } from "@hackhyre/ui/components/switch";
-import { Label } from "@hackhyre/ui/components/label";
+} from '@hackhyre/ui/components/select'
+import { Switch } from '@hackhyre/ui/components/switch'
+import { Label } from '@hackhyre/ui/components/label'
 import {
   Form,
   FormControl,
@@ -25,18 +25,18 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@hackhyre/ui/components/form";
-import type { StepProps } from "../onboarding-wizard";
+} from '@hackhyre/ui/components/form'
+import type { StepProps } from '../onboarding-wizard'
 
 const schema = z.object({
-  jobTitle: z.string().min(1, "Job title is required"),
-  jobDescription: z.string().min(1, "Description is required"),
+  jobTitle: z.string().min(1, 'Job title is required'),
+  jobDescription: z.string().min(1, 'Description is required'),
   jobEmploymentType: z.string().optional(),
   jobExperienceLevel: z.string().optional(),
   jobLocation: z.string().optional(),
-});
+})
 
-type Values = z.infer<typeof schema>;
+type Values = z.infer<typeof schema>
 
 export function RecruiterStepFirstJob({
   data,
@@ -44,26 +44,26 @@ export function RecruiterStepFirstJob({
   onNext,
   onBack,
 }: StepProps) {
-  const [isRemote, setIsRemote] = useState(data.jobIsRemote ?? false);
+  const [isRemote, setIsRemote] = useState(data.jobIsRemote ?? false)
 
   const form = useForm<Values>({
     resolver: zodResolver(schema),
     defaultValues: {
-      jobTitle: data.jobTitle ?? "",
-      jobDescription: data.jobDescription ?? "",
-      jobEmploymentType: data.jobEmploymentType ?? "full_time",
-      jobExperienceLevel: data.jobExperienceLevel ?? "mid",
-      jobLocation: data.jobLocation ?? "",
+      jobTitle: data.jobTitle ?? '',
+      jobDescription: data.jobDescription ?? '',
+      jobEmploymentType: data.jobEmploymentType ?? 'full_time',
+      jobExperienceLevel: data.jobExperienceLevel ?? 'mid',
+      jobLocation: data.jobLocation ?? '',
     },
-  });
+  })
 
   function onSubmit(values: Values) {
-    onUpdate({ ...values, jobIsRemote: isRemote });
-    onNext();
+    onUpdate({ ...values, jobIsRemote: isRemote })
+    onNext()
   }
 
   function handleSkip() {
-    onNext();
+    onNext()
   }
 
   return (
@@ -98,10 +98,7 @@ export function RecruiterStepFirstJob({
               <FormItem>
                 <FormLabel>Job Title</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder="Senior Frontend Engineer"
-                    {...field}
-                  />
+                  <Input placeholder="Senior Frontend Engineer" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -211,5 +208,5 @@ export function RecruiterStepFirstJob({
         </form>
       </Form>
     </div>
-  );
+  )
 }

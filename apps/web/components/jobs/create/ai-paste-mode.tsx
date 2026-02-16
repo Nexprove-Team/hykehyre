@@ -1,12 +1,12 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
-import { toast } from "sonner";
+import { useState } from 'react'
+import { motion, AnimatePresence } from 'motion/react'
+import { toast } from 'sonner'
 
-import { Button } from "@hackhyre/ui/components/button";
-import { Textarea } from "@hackhyre/ui/components/textarea";
-import { Spinner } from "@hackhyre/ui/components/spinner";
+import { Button } from '@hackhyre/ui/components/button'
+import { Textarea } from '@hackhyre/ui/components/textarea'
+import { Spinner } from '@hackhyre/ui/components/spinner'
 import {
   Card,
   CardContent,
@@ -14,49 +14,45 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@hackhyre/ui/components/card";
-import { MagicStar, LinkIcon, DocumentText } from "@hackhyre/ui/icons";
+} from '@hackhyre/ui/components/card'
+import { MagicStar, LinkIcon, DocumentText } from '@hackhyre/ui/icons'
 
-import { AiParseResult } from "./ai-parse-result";
-import { MOCK_AI_PARSED_JOB } from "@/lib/mock-data";
+import { AiParseResult } from './ai-parse-result'
+import { MOCK_AI_PARSED_JOB } from '@/lib/mock-data'
 
-type ParsedJob = typeof MOCK_AI_PARSED_JOB;
+type ParsedJob = typeof MOCK_AI_PARSED_JOB
 
 export function AIPasteMode() {
-  const [input, setInput] = useState("");
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [parsedData, setParsedData] = useState<ParsedJob | null>(null);
+  const [input, setInput] = useState('')
+  const [isAnalyzing, setIsAnalyzing] = useState(false)
+  const [parsedData, setParsedData] = useState<ParsedJob | null>(null)
 
   async function handleAnalyze() {
     if (!input.trim()) {
-      toast.error("Please paste a job description or URL first");
-      return;
+      toast.error('Please paste a job description or URL first')
+      return
     }
 
-    setIsAnalyzing(true);
+    setIsAnalyzing(true)
 
     // Mock AI analysis
-    await new Promise((r) => setTimeout(r, 2500));
+    await new Promise((r) => setTimeout(r, 2500))
 
-    setParsedData(MOCK_AI_PARSED_JOB);
-    setIsAnalyzing(false);
-    toast.success("Analysis complete!", {
+    setParsedData(MOCK_AI_PARSED_JOB)
+    setIsAnalyzing(false)
+    toast.success('Analysis complete!', {
       description: "We've extracted the job details. Review and edit below.",
-    });
+    })
   }
 
   function handleBack() {
-    setParsedData(null);
+    setParsedData(null)
   }
 
   return (
     <AnimatePresence mode="wait">
       {parsedData ? (
-        <AiParseResult
-          key="result"
-          data={parsedData}
-          onBack={handleBack}
-        />
+        <AiParseResult key="result" data={parsedData} onBack={handleBack} />
       ) : (
         <motion.div
           key="input"
@@ -112,7 +108,7 @@ export function AIPasteMode() {
             <CardFooter className="justify-end gap-3">
               <Button
                 variant="outline"
-                onClick={() => setInput("")}
+                onClick={() => setInput('')}
                 disabled={!input || isAnalyzing}
               >
                 Clear
@@ -138,5 +134,5 @@ export function AIPasteMode() {
         </motion.div>
       )}
     </AnimatePresence>
-  );
+  )
 }

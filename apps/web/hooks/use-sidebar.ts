@@ -1,13 +1,13 @@
-import { create } from "zustand";
+import { create } from 'zustand'
 
 interface SidebarState {
-  isCollapsed: boolean;
-  isMobileOpen: boolean;
-  toggle: () => void;
-  collapse: () => void;
-  expand: () => void;
-  openMobile: () => void;
-  closeMobile: () => void;
+  isCollapsed: boolean
+  isMobileOpen: boolean
+  toggle: () => void
+  collapse: () => void
+  expand: () => void
+  openMobile: () => void
+  closeMobile: () => void
 }
 
 export const useSidebar = create<SidebarState>((set) => ({
@@ -18,4 +18,4 @@ export const useSidebar = create<SidebarState>((set) => ({
   expand: () => set({ isCollapsed: false }),
   openMobile: () => set({ isMobileOpen: true }),
   closeMobile: () => set({ isMobileOpen: false }),
-}));
+}))

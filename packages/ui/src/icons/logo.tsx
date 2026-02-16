@@ -1,4 +1,4 @@
-import type { SVGProps } from "react";
+import type { SVGProps } from 'react'
 
 export function Logo(props: SVGProps<SVGSVGElement>) {
   return (
@@ -12,13 +12,25 @@ export function Logo(props: SVGProps<SVGSVGElement>) {
       {...props}
     >
       <defs>
-        <filter x="0%%" y="0%%" width="100%%" height="100%%" id="hackhyre-filter-1">
+        <filter
+          x="0%%"
+          y="0%%"
+          width="100%%"
+          height="100%%"
+          id="hackhyre-filter-1"
+        >
           <feColorMatrix
             values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0"
             colorInterpolationFilters="sRGB"
           />
         </filter>
-        <filter x="0%%" y="0%%" width="100%%" height="100%%" id="hackhyre-filter-2">
+        <filter
+          x="0%%"
+          y="0%%"
+          width="100%%"
+          height="100%%"
+          id="hackhyre-filter-2"
+        >
           <feColorMatrix
             values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0.2126 0.7152 0.0722 0 0"
             colorInterpolationFilters="sRGB"
@@ -92,5 +104,5 @@ export function Logo(props: SVGProps<SVGSVGElement>) {
         </g>
       </g>
     </svg>
-  );
+  )
 }

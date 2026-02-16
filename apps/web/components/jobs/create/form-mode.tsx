@@ -1,30 +1,30 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod/v4";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "sonner";
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod/v4'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { toast } from 'sonner'
 
-import { Button } from "@hackhyre/ui/components/button";
-import { Input } from "@hackhyre/ui/components/input";
-import { Textarea } from "@hackhyre/ui/components/textarea";
-import { Switch } from "@hackhyre/ui/components/switch";
-import { Label } from "@hackhyre/ui/components/label";
-import { Spinner } from "@hackhyre/ui/components/spinner";
+import { Button } from '@hackhyre/ui/components/button'
+import { Input } from '@hackhyre/ui/components/input'
+import { Textarea } from '@hackhyre/ui/components/textarea'
+import { Switch } from '@hackhyre/ui/components/switch'
+import { Label } from '@hackhyre/ui/components/label'
+import { Spinner } from '@hackhyre/ui/components/spinner'
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
-} from "@hackhyre/ui/components/card";
+} from '@hackhyre/ui/components/card'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@hackhyre/ui/components/select";
+} from '@hackhyre/ui/components/select'
 import {
   Form,
   FormControl,
@@ -32,16 +32,21 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@hackhyre/ui/components/form";
-import { Briefcase, Location, DollarCircle, DocumentText } from "@hackhyre/ui/icons";
+} from '@hackhyre/ui/components/form'
+import {
+  Briefcase,
+  Location,
+  DollarCircle,
+  DocumentText,
+} from '@hackhyre/ui/icons'
 
-import { TagInput } from "./tag-input";
-import { SalaryRangeInput } from "./salary-range-input";
-import { JobPreview } from "./job-preview";
+import { TagInput } from './tag-input'
+import { SalaryRangeInput } from './salary-range-input'
+import { JobPreview } from './job-preview'
 
 const schema = z.object({
-  title: z.string().min(1, "Job title is required"),
-  description: z.string().min(10, "Description must be at least 10 characters"),
+  title: z.string().min(1, 'Job title is required'),
+  description: z.string().min(10, 'Description must be at least 10 characters'),
   employmentType: z.string(),
   experienceLevel: z.string(),
   location: z.string().optional(),
@@ -52,40 +57,40 @@ const schema = z.object({
   requirements: z.array(z.string()),
   responsibilities: z.array(z.string()),
   skills: z.array(z.string()),
-});
+})
 
-type FormValues = z.infer<typeof schema>;
+type FormValues = z.infer<typeof schema>
 
 export function FormMode() {
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: {
-      title: "",
-      description: "",
-      employmentType: "full_time",
-      experienceLevel: "mid",
-      location: "",
+      title: '',
+      description: '',
+      employmentType: 'full_time',
+      experienceLevel: 'mid',
+      location: '',
       isRemote: false,
       salaryMin: undefined,
       salaryMax: undefined,
-      salaryCurrency: "USD",
+      salaryCurrency: 'USD',
       requirements: [],
       responsibilities: [],
       skills: [],
     },
-  });
+  })
 
-  const watchedValues = form.watch();
+  const watchedValues = form.watch()
 
   async function onSubmit(values: FormValues) {
-    setIsSubmitting(true);
-    await new Promise((r) => setTimeout(r, 1500));
-    setIsSubmitting(false);
-    toast.success("Job created successfully!", {
+    setIsSubmitting(true)
+    await new Promise((r) => setTimeout(r, 1500))
+    setIsSubmitting(false)
+    toast.success('Job created successfully!', {
       description: `"${values.title}" has been saved as a draft.`,
-    });
+    })
   }
 
   return (
@@ -93,15 +98,16 @@ export function FormMode() {
       {/* Form */}
       <div className="lg:col-span-3">
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-5"
-          >
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
             {/* Basic Info */}
             <Card>
               <CardHeader className="pb-3">
                 <CardTitle className="flex items-center gap-2 text-sm">
-                  <Briefcase size={16} variant="Bulk" className="text-primary" />
+                  <Briefcase
+                    size={16}
+                    variant="Bulk"
+                    className="text-primary"
+                  />
                   Basic Information
                 </CardTitle>
               </CardHeader>
@@ -227,9 +233,9 @@ export function FormMode() {
                 <div className="flex items-center justify-between">
                   <Label>Remote friendly</Label>
                   <Switch
-                    checked={form.watch("isRemote")}
+                    checked={form.watch('isRemote')}
                     onCheckedChange={(checked) =>
-                      form.setValue("isRemote", checked)
+                      form.setValue('isRemote', checked)
                     }
                   />
                 </div>
@@ -250,10 +256,10 @@ export function FormMode() {
               </CardHeader>
               <CardContent>
                 <SalaryRangeInput
-                  minValue={form.watch("salaryMin")}
-                  maxValue={form.watch("salaryMax")}
-                  onMinChange={(v) => form.setValue("salaryMin", v)}
-                  onMaxChange={(v) => form.setValue("salaryMax", v)}
+                  minValue={form.watch('salaryMin')}
+                  maxValue={form.watch('salaryMax')}
+                  onMinChange={(v) => form.setValue('salaryMin', v)}
+                  onMaxChange={(v) => form.setValue('salaryMax', v)}
                 />
               </CardContent>
             </Card>
@@ -274,24 +280,24 @@ export function FormMode() {
                 <div>
                   <Label className="mb-2 block">Requirements</Label>
                   <TagInput
-                    value={form.watch("requirements")}
-                    onChange={(tags) => form.setValue("requirements", tags)}
+                    value={form.watch('requirements')}
+                    onChange={(tags) => form.setValue('requirements', tags)}
                     placeholder="Add a requirement and press Enter..."
                   />
                 </div>
                 <div>
                   <Label className="mb-2 block">Responsibilities</Label>
                   <TagInput
-                    value={form.watch("responsibilities")}
-                    onChange={(tags) => form.setValue("responsibilities", tags)}
+                    value={form.watch('responsibilities')}
+                    onChange={(tags) => form.setValue('responsibilities', tags)}
                     placeholder="Add a responsibility and press Enter..."
                   />
                 </div>
                 <div>
                   <Label className="mb-2 block">Skills</Label>
                   <TagInput
-                    value={form.watch("skills")}
-                    onChange={(tags) => form.setValue("skills", tags)}
+                    value={form.watch('skills')}
+                    onChange={(tags) => form.setValue('skills', tags)}
                     placeholder="Add a skill and press Enter..."
                   />
                 </div>
@@ -317,5 +323,5 @@ export function FormMode() {
         <JobPreview data={watchedValues} />
       </div>
     </div>
-  );
+  )
 }

@@ -1,16 +1,16 @@
-"use client";
+'use client'
 
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
-} from "@hackhyre/ui/components/tabs";
-import { Microphone2, DocumentText, Magicpen } from "@hackhyre/ui/icons";
+} from '@hackhyre/ui/components/tabs'
+import { Microphone2, DocumentText, Magicpen } from '@hackhyre/ui/icons'
 
-import { VoiceMode } from "@/components/jobs/create/voice-mode";
-import { FormMode } from "@/components/jobs/create/form-mode";
-import { AIPasteMode } from "@/components/jobs/create/ai-paste-mode";
+import { VoiceMode } from '@/components/jobs/create/voice-mode'
+import { FormMode } from '@/components/jobs/create/form-mode'
+import { AIPasteMode } from '@/components/jobs/create/ai-paste-mode'
 
 export default function CreateJobPage() {
   return (
@@ -51,5 +51,5 @@ export default function CreateJobPage() {
         </TabsContent>
       </Tabs>
     </div>
-  );
+  )
 }

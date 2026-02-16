@@ -1,12 +1,12 @@
-"use client";
+'use client'
 
-import { useState, useRef, useEffect, useCallback } from "react";
-import { motion, AnimatePresence } from "motion/react";
-import { toast } from "sonner";
+import { useState, useRef, useEffect, useCallback } from 'react'
+import { motion, AnimatePresence } from 'motion/react'
+import { toast } from 'sonner'
 
-import { Button } from "@hackhyre/ui/components/button";
-import { Input } from "@hackhyre/ui/components/input";
-import { Spinner } from "@hackhyre/ui/components/spinner";
+import { Button } from '@hackhyre/ui/components/button'
+import { Input } from '@hackhyre/ui/components/input'
+import { Spinner } from '@hackhyre/ui/components/spinner'
 import {
   Card,
   CardContent,
@@ -14,213 +14,210 @@ import {
   CardHeader,
   CardTitle,
   CardDescription,
-} from "@hackhyre/ui/components/card";
-import { ScrollArea } from "@hackhyre/ui/components/scroll-area";
-import { Microphone2, Send, TickCircle } from "@hackhyre/ui/icons";
-import { cn } from "@hackhyre/ui/lib/utils";
+} from '@hackhyre/ui/components/card'
+import { ScrollArea } from '@hackhyre/ui/components/scroll-area'
+import { Microphone2, Send, TickCircle } from '@hackhyre/ui/icons'
+import { cn } from '@hackhyre/ui/lib/utils'
 
-import {
-  VoiceChatBubble,
-  type ChatMessage,
-} from "./voice-chat-bubble";
-import { JobPreview } from "./job-preview";
-import { VOICE_AI_SCRIPT } from "@/lib/mock-data";
+import { VoiceChatBubble, type ChatMessage } from './voice-chat-bubble'
+import { JobPreview } from './job-preview'
+import { VOICE_AI_SCRIPT } from '@/lib/mock-data'
 
 interface ConstructedJob {
-  title?: string;
-  description?: string;
-  employmentType?: string;
-  experienceLevel?: string;
-  location?: string;
-  isRemote?: boolean;
-  salaryMin?: number;
-  salaryMax?: number;
-  salaryCurrency?: string;
-  requirements?: string[];
-  responsibilities?: string[];
-  skills?: string[];
+  title?: string
+  description?: string
+  employmentType?: string
+  experienceLevel?: string
+  location?: string
+  isRemote?: boolean
+  salaryMin?: number
+  salaryMax?: number
+  salaryCurrency?: string
+  requirements?: string[]
+  responsibilities?: string[]
+  skills?: string[]
 }
 
 export function VoiceMode() {
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [input, setInput] = useState("");
-  const [isTyping, setIsTyping] = useState(false);
-  const [isRecording, setIsRecording] = useState(false);
-  const [scriptIndex, setScriptIndex] = useState(0);
-  const [constructedJob, setConstructedJob] = useState<ConstructedJob>({});
-  const [isComplete, setIsComplete] = useState(false);
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const [messages, setMessages] = useState<ChatMessage[]>([])
+  const [input, setInput] = useState('')
+  const [isTyping, setIsTyping] = useState(false)
+  const [isRecording, setIsRecording] = useState(false)
+  const [scriptIndex, setScriptIndex] = useState(0)
+  const [constructedJob, setConstructedJob] = useState<ConstructedJob>({})
+  const [isComplete, setIsComplete] = useState(false)
+  const scrollRef = useRef<HTMLDivElement>(null)
 
   // Auto-scroll to bottom
   useEffect(() => {
     if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight
     }
-  }, [messages, isTyping]);
+  }, [messages, isTyping])
 
   // Send initial AI greeting
   useEffect(() => {
     const timer = setTimeout(() => {
-      const firstScript = VOICE_AI_SCRIPT[0];
+      const firstScript = VOICE_AI_SCRIPT[0]
       if (firstScript) {
         setMessages([
           {
-            id: "ai-0",
-            role: "ai",
+            id: 'ai-0',
+            role: 'ai',
             content: firstScript.response,
           },
-        ]);
-        setScriptIndex(1);
+        ])
+        setScriptIndex(1)
       }
-    }, 500);
-    return () => clearTimeout(timer);
-  }, []);
+    }, 500)
+    return () => clearTimeout(timer)
+  }, [])
 
   const processUserMessage = useCallback(
     (text: string) => {
-      if (!text.trim() || isTyping || isComplete) return;
+      if (!text.trim() || isTyping || isComplete) return
 
       // Add user message
       const userMsg: ChatMessage = {
         id: `user-${Date.now()}`,
-        role: "user",
+        role: 'user',
         content: text.trim(),
-      };
-      setMessages((prev) => [...prev, userMsg]);
-      setInput("");
+      }
+      setMessages((prev) => [...prev, userMsg])
+      setInput('')
 
       // Update constructed job based on script step
-      const currentScript = VOICE_AI_SCRIPT[scriptIndex - 1];
+      const currentScript = VOICE_AI_SCRIPT[scriptIndex - 1]
       if (currentScript?.field) {
-        const userText = text.trim();
+        const userText = text.trim()
         setConstructedJob((prev) => {
-          const updated = { ...prev };
+          const updated = { ...prev }
           switch (currentScript.field) {
-            case "title":
-              updated.title = userText;
-              break;
-            case "employmentType":
-              if (userText.toLowerCase().includes("full"))
-                updated.employmentType = "full_time";
-              else if (userText.toLowerCase().includes("part"))
-                updated.employmentType = "part_time";
-              else if (userText.toLowerCase().includes("contract"))
-                updated.employmentType = "contract";
-              else if (userText.toLowerCase().includes("intern"))
-                updated.employmentType = "internship";
-              else updated.employmentType = "full_time";
-              break;
-            case "experienceLevel":
-              if (userText.toLowerCase().includes("entry"))
-                updated.experienceLevel = "entry";
-              else if (userText.toLowerCase().includes("mid"))
-                updated.experienceLevel = "mid";
-              else if (userText.toLowerCase().includes("senior"))
-                updated.experienceLevel = "senior";
-              else if (userText.toLowerCase().includes("lead"))
-                updated.experienceLevel = "lead";
-              else if (userText.toLowerCase().includes("exec"))
-                updated.experienceLevel = "executive";
-              else updated.experienceLevel = "mid";
-              break;
-            case "location":
-              updated.location = userText;
+            case 'title':
+              updated.title = userText
+              break
+            case 'employmentType':
+              if (userText.toLowerCase().includes('full'))
+                updated.employmentType = 'full_time'
+              else if (userText.toLowerCase().includes('part'))
+                updated.employmentType = 'part_time'
+              else if (userText.toLowerCase().includes('contract'))
+                updated.employmentType = 'contract'
+              else if (userText.toLowerCase().includes('intern'))
+                updated.employmentType = 'internship'
+              else updated.employmentType = 'full_time'
+              break
+            case 'experienceLevel':
+              if (userText.toLowerCase().includes('entry'))
+                updated.experienceLevel = 'entry'
+              else if (userText.toLowerCase().includes('mid'))
+                updated.experienceLevel = 'mid'
+              else if (userText.toLowerCase().includes('senior'))
+                updated.experienceLevel = 'senior'
+              else if (userText.toLowerCase().includes('lead'))
+                updated.experienceLevel = 'lead'
+              else if (userText.toLowerCase().includes('exec'))
+                updated.experienceLevel = 'executive'
+              else updated.experienceLevel = 'mid'
+              break
+            case 'location':
+              updated.location = userText
               updated.isRemote =
-                userText.toLowerCase().includes("remote") ||
-                userText.toLowerCase().includes("yes");
-              break;
-            case "salary":
+                userText.toLowerCase().includes('remote') ||
+                userText.toLowerCase().includes('yes')
+              break
+            case 'salary':
               // Extract numbers from text
-              const nums = userText.match(/\d[\d,]*/g);
+              const nums = userText.match(/\d[\d,]*/g)
               if (nums && nums.length >= 2) {
-                updated.salaryMin = parseInt(nums[0]!.replace(/,/g, ""), 10);
-                updated.salaryMax = parseInt(nums[1]!.replace(/,/g, ""), 10);
+                updated.salaryMin = parseInt(nums[0]!.replace(/,/g, ''), 10)
+                updated.salaryMax = parseInt(nums[1]!.replace(/,/g, ''), 10)
               } else if (nums && nums.length === 1) {
-                const val = parseInt(nums[0]!.replace(/,/g, ""), 10);
-                updated.salaryMin = val;
-                updated.salaryMax = Math.round(val * 1.3);
+                const val = parseInt(nums[0]!.replace(/,/g, ''), 10)
+                updated.salaryMin = val
+                updated.salaryMax = Math.round(val * 1.3)
               }
-              updated.salaryCurrency = "USD";
-              break;
-            case "responsibilities":
+              updated.salaryCurrency = 'USD'
+              break
+            case 'responsibilities':
               updated.responsibilities = userText
                 .split(/[,;\n]/)
                 .map((s) => s.trim())
-                .filter(Boolean);
-              break;
-            case "requirements":
+                .filter(Boolean)
+              break
+            case 'requirements':
               updated.requirements = userText
                 .split(/[,;\n]/)
                 .map((s) => s.trim())
-                .filter(Boolean);
-              break;
-            case "skills":
+                .filter(Boolean)
+              break
+            case 'skills':
               updated.skills = userText
                 .split(/[,;\n]/)
                 .map((s) => s.trim())
-                .filter(Boolean);
-              break;
+                .filter(Boolean)
+              break
           }
-          return updated;
-        });
+          return updated
+        })
       }
 
       // Show typing indicator, then AI response
-      setIsTyping(true);
-      const nextScript = VOICE_AI_SCRIPT[scriptIndex];
+      setIsTyping(true)
+      const nextScript = VOICE_AI_SCRIPT[scriptIndex]
 
       setTimeout(() => {
-        setIsTyping(false);
+        setIsTyping(false)
         if (nextScript) {
           setMessages((prev) => [
             ...prev,
             {
               id: `ai-${Date.now()}`,
-              role: "ai",
+              role: 'ai',
               content: nextScript.response,
             },
-          ]);
-          setScriptIndex((prev) => prev + 1);
+          ])
+          setScriptIndex((prev) => prev + 1)
 
           // Check if this is the last step
           if (scriptIndex >= VOICE_AI_SCRIPT.length - 1) {
-            setIsComplete(true);
+            setIsComplete(true)
           }
         }
-      }, 1500);
+      }, 1500)
     },
-    [scriptIndex, isTyping, isComplete],
-  );
+    [scriptIndex, isTyping, isComplete]
+  )
 
   function handleSend() {
-    processUserMessage(input);
+    processUserMessage(input)
   }
 
   function handleKeyDown(e: React.KeyboardEvent) {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      handleSend();
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault()
+      handleSend()
     }
   }
 
   function toggleRecording() {
     if (isRecording) {
-      setIsRecording(false);
+      setIsRecording(false)
       // Mock: simulate voice-to-text after "recording"
       setTimeout(() => {
-        processUserMessage("Senior Full Stack Engineer");
-      }, 300);
+        processUserMessage('Senior Full Stack Engineer')
+      }, 300)
     } else {
-      setIsRecording(true);
+      setIsRecording(true)
       // Auto-stop after 3 seconds (mock)
-      setTimeout(() => setIsRecording(false), 3000);
+      setTimeout(() => setIsRecording(false), 3000)
     }
   }
 
   function handleCreateJob() {
-    toast.success("Job created successfully!", {
+    toast.success('Job created successfully!', {
       description: `"${constructedJob.title}" has been saved as a draft.`,
-    });
+    })
   }
 
   return (
@@ -248,7 +245,7 @@ export function VoiceMode() {
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    className="flex items-center gap-2 text-muted-foreground text-sm"
+                    className="text-muted-foreground flex items-center gap-2 text-sm"
                   >
                     <Spinner className="h-4 w-4" />
                     AI is thinking...
@@ -262,16 +259,16 @@ export function VoiceMode() {
             <div className="flex w-full items-center gap-2">
               <Button
                 type="button"
-                variant={isRecording ? "destructive" : "outline"}
+                variant={isRecording ? 'destructive' : 'outline'}
                 size="icon"
-                className={cn(
-                  "shrink-0",
-                  isRecording && "animate-pulse",
-                )}
+                className={cn('shrink-0', isRecording && 'animate-pulse')}
                 onClick={toggleRecording}
                 disabled={isTyping || isComplete}
               >
-                <Microphone2 size={18} variant={isRecording ? "Bold" : "Linear"} />
+                <Microphone2
+                  size={18}
+                  variant={isRecording ? 'Bold' : 'Linear'}
+                />
               </Button>
 
               <Input
@@ -279,9 +276,7 @@ export function VoiceMode() {
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder={
-                  isComplete
-                    ? "Conversation complete"
-                    : "Type your response..."
+                  isComplete ? 'Conversation complete' : 'Type your response...'
                 }
                 disabled={isTyping || isComplete}
                 className="flex-1"
@@ -301,7 +296,7 @@ export function VoiceMode() {
       </div>
 
       {/* Preview panel */}
-      <div className="lg:col-span-2 space-y-4">
+      <div className="space-y-4 lg:col-span-2">
         <JobPreview data={constructedJob} />
 
         <AnimatePresence>
@@ -319,5 +314,5 @@ export function VoiceMode() {
         </AnimatePresence>
       </div>
     </div>
-  );
+  )
 }
