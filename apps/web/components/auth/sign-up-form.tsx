@@ -170,37 +170,6 @@ export function SignUpForm() {
             </div>
 
             <div className="space-y-3">
-              {/* Talent card */}
-              <button
-                type="button"
-                onClick={() => handleRoleSelect('candidate')}
-                className={cn(
-                  'border-border bg-card flex w-full items-center gap-4 rounded-xl border p-5 text-left transition-all duration-200',
-                  'hover:border-primary/40 hover:shadow-[0_0_24px_oklch(0.82_0.22_155/0.1)]'
-                )}
-              >
-                <div className="bg-primary/10 flex h-12 w-12 shrink-0 items-center justify-center rounded-xl">
-                  <UserSearch
-                    size={24}
-                    variant="Bulk"
-                    className="text-primary"
-                  />
-                </div>
-                <div className="min-w-0">
-                  <p className="font-mono text-sm font-semibold">
-                    I&apos;m looking for work
-                  </p>
-                  <p className="text-muted-foreground mt-0.5 text-xs">
-                    Find jobs, showcase your skills, connect with teams
-                  </p>
-                </div>
-                <ArrowLeft
-                  size={18}
-                  variant="Linear"
-                  className="text-muted-foreground ml-auto shrink-0 rotate-180"
-                />
-              </button>
-
               {/* Recruiter card */}
               <button
                 type="button"
@@ -223,6 +192,36 @@ export function SignUpForm() {
                   </p>
                   <p className="text-muted-foreground mt-0.5 text-xs">
                     Post jobs, discover candidates, build your team
+                  </p>
+                </div>
+                <ArrowLeft
+                  size={18}
+                  variant="Linear"
+                  className="text-muted-foreground ml-auto shrink-0 rotate-180"
+                />
+              </button>
+              {/* Talent card */}
+              <button
+                type="button"
+                onClick={() => handleRoleSelect('candidate')}
+                className={cn(
+                  'border-border bg-card flex w-full items-center gap-4 rounded-xl border p-5 text-left transition-all duration-200',
+                  'hover:border-primary/40 hover:shadow-[0_0_24px_oklch(0.82_0.22_155/0.1)]'
+                )}
+              >
+                <div className="bg-primary/10 flex h-12 w-12 shrink-0 items-center justify-center rounded-xl">
+                  <UserSearch
+                    size={24}
+                    variant="Bulk"
+                    className="text-primary"
+                  />
+                </div>
+                <div className="min-w-0">
+                  <p className="font-mono text-sm font-semibold">
+                    I&apos;m looking for work
+                  </p>
+                  <p className="text-muted-foreground mt-0.5 text-xs">
+                    Find jobs, showcase your skills, connect with teams
                   </p>
                 </div>
                 <ArrowLeft

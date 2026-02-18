@@ -45,19 +45,22 @@ export function SignInForm() {
 
   async function onSubmit(values: SignInValues) {
     startTransition(async () => {
-      const { error } = await authClient.signIn.email({
+      const { error, data } = await authClient.signIn.email({
         email: values.email,
         password: values.password,
       })
+      console.log({ error, data })
       if (error) {
         toast.error(error.message ?? 'Invalid credentials')
         return
       }
       toast.success('Welcome back!')
-      router.push('/')
+      router.push(
+        // @ts-expect-error next line to be updated to handle multiple roles
+        data.role === 'recruiter' ? '/recuriter/dashboard' : '/dashboard'
+      )
     })
   }
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 8 }}
