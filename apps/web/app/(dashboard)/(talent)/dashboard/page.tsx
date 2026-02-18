@@ -1,5 +1,6 @@
 'use client'
 
+import { useMemo } from 'react'
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts'
 import { formatDistanceToNow } from 'date-fns'
 import {
@@ -33,18 +34,23 @@ import {
   TableHeader,
   TableRow,
 } from '@hackhyre/ui/components/table'
+import { Skeleton } from '@hackhyre/ui/components/skeleton'
 
 import { StatCard } from '@/components/dashboard/stat-card'
 import { APPLICATION_STATUS_CONFIG } from '@/lib/constants'
-import {
-  MOCK_CANDIDATE_USER,
-  MOCK_CANDIDATE_STATS,
-  MOCK_CANDIDATE_APPLICATIONS,
-  MOCK_CANDIDATE_ACTIVITY,
-  MOCK_CANDIDATE_CHART_DATA,
-} from '@/lib/candidate-mock-data'
 import { cn } from '@hackhyre/ui/lib/utils'
 import type { Icon } from '@hackhyre/ui/icons'
+import { useSession } from '@/lib/auth-client'
+import { useApplications } from '@/hooks/use-applications'
+import { useSavedJobIds } from '@/hooks/use-saved-jobs'
+import type { CandidateApplicationListItem } from '@/actions/applications'
+import {
+  buildWeeklyChartData,
+  deriveActivityFeed,
+  computeStatTrends,
+  type ChartDataPoint,
+  type DerivedActivity,
+} from '@/lib/dashboard-utils'
 
 // ── Chart config ──────────────────────────────────────────────────
 
@@ -55,7 +61,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-function CandidateApplicationsChart() {
+function CandidateApplicationsChart({ data }: { data: ChartDataPoint[] }) {
   return (
     <Card>
       <CardHeader className="pb-2">
@@ -66,7 +72,7 @@ function CandidateApplicationsChart() {
       <CardContent>
         <ChartContainer config={chartConfig} className="h-55 w-full">
           <AreaChart
-            data={MOCK_CANDIDATE_CHART_DATA}
+            data={data}
             margin={{ top: 8, right: 8, left: -16, bottom: 0 }}
           >
             <defs>
@@ -124,8 +130,36 @@ function CandidateApplicationsChart() {
 
 // ── Recent applications table ─────────────────────────────────────
 
-function CandidateRecentApplications() {
-  const recent = MOCK_CANDIDATE_APPLICATIONS.slice(0, 5)
+function CandidateRecentApplications({
+  applications,
+}: {
+  applications: CandidateApplicationListItem[]
+}) {
+  const recent = applications.slice(0, 5)
+
+  if (recent.length === 0) {
+    return (
+      <Card>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-base font-semibold">
+            Recent Applications
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-col items-center justify-center py-8 text-center">
+            <DocumentText
+              size={32}
+              variant="Linear"
+              className="text-muted-foreground/30 mb-2"
+            />
+            <p className="text-muted-foreground text-[13px]">
+              No applications yet
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+    )
+  }
 
   return (
     <Card>
@@ -152,10 +186,10 @@ function CandidateRecentApplications() {
               return (
                 <TableRow key={app.id}>
                   <TableCell className="pl-6 text-[13px] font-medium">
-                    {app.companyName}
+                    {app.company?.name ?? 'Unknown'}
                   </TableCell>
                   <TableCell className="text-muted-foreground text-[13px]">
-                    {app.jobTitle}
+                    {app.job.title}
                   </TableCell>
                   <TableCell>
                     <Badge
@@ -199,7 +233,35 @@ const ACTIVITY_ICON_MAP: Record<string, { icon: Icon; className: string }> = {
   profile_view: { icon: Profile, className: 'bg-pink-500/10 text-pink-600' },
 }
 
-function CandidateActivityFeed() {
+function CandidateActivityFeed({
+  activities,
+}: {
+  activities: DerivedActivity[]
+}) {
+  if (activities.length === 0) {
+    return (
+      <Card className="h-full">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-base font-semibold">
+            Recent Activity
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-col items-center justify-center py-8 text-center">
+            <Clock
+              size={32}
+              variant="Linear"
+              className="text-muted-foreground/30 mb-2"
+            />
+            <p className="text-muted-foreground text-[13px]">
+              No activity yet
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+    )
+  }
+
   return (
     <Card className="h-full">
       <CardHeader className="pb-2">
@@ -208,7 +270,7 @@ function CandidateActivityFeed() {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-0">
-        {MOCK_CANDIDATE_ACTIVITY.slice(0, 8).map((activity, i) => {
+        {activities.map((activity, i) => {
           const config = ACTIVITY_ICON_MAP[activity.type]
           const ActivityIcon = config?.icon ?? Clock
           const iconClass =
@@ -226,7 +288,9 @@ function CandidateActivityFeed() {
                 >
                   <ActivityIcon size={14} variant="Bold" />
                 </div>
-                {i < 7 && <div className="bg-border mt-1 w-px flex-1" />}
+                {i < activities.length - 1 && (
+                  <div className="bg-border mt-1 w-px flex-1" />
+                )}
               </div>
 
               {/* Content */}
@@ -249,11 +313,72 @@ function CandidateActivityFeed() {
   )
 }
 
+// ── Loading skeleton ──────────────────────────────────────────────
+
+function DashboardSkeleton() {
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div>
+        <Skeleton className="h-8 w-40" />
+        <Skeleton className="mt-2 h-4 w-56" />
+      </div>
+
+      {/* Stats */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <Skeleton key={i} className="h-24 rounded-xl" />
+        ))}
+      </div>
+
+      {/* Content grid */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-5">
+        <div className="space-y-6 lg:col-span-3">
+          <Skeleton className="h-64 rounded-xl" />
+          <Skeleton className="h-72 rounded-xl" />
+        </div>
+        <div className="lg:col-span-2">
+          <Skeleton className="h-[540px] rounded-xl" />
+        </div>
+      </div>
+    </div>
+  )
+}
 
 // ── Page ──────────────────────────────────────────────────────────
 
 export default function CandidateDashboardPage() {
-  const firstName = MOCK_CANDIDATE_USER.name.split(' ')[0]
+  const { data: session, isPending: sessionLoading } = useSession()
+  const { data: appData, isLoading: appsLoading } = useApplications()
+  const { data: savedIds, isLoading: savedLoading } = useSavedJobIds()
+
+  const applications = appData?.applications ?? []
+  const stats = appData?.stats ?? {
+    total: 0,
+    active: 0,
+    interviewing: 0,
+    offers: 0,
+  }
+  const savedCount = savedIds?.length ?? 0
+
+  const chartData = useMemo(
+    () => buildWeeklyChartData(applications),
+    [applications]
+  )
+  const activities = useMemo(
+    () => deriveActivityFeed(applications),
+    [applications]
+  )
+  const trends = useMemo(
+    () => computeStatTrends(applications, savedCount),
+    [applications, savedCount]
+  )
+
+  if (sessionLoading || appsLoading || savedLoading) {
+    return <DashboardSkeleton />
+  }
+
+  const firstName = session?.user?.name?.split(' ')[0] ?? 'there'
 
   return (
     <div className="space-y-6">
@@ -272,29 +397,29 @@ export default function CandidateDashboardPage() {
         <StatCard
           icon={DocumentText}
           label="Applications"
-          value={String(MOCK_CANDIDATE_STATS.totalApplications)}
-          trend="+3 this week"
+          value={String(stats.total)}
+          trend={trends.applications}
           index={0}
         />
         <StatCard
           icon={Briefcase}
           label="Active"
-          value={String(MOCK_CANDIDATE_STATS.activeApplications)}
-          trend="2 in review"
+          value={String(stats.active)}
+          trend={trends.active}
           index={1}
         />
         <StatCard
           icon={Calendar}
           label="Interviews"
-          value={String(MOCK_CANDIDATE_STATS.interviewsUpcoming)}
-          trend="Next: Feb 14"
+          value={String(stats.interviewing)}
+          trend={trends.interviews}
           index={2}
         />
         <StatCard
           icon={Bookmark}
           label="Saved Jobs"
-          value={String(MOCK_CANDIDATE_STATS.savedJobs)}
-          trend="+2 this week"
+          value={String(savedCount)}
+          trend={trends.saved}
           index={3}
         />
       </div>
@@ -302,11 +427,11 @@ export default function CandidateDashboardPage() {
       {/* Content grid */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-5">
         <div className="space-y-6 lg:col-span-3">
-          <CandidateApplicationsChart />
-          <CandidateRecentApplications />
+          <CandidateApplicationsChart data={chartData} />
+          <CandidateRecentApplications applications={applications} />
         </div>
         <div className="lg:col-span-2">
-          <CandidateActivityFeed />
+          <CandidateActivityFeed activities={activities} />
         </div>
       </div>
     </div>

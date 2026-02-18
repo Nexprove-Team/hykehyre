@@ -33,10 +33,9 @@ import {
 import { cn } from '@hackhyre/ui/lib/utils'
 import { useCandidateSidebar } from '@/hooks/use-candidate-sidebar'
 import { CANDIDATE_BREADCRUMB_MAP } from '@/lib/candidate-constants'
-import {
-  MOCK_CANDIDATE_USER,
-  MOCK_CANDIDATE_NOTIFICATIONS,
-} from '@/lib/candidate-mock-data'
+import { useSession } from '@/lib/auth-client'
+// TODO: Replace with real notifications when a notifications system is built
+import { MOCK_CANDIDATE_NOTIFICATIONS } from '@/lib/candidate-mock-data'
 
 function CandidateBreadcrumbs() {
   const pathname = usePathname()
@@ -168,7 +167,11 @@ function CandidateNotificationsPopover() {
 }
 
 function CandidateUserNav() {
-  const initials = MOCK_CANDIDATE_USER.name
+  const { data: session } = useSession()
+  const userName = session?.user?.name ?? ''
+  const userEmail = session?.user?.email ?? ''
+
+  const initials = userName
     .split(' ')
     .map((n) => n[0])
     .join('')
@@ -193,10 +196,10 @@ function CandidateUserNav() {
             </Avatar>
             <div className="min-w-0">
               <p className="truncate text-sm font-semibold">
-                {MOCK_CANDIDATE_USER.name}
+                {userName}
               </p>
               <p className="text-muted-foreground truncate text-xs">
-                {MOCK_CANDIDATE_USER.email}
+                {userEmail}
               </p>
             </div>
           </div>
