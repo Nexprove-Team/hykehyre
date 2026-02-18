@@ -58,7 +58,7 @@ export function Testimonials() {
           <p className="text-primary mb-2 text-xs font-semibold tracking-widest uppercase">
             Testimonials
           </p>
-          <h2 className="font-mono text-3xl font-bold tracking-tight sm:text-4xl">
+          <h2 className="font-mono text-3xl font-bold tracking-tight sm:text-5xl">
             Loved by talent and teams
           </h2>
         </motion.div>
@@ -75,7 +75,7 @@ export function Testimonials() {
               key={t.name}
               variants={fadeUp}
               transition={{ duration: 0.5 }}
-              className="bg-card relative rounded-2xl border p-6"
+              className="relative rounded-none border border-dashed p-6"
             >
               {/* Quote mark */}
               <span className="text-primary/10 pointer-events-none absolute top-4 right-5 font-serif text-6xl leading-none select-none">
@@ -94,11 +94,11 @@ export function Testimonials() {
                 ))}
               </div>
 
-              <p className="text-sm leading-relaxed">{t.quote}</p>
+              <p className="text-sm leading-relaxed sm:text-base">{t.quote}</p>
 
               <div className="mt-6 flex items-center gap-3">
                 <div className="bg-primary/10 flex h-10 w-10 items-center justify-center rounded-full">
-                  <span className="text-primary text-xs font-bold">
+                  <span className="text-primary text-sm font-bold">
                     {t.initials}
                   </span>
                 </div>

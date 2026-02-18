@@ -26,6 +26,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@hackhyre/ui/components/dropdown-menu'
+import { Skeleton } from '@hackhyre/ui/components/skeleton'
 import {
   SearchNormal,
   AddCircle,
@@ -44,8 +45,11 @@ import {
   CloseCircle,
 } from '@hackhyre/ui/icons'
 import { cn } from '@hackhyre/ui/lib/utils'
-import { MOCK_JOBS, type JobStatus, type MockJob } from '@/lib/mock-data'
+import { useRecruiterJobs } from '@/hooks/use-recruiter-jobs'
+import type { RecruiterJobListItem } from '@/actions/recruiter-jobs'
 import { JOB_STATUS_CONFIG } from '@/lib/constants'
+
+type JobStatus = 'draft' | 'open' | 'paused' | 'filled'
 
 const STATUS_FILTERS: { label: string; value: JobStatus | 'all' }[] = [
   { label: 'All Jobs', value: 'all' },
@@ -79,8 +83,8 @@ function formatSalary(
   return `Up to ${fmt(max!)}`
 }
 
-function formatDate(dateStr: string) {
-  return new Date(dateStr).toLocaleDateString('en-US', {
+function formatDate(date: Date) {
+  return new Date(date).toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
     year: 'numeric',
@@ -94,7 +98,7 @@ function formatEmploymentType(type: string) {
     .join(' ')
 }
 
-function JobRow({ job, index }: { job: MockJob; index: number }) {
+function JobRow({ job, index }: { job: RecruiterJobListItem; index: number }) {
   const config = JOB_STATUS_CONFIG[job.status]
   const StatusIcon = STATUS_ICON[job.status] ?? Clock
 
@@ -106,7 +110,7 @@ function JobRow({ job, index }: { job: MockJob; index: number }) {
       className="group hover:bg-accent/50 border-b transition-colors"
     >
       <TableCell className="py-4">
-        <Link href={`/jobs/${job.id}`} className="block">
+        <Link href={`/recuriter/jobs/${job.id}`} className="block">
           <p className="group-hover:text-primary text-[13px] font-semibold transition-colors">
             {job.title}
           </p>
@@ -172,7 +176,7 @@ function JobRow({ job, index }: { job: MockJob; index: number }) {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-40">
             <DropdownMenuItem className="gap-2 text-[13px]" asChild>
-              <Link href={`/jobs/${job.id}`}>
+              <Link href={`/recuriter/jobs/${job.id}`}>
                 <Eye size={14} variant="Linear" />
                 View Details
               </Link>
@@ -196,11 +200,55 @@ function JobRow({ job, index }: { job: MockJob; index: number }) {
   )
 }
 
+function JobsLoadingSkeleton() {
+  return (
+    <div className="space-y-6">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <Skeleton className="h-7 w-36" />
+          <Skeleton className="mt-1.5 h-4 w-56" />
+        </div>
+        <Skeleton className="h-9 w-32 rounded-xl" />
+      </div>
+      <div className="flex gap-2">
+        {Array.from({ length: 5 }).map((_, i) => (
+          <Skeleton key={i} className="h-8 w-20 rounded-lg" />
+        ))}
+      </div>
+      <Card>
+        <CardHeader className="pb-3">
+          <div className="flex items-center justify-between">
+            <Skeleton className="h-5 w-28" />
+            <Skeleton className="h-8 w-48 rounded-lg" />
+          </div>
+        </CardHeader>
+        <CardContent className="pb-2">
+          <div className="space-y-4">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <div key={i} className="flex items-center gap-4">
+                <Skeleton className="h-10 flex-1" />
+                <Skeleton className="hidden h-6 w-16 sm:block" />
+                <Skeleton className="hidden h-6 w-24 md:block" />
+                <Skeleton className="h-6 w-12" />
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  )
+}
+
 export default function JobsPage() {
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState<JobStatus | 'all'>('all')
+  const { data: jobs, isLoading } = useRecruiterJobs()
 
-  const filtered = MOCK_JOBS.filter((job) => {
+  if (isLoading) return <JobsLoadingSkeleton />
+
+  const allJobs = jobs ?? []
+
+  const filtered = allJobs.filter((job) => {
     const matchesSearch =
       !search ||
       job.title.toLowerCase().includes(search.toLowerCase()) ||
@@ -210,11 +258,11 @@ export default function JobsPage() {
   })
 
   const counts = {
-    all: MOCK_JOBS.length,
-    open: MOCK_JOBS.filter((j) => j.status === 'open').length,
-    draft: MOCK_JOBS.filter((j) => j.status === 'draft').length,
-    paused: MOCK_JOBS.filter((j) => j.status === 'paused').length,
-    filled: MOCK_JOBS.filter((j) => j.status === 'filled').length,
+    all: allJobs.length,
+    open: allJobs.filter((j) => j.status === 'open').length,
+    draft: allJobs.filter((j) => j.status === 'draft').length,
+    paused: allJobs.filter((j) => j.status === 'paused').length,
+    filled: allJobs.filter((j) => j.status === 'filled').length,
   }
 
   return (
@@ -228,7 +276,7 @@ export default function JobsPage() {
           </p>
         </div>
         <Button className="gap-2 rounded-xl" asChild>
-          <Link href="/jobs/create">
+          <Link href="/recuriter/jobs/create">
             <AddCircle size={18} variant="Bold" />
             Create Job
           </Link>
@@ -291,7 +339,27 @@ export default function JobsPage() {
           </div>
         </CardHeader>
         <CardContent className="pb-2">
-          {filtered.length === 0 ? (
+          {allJobs.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-16 text-center">
+              <Briefcase
+                size={40}
+                variant="Linear"
+                className="text-muted-foreground/30 mb-3"
+              />
+              <p className="text-muted-foreground text-[13px] font-medium">
+                No jobs yet
+              </p>
+              <p className="text-muted-foreground/70 mt-1 text-[12px]">
+                Create your first job posting to start receiving applications
+              </p>
+              <Button className="mt-4 gap-2 rounded-xl" asChild>
+                <Link href="/recuriter/jobs/create">
+                  <AddCircle size={16} variant="Bold" />
+                  Post a Job
+                </Link>
+              </Button>
+            </div>
+          ) : filtered.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 text-center">
               <Briefcase
                 size={40}

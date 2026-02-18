@@ -228,7 +228,6 @@ export function Hero() {
     <section className="relative overflow-hidden py-24 lg:py-32">
       <div className="mx-auto max-w-375 px-4 sm:px-6 lg:px-8">
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
-          {/* Left content */}
           <motion.div
             initial="hidden"
             animate="visible"
@@ -248,7 +247,7 @@ export function Hero() {
             <motion.h1
               variants={fadeUp}
               transition={{ duration: 0.5 }}
-              className="font-mono text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl"
+              className="font-mono text-4xl font-bold tracking-tight sm:text-5xl lg:text-7xl"
             >
               The smartest way to{' '}
               <span className="text-primary">match talent</span> with
@@ -258,7 +257,7 @@ export function Hero() {
             <motion.p
               variants={fadeUp}
               transition={{ duration: 0.5 }}
-              className="text-muted-foreground mx-auto mt-6 max-w-lg text-base leading-relaxed sm:text-lg lg:mx-0"
+              className="text-muted-foreground mx-auto mt-6 max-w-lg text-base leading-relaxed sm:text-xl lg:mx-0"
             >
               HackHyre uses AI to connect ambitious professionals with
               forward-thinking companies. No keyword games, no guesswork — just
@@ -272,26 +271,16 @@ export function Hero() {
             >
               <Button
                 size="lg"
-                className="rounded-xl text-sm font-semibold shadow-sm"
+                className="h-12.5 w-80 rounded-2xl text-sm font-semibold shadow-sm lg:text-xl"
                 asChild
               >
                 <Link href="/sign-up">
-                  Find Your Next Role
-                  <ArrowRight size={16} variant="Linear" />
+                  Get Started <ArrowRight size={16} variant="Linear" />
                 </Link>
-              </Button>
-              <Button
-                variant="outline"
-                size="lg"
-                className="rounded-xl text-sm font-semibold"
-                asChild
-              >
-                <Link href="/sign-up?role=recruiter">Start Hiring</Link>
               </Button>
             </motion.div>
           </motion.div>
 
-          {/* Right illustration */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}

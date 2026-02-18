@@ -88,10 +88,10 @@ export function ForRecruiters() {
           <p className="mb-2 text-xs font-semibold tracking-widest text-[oklch(0.82_0.22_155)] uppercase">
             For Employers
           </p>
-          <h2 className="font-mono text-3xl font-bold tracking-tight text-white sm:text-4xl">
+          <h2 className="font-mono text-3xl font-bold tracking-tight text-white sm:text-5xl">
             Hire smarter, not harder
           </h2>
-          <p className="mx-auto mt-4 max-w-xl text-base text-neutral-400">
+          <p className="mx-auto mt-4 max-w-xl text-xl text-neutral-400">
             Powerful tools that help you find, evaluate, and hire the best
             talent — faster than ever.
           </p>
@@ -118,10 +118,10 @@ export function ForRecruiters() {
                   className="text-[oklch(0.82_0.22_155)]"
                 />
               </div>
-              <h3 className="font-mono text-[15px] font-semibold tracking-tight text-white">
+              <h3 className="font-mono text-xl font-semibold tracking-tight text-white">
                 {card.title}
               </h3>
-              <p className="mt-1.5 text-sm leading-relaxed text-neutral-400">
+              <p className="mt-1.5 text-sm leading-relaxed text-neutral-400 sm:text-base">
                 {card.description}
               </p>
             </motion.div>

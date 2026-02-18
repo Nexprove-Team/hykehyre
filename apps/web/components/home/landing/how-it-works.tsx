@@ -52,10 +52,10 @@ export function HowItWorks() {
           <p className="text-primary mb-2 text-xs font-semibold tracking-widest uppercase">
             Simple Process
           </p>
-          <h2 className="font-mono text-3xl font-bold tracking-tight sm:text-4xl">
+          <h2 className="font-mono text-3xl font-bold tracking-tight sm:text-5xl">
             How it works
           </h2>
-          <p className="text-muted-foreground mx-auto mt-4 max-w-xl text-base">
+          <p className="text-muted-foreground mx-auto mt-4 max-w-xl text-xl">
             Three simple steps to finding your perfect match — whether
             you&apos;re hiring or looking for your next role.
           </p>
@@ -66,9 +66,8 @@ export function HowItWorks() {
           whileInView="visible"
           viewport={{ once: true, margin: '-80px' }}
           variants={stagger}
-          className="relative grid gap-8 md:grid-cols-3"
+          className="relative grid gap-8 sm:divide-x md:grid-cols-3"
         >
-          {/* Connecting line — desktop only */}
           <div className="absolute top-16 right-[calc(33%+1rem)] left-[calc(33%-1rem)] hidden h-px bg-linear-to-r from-transparent via-neutral-200 to-transparent md:block dark:via-neutral-800" />
 
           {STEPS.map((step) => (
@@ -84,10 +83,10 @@ export function HowItWorks() {
               <span className="text-primary/30 font-mono text-5xl font-bold">
                 {step.num}
               </span>
-              <h3 className="mt-2 font-mono text-lg font-semibold tracking-tight">
+              <h3 className="mt-2 font-mono text-xl font-semibold tracking-tight">
                 {step.title}
               </h3>
-              <p className="text-muted-foreground mx-auto mt-2 max-w-xs text-sm leading-relaxed">
+              <p className="text-muted-foreground mx-auto mt-2 max-w-xs text-sm leading-relaxed lg:text-xl">
                 {step.description}
               </p>
             </motion.div>

@@ -27,7 +27,6 @@ export default async function HomeLayout({
     staleTime: 60 * 60 * 1000,
   })
 
-  console.log('User location:', res)
   return (
     <LayoutWrapper>
       <Header user={session?.user} geo={res} />

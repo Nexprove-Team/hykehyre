@@ -130,7 +130,6 @@ export function AIMatching() {
     <section className="bg-muted/30 py-20 lg:py-28">
       <div className="mx-auto max-w-375 px-4 sm:px-6 lg:px-8">
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
-          {/* Left text */}
           <motion.div
             initial="hidden"
             whileInView="visible"
@@ -147,14 +146,14 @@ export function AIMatching() {
             <motion.h2
               variants={fadeUp}
               transition={{ duration: 0.5 }}
-              className="font-mono text-3xl font-bold tracking-tight sm:text-4xl"
+              className="font-mono text-3xl font-bold tracking-tight sm:text-5xl"
             >
               Matching powered by intelligence, not keywords
             </motion.h2>
             <motion.p
               variants={fadeUp}
               transition={{ duration: 0.5 }}
-              className="text-muted-foreground mt-4 max-w-lg text-base leading-relaxed"
+              className="text-muted-foreground mt-4 max-w-lg text-xl leading-relaxed"
             >
               Our AI goes beyond keyword matching. It understands context,
               evaluates culture fit, and identifies growth potential to find
@@ -167,7 +166,7 @@ export function AIMatching() {
                   key={feature}
                   variants={fadeUp}
                   transition={{ duration: 0.4 }}
-                  className="flex items-center gap-3 text-sm font-medium"
+                  className="flex items-center gap-3 text-sm font-medium sm:text-lg"
                 >
                   <TickCircle
                     size={20}
@@ -179,8 +178,6 @@ export function AIMatching() {
               ))}
             </motion.ul>
           </motion.div>
-
-          {/* Right visual */}
           <motion.div
             initial={{ opacity: 0, x: 24 }}
             whileInView={{ opacity: 1, x: 0 }}

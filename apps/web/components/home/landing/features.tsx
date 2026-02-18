@@ -81,10 +81,10 @@ export function Features() {
           <p className="text-primary mb-2 text-xs font-semibold tracking-widest uppercase">
             Platform
           </p>
-          <h2 className="font-mono text-3xl font-bold tracking-tight sm:text-4xl">
+          <h2 className="font-mono text-3xl font-bold tracking-tight sm:text-5xl">
             Everything you need to hire and get hired
           </h2>
-          <p className="text-muted-foreground mx-auto mt-4 max-w-xl text-base">
+          <p className="text-muted-foreground mx-auto mt-4 max-w-xl text-xl">
             A complete toolkit for both sides of the hiring equation.
           </p>
         </motion.div>
@@ -112,10 +112,10 @@ export function Features() {
                   className="text-primary"
                 />
               </div>
-              <h3 className="font-mono text-[15px] font-semibold tracking-tight">
+              <h3 className="font-mono text-xl font-semibold tracking-tight">
                 {feature.title}
               </h3>
-              <p className="text-muted-foreground mt-1.5 text-sm leading-relaxed">
+              <p className="text-muted-foreground mt-1.5 text-sm leading-relaxed sm:text-base">
                 {feature.description}
               </p>
             </motion.div>

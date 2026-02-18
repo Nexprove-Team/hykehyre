@@ -17,7 +17,7 @@
     "@tanstack/react-query": "^5.90.21",
     "@tanstack/react-query-devtools": "^5.91.3",
     "@xyflow/react": "^12.10.0",
-    "ai": "^6.0.90",
+    "ai": "^6.0.91",
     "ansi-to-react": "^6.2.6",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -52,7 +52,7 @@
   "devDependencies": {
     "@hackhyre/eslint-config": "workspace:*",
     "@hackhyre/typescript-config": "workspace:*",
-    "@tailwindcss/postcss": "^4.1.18",
+    "@tailwindcss/postcss": "^4.2.0",
     "@turbo/gen": "^2.8.10",
     "@types/node": "^25.2.3",
     "@types/react": "^19.2.14",
@@ -60,7 +60,7 @@
     "eslint": "^10.0.0",
     "prettier": "^3.8.1",
     "prettier-plugin-tailwindcss": "^0.7.2",
-    "tailwindcss": "^4.1.18",
+    "tailwindcss": "^4.2.0",
     "typescript": "^5.9.3"
   },
   "exports": {

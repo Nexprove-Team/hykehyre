@@ -64,7 +64,19 @@ const CARDS: FeatureCard[] = [
 
 export function ForCandidates() {
   return (
-    <section className="py-20 lg:py-28">
+    <section className="bg-brand-navy overflow-x-hidden py-20 lg:py-28">
+      {/* Background effects */}
+      {/* <div className="pointer-events-none absolute -top-32 -right-32 h-80 w-80 rounded-full bg-[oklch(0.82_0.22_155)] opacity-[0.05] blur-[100px]" />
+      <div className="pointer-events-none absolute -bottom-24 -left-24 h-64 w-64 rounded-full bg-[oklch(0.82_0.22_155)] opacity-[0.04] blur-[80px]" />
+
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.03]"
+        style={{
+          backgroundImage:
+            'linear-gradient(rgba(255,255,255,.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.1) 1px, transparent 1px)',
+          backgroundSize: '40px 40px',
+        }}
+      /> */}
       <div className="mx-auto max-w-375 px-4 sm:px-6 lg:px-8">
         <motion.div
           initial="hidden"
@@ -77,10 +89,10 @@ export function ForCandidates() {
           <p className="text-primary mb-2 text-xs font-semibold tracking-widest uppercase">
             For Job Seekers
           </p>
-          <h2 className="font-mono text-3xl font-bold tracking-tight sm:text-4xl">
+          <h2 className="font-mono text-3xl font-bold tracking-tight sm:text-5xl">
             Built for ambitious talent
           </h2>
-          <p className="text-muted-foreground mx-auto mt-4 max-w-xl text-base">
+          <p className="text-muted-foreground mx-auto mt-4 max-w-xl text-xl">
             Everything you need to find a role that fits — not just a job, but
             the right opportunity.
           </p>
@@ -98,15 +110,15 @@ export function ForCandidates() {
               key={card.title}
               variants={fadeUp}
               transition={{ duration: 0.4 }}
-              className="group rounded-2xl border p-6 transition-colors hover:border-neutral-300 dark:hover:border-neutral-700"
+              className="group rounded-2xl border border-neutral-800 bg-neutral-900/50 p-6 transition-colors hover:border-neutral-700"
             >
               <div className="bg-primary/10 mb-4 flex h-10 w-10 items-center justify-center rounded-xl transition-transform group-hover:scale-110">
                 <card.icon size={20} variant="Bold" className="text-primary" />
               </div>
-              <h3 className="font-mono text-[15px] font-semibold tracking-tight">
+              <h3 className="font-mono text-xl font-semibold tracking-tight">
                 {card.title}
               </h3>
-              <p className="text-muted-foreground mt-1.5 text-sm leading-relaxed">
+              <p className="text-muted-foreground mt-1.5 text-sm leading-relaxed sm:text-lg">
                 {card.description}
               </p>
             </motion.div>
