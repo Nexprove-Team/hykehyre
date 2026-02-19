@@ -6,6 +6,7 @@ import { resend } from "@jobs/utils/resend";
 import { interviewScheduledSchema } from "@jobs/schema";
 import { InterviewScheduledCandidateEmail } from "@hackhyre/email/emails/interview-scheduled-candidate";
 import { InterviewScheduledRecruiterEmail } from "@hackhyre/email/emails/interview-scheduled-recruiter";
+import { format } from "date-fns";
 
 export const sendInterviewScheduledEmail = schemaTask({
   id: "send-interview-scheduled-email",
@@ -30,24 +31,13 @@ export const sendInterviewScheduledEmail = schemaTask({
       notes,
     } = payload;
 
-    // Format the scheduled time for display
-    const formattedDate = new Date(scheduledAt).toLocaleDateString("en-US", {
-      weekday: "long",
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    });
-    const formattedTime = new Date(scheduledAt).toLocaleTimeString("en-US", {
-      hour: "numeric",
-      minute: "2-digit",
-      hour12: true,
-    });
+    const formattedDate = format(new Date(scheduledAt), "EEEE, MMM d, yyyy");
+    const formattedTime = format(new Date(scheduledAt), "h:mm a");
     const formattedDateTime = `${formattedDate} at ${formattedTime}`;
 
     const typeLabel =
       interviewType.charAt(0).toUpperCase() + interviewType.slice(1);
 
-    // Render both emails
     const [candidateHtml, recruiterHtml] = await Promise.all([
       render(
         InterviewScheduledCandidateEmail({
@@ -76,7 +66,7 @@ export const sendInterviewScheduledEmail = schemaTask({
       ),
     ]);
 
-    // Send both emails in parallel
+
     const results = await Promise.allSettled([
       resend.emails.send({
         headers: { "X-Entity-Ref-ID": nanoid() },
@@ -94,7 +84,7 @@ export const sendInterviewScheduledEmail = schemaTask({
       }),
     ]);
 
-    // Schedule reminder 30 minutes before interview
+
     const reminderAt = new Date(
       new Date(scheduledAt).getTime() - 30 * 60 * 1000,
     );
