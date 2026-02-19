@@ -14,6 +14,12 @@ export const env = createEnv({
     BLOB_READ_WRITE_TOKEN: z
       .string()
       .min(1, 'BLOB_READ_WRITE_TOKEN is required'),
+    GOOGLE_CLIENT_ID: z.string().optional(),
+    GOOGLE_CLIENT_SECRET: z.string().optional(),
+    GOOGLE_REDIRECT_URI: z
+      .string()
+      .optional()
+      .default('http://localhost:3000/api/google/callback'),
   },
   experimental__runtimeEnv: process.env,
 })

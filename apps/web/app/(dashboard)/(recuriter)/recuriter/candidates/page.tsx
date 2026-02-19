@@ -13,6 +13,7 @@ import { Badge } from '@hackhyre/ui/components/badge'
 import { Input } from '@hackhyre/ui/components/input'
 import { Button } from '@hackhyre/ui/components/button'
 import { Avatar, AvatarFallback } from '@hackhyre/ui/components/avatar'
+import { Skeleton } from '@hackhyre/ui/components/skeleton'
 import {
   Select,
   SelectContent,
@@ -22,7 +23,6 @@ import {
 } from '@hackhyre/ui/components/select'
 import {
   People,
-  Star,
   Calendar,
   TickCircle,
   Location,
@@ -32,32 +32,12 @@ import {
   MagicStar,
 } from '@hackhyre/ui/icons'
 import { cn } from '@hackhyre/ui/lib/utils'
-import {
-  MOCK_CANDIDATES,
-  MOCK_APPLICATIONS,
-  type ApplicationStatus,
-} from '@/lib/mock-data'
 import { APPLICATION_STATUS_CONFIG } from '@/lib/constants'
 import { StatCard } from '@/components/dashboard/stat-card'
+import { useRecruiterCandidates } from '@/hooks/use-recruiter-candidates'
 
-// ── Status priority for "best status" derivation ────────────────────
-const STATUS_PRIORITY: Record<ApplicationStatus, number> = {
-  hired: 5,
-  interviewing: 4,
-  under_review: 3,
-  not_reviewed: 2,
-  rejected: 1,
-}
-
-// ── Sort helpers ────────────────────────────────────────────────────
 type SortKey = 'match' | 'newest' | 'experience' | 'name'
 
-function parseExperience(exp: string) {
-  const n = parseInt(exp, 10)
-  return isNaN(n) ? 0 : n
-}
-
-// ── ScoreRingSmall (48x48) ──────────────────────────────────────────
 function ScoreRingSmall({ score }: { score: number }) {
   const percentage = Math.round(score * 100)
   const r = 18
@@ -112,42 +92,43 @@ function ScoreRingSmall({ score }: { score: number }) {
   )
 }
 
+function CandidatesLoadingSkeleton() {
+  return (
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-xl font-bold tracking-tight">Candidates</h1>
+        <p className="text-muted-foreground mt-0.5 text-[13px]">
+          AI-ranked candidates across all your open positions
+        </p>
+      </div>
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <Skeleton key={i} className="h-24 rounded-xl" />
+        ))}
+      </div>
+      <Card>
+        <CardHeader className="pb-3">
+          <Skeleton className="h-5 w-40" />
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <Skeleton key={i} className="h-52 rounded-xl" />
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  )
+}
+
 // ── Main Page ───────────────────────────────────────────────────────
 export default function CandidatesPage() {
   const [search, setSearch] = useState('')
   const [sort, setSort] = useState<SortKey>('match')
+  const { data: candidates = [], isLoading } = useRecruiterCandidates()
 
-  // Derive per-candidate data from mock data
-  const candidates = useMemo(() => {
-    return MOCK_CANDIDATES.map((c) => {
-      const apps = MOCK_APPLICATIONS.filter((a) => a.candidateId === c.id)
-      const scores = apps
-        .map((a) => a.relevanceScore)
-        .filter((s): s is number => s !== null)
-      const bestMatchScore = scores.length > 0 ? Math.max(...scores) : 0
-      const bestApp = apps.reduce<(typeof apps)[0] | null>((best, a) => {
-        if (a.relevanceScore === null) return best
-        if (!best || best.relevanceScore === null) return a
-        return a.relevanceScore > best.relevanceScore ? a : best
-      }, null)
-      const bestStatus = apps.reduce<ApplicationStatus>(
-        (best, a) =>
-          STATUS_PRIORITY[a.status] > STATUS_PRIORITY[best] ? a.status : best,
-        'not_reviewed'
-      )
-
-      return {
-        ...c,
-        bestMatchScore,
-        applicationCount: apps.length,
-        applications: apps,
-        bestStatus,
-        bestMatchJobTitle: bestApp?.jobTitle ?? null,
-      }
-    })
-  }, [])
-
-  // Filter
+  // Filter & sort
   const filtered = useMemo(() => {
     let result = candidates
     if (search) {
@@ -155,28 +136,21 @@ export default function CandidatesPage() {
       result = result.filter(
         (c) =>
           c.name.toLowerCase().includes(q) ||
-          c.title.toLowerCase().includes(q) ||
+          (c.headline ?? '').toLowerCase().includes(q) ||
           c.skills.some((s) => s.toLowerCase().includes(q))
       )
     }
-    // Sort
     result = [...result].sort((a, b) => {
       switch (sort) {
         case 'match':
           return b.bestMatchScore - a.bestMatchScore
         case 'newest':
           return (
-            Math.max(
-              ...b.applications.map((x) => new Date(x.createdAt).getTime()),
-              0
-            ) -
-            Math.max(
-              ...a.applications.map((x) => new Date(x.createdAt).getTime()),
-              0
-            )
+            new Date(b.latestApplicationDate).getTime() -
+            new Date(a.latestApplicationDate).getTime()
           )
         case 'experience':
-          return parseExperience(b.experience) - parseExperience(a.experience)
+          return (b.experienceYears ?? 0) - (a.experienceYears ?? 0)
         case 'name':
           return a.name.localeCompare(b.name)
         default:
@@ -193,6 +167,8 @@ export default function CandidatesPage() {
     (c) => c.bestStatus === 'interviewing'
   ).length
   const hired = candidates.filter((c) => c.bestStatus === 'hired').length
+
+  if (isLoading) return <CandidatesLoadingSkeleton />
 
   return (
     <div className="space-y-6">
@@ -260,10 +236,7 @@ export default function CandidatesPage() {
                   className="bg-muted/50 focus-visible:bg-background h-8 w-56 rounded-lg border-0 pl-8 text-[12px]"
                 />
               </div>
-              <Select
-                value={sort}
-                onValueChange={(v) => setSort(v as SortKey)}
-              >
+              <Select value={sort} onValueChange={(v) => setSort(v as SortKey)}>
                 <SelectTrigger className="h-8 w-40 rounded-lg text-[12px]">
                   <SelectValue />
                 </SelectTrigger>
@@ -307,7 +280,7 @@ export default function CandidatesPage() {
 
                 return (
                   <motion.div
-                    key={candidate.id}
+                    key={candidate.bestApplicationId}
                     initial={{ opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{
@@ -319,7 +292,7 @@ export default function CandidatesPage() {
                       <CardContent className="p-4">
                         {/* Top row: avatar + name | score ring */}
                         <div className="flex items-start justify-between gap-3">
-                          <div className="flex items-center gap-3 min-w-0">
+                          <div className="flex min-w-0 items-center gap-3">
                             <Avatar className="h-10 w-10 shrink-0">
                               <AvatarFallback className="bg-primary/10 text-primary text-[11px] font-bold">
                                 {initials}
@@ -330,7 +303,7 @@ export default function CandidatesPage() {
                                 {candidate.name}
                               </p>
                               <p className="text-muted-foreground truncate text-[11px]">
-                                {candidate.title}
+                                {candidate.headline ?? 'Applicant'}
                               </p>
                             </div>
                           </div>
@@ -341,34 +314,38 @@ export default function CandidatesPage() {
                         <div className="text-muted-foreground mt-3 flex items-center gap-3 text-[11px]">
                           <span className="flex items-center gap-1">
                             <Location size={12} variant="Linear" />
-                            {candidate.location}
+                            {candidate.location ?? '—'}
                           </span>
                           <span className="flex items-center gap-1">
                             <Briefcase size={12} variant="Linear" />
-                            {candidate.experience}
+                            {candidate.experienceYears
+                              ? `${candidate.experienceYears} Years`
+                              : '—'}
                           </span>
                         </div>
 
                         {/* Skills */}
-                        <div className="mt-3 flex flex-wrap gap-1.5">
-                          {visibleSkills.map((skill) => (
-                            <Badge
-                              key={skill}
-                              variant="secondary"
-                              className="px-2 py-0.5 text-[10px] font-medium"
-                            >
-                              {skill}
-                            </Badge>
-                          ))}
-                          {overflowCount > 0 && (
-                            <Badge
-                              variant="outline"
-                              className="px-2 py-0.5 text-[10px] font-medium"
-                            >
-                              +{overflowCount}
-                            </Badge>
-                          )}
-                        </div>
+                        {candidate.skills.length > 0 && (
+                          <div className="mt-3 flex flex-wrap gap-1.5">
+                            {visibleSkills.map((skill) => (
+                              <Badge
+                                key={skill}
+                                variant="secondary"
+                                className="px-2 py-0.5 text-[10px] font-medium"
+                              >
+                                {skill}
+                              </Badge>
+                            ))}
+                            {overflowCount > 0 && (
+                              <Badge
+                                variant="outline"
+                                className="px-2 py-0.5 text-[10px] font-medium"
+                              >
+                                +{overflowCount}
+                              </Badge>
+                            )}
+                          </div>
+                        )}
 
                         {/* Bottom row */}
                         <div className="mt-3 flex items-center justify-between border-t pt-3">
@@ -395,7 +372,7 @@ export default function CandidatesPage() {
                             asChild
                           >
                             <Link
-                              href={`/recuriter/candidates/${candidate.id}`}
+                              href={`/recuriter/candidates/${candidate.bestApplicationId}`}
                             >
                               View
                               <ArrowRight size={12} variant="Linear" />

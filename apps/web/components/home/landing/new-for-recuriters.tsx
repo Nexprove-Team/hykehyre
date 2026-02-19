@@ -52,7 +52,7 @@ export function NewForRecruiters() {
         <p className="mb-2 text-xs font-semibold tracking-widest text-[oklch(0.82_0.22_155)] uppercase">
           For Employers
         </p>
-        <h2 className="font-mono text-3xl font-bold tracking-tight text-white sm:text-5xl">
+        <h2 className="font-mono text-3xl font-bold tracking-tight sm:text-5xl">
           Hire smarter, not harder
         </h2>
         <p className="mx-auto mt-4 max-w-xl text-xl text-neutral-400">
@@ -137,7 +137,7 @@ function UserBasedSecurity() {
     <>
       <div className="bg-background outline-border relative mx-auto flex size-32 items-center justify-center rounded-full border shadow-xs outline outline-offset-4">
         <CustomLockIcon className="size-24" />
-        <div className="from-foreground/15 via-foreground/5 absolute inset-0 scale-120 bg-radial to-transparent blur-xl" />
+        <div className="from-foreground/15 via-foreground/5 relative inset-0 scale-120 bg-radial to-transparent blur-xl" />
       </div>
 
       <div className="relative mt-8 space-y-1.5 text-center">

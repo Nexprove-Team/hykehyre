@@ -1,7 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useMemo } from 'react'
 import { motion } from 'motion/react'
+import { parseAsString, useQueryStates } from 'nuqs'
+import { useDebounce } from 'use-debounce'
 import {
   Card,
   CardContent,
@@ -10,9 +12,9 @@ import {
 } from '@hackhyre/ui/components/card'
 import { Badge } from '@hackhyre/ui/components/badge'
 import { Input } from '@hackhyre/ui/components/input'
-import { Button } from '@hackhyre/ui/components/button'
 import { Avatar, AvatarFallback } from '@hackhyre/ui/components/avatar'
 import { Progress } from '@hackhyre/ui/components/progress'
+import { Skeleton } from '@hackhyre/ui/components/skeleton'
 import {
   Table,
   TableBody,
@@ -24,19 +26,16 @@ import {
 import {
   SearchNormal,
   Briefcase,
-  Calendar,
-  Star,
   DocumentText,
-  People,
 } from '@hackhyre/ui/icons'
 import { cn } from '@hackhyre/ui/lib/utils'
-import {
-  MOCK_APPLICATIONS,
-  type ApplicationStatus,
-  type MockApplication,
-} from '@/lib/mock-data'
 import { APPLICATION_STATUS_CONFIG } from '@/lib/constants'
 import { useCandidateSheet } from '@/hooks/use-candidate-sheet'
+import { useRecruiterApplications } from '@/hooks/use-recruiter-applications'
+import type {
+  RecruiterApplicationListItem,
+  ApplicationStatus,
+} from '@/actions/recruiter-applications'
 
 const STATUS_FILTERS: { label: string; value: ApplicationStatus | 'all' }[] = [
   { label: 'All', value: 'all' },
@@ -47,10 +46,9 @@ const STATUS_FILTERS: { label: string; value: ApplicationStatus | 'all' }[] = [
   { label: 'Rejected', value: 'rejected' },
 ]
 
-function formatRelativeTime(dateStr: string) {
+function formatRelativeTime(date: Date) {
   const now = new Date()
-  const date = new Date(dateStr)
-  const diffMs = now.getTime() - date.getTime()
+  const diffMs = now.getTime() - new Date(date).getTime()
   const diffH = Math.floor(diffMs / (1000 * 60 * 60))
   if (diffH < 1) return 'Just now'
   if (diffH < 24) return `${diffH}h ago`
@@ -64,7 +62,7 @@ function ApplicationRow({
   index,
   onSelect,
 }: {
-  app: MockApplication
+  app: RecruiterApplicationListItem
   index: number
   onSelect: () => void
 }) {
@@ -138,33 +136,78 @@ function ApplicationRow({
   )
 }
 
-export default function ApplicationsPage() {
-  const [search, setSearch] = useState('')
-  const [statusFilter, setStatusFilter] = useState<ApplicationStatus | 'all'>(
-    'all'
+function ApplicationsLoadingSkeleton() {
+  return (
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-xl font-bold tracking-tight">Applications</h1>
+        <p className="text-muted-foreground mt-0.5 text-[13px]">
+          Review and manage all candidate applications
+        </p>
+      </div>
+      <div className="flex gap-2">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <Skeleton key={i} className="h-8 w-24 rounded-lg" />
+        ))}
+      </div>
+      <Card>
+        <CardHeader className="pb-3">
+          <Skeleton className="h-5 w-40" />
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-3">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <Skeleton key={i} className="h-14 w-full rounded-lg" />
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   )
+}
+
+export default function ApplicationsPage() {
+  const [{ q, status }, setQueryStates] = useQueryStates(
+    {
+      q: parseAsString.withDefault(''),
+      status: parseAsString.withDefault('all'),
+    },
+    { clearOnDefault: true }
+  )
+  const [debouncedQ] = useDebounce(q, 300)
+
+  const { data: allApplications = [], isLoading } =
+    useRecruiterApplications()
   const openCandidate = useCandidateSheet((s) => s.open)
 
-  const filtered = MOCK_APPLICATIONS.filter((app) => {
-    const matchesSearch =
-      !search ||
-      app.candidateName.toLowerCase().includes(search.toLowerCase()) ||
-      app.jobTitle.toLowerCase().includes(search.toLowerCase()) ||
-      app.candidateEmail.toLowerCase().includes(search.toLowerCase())
-    const matchesStatus = statusFilter === 'all' || app.status === statusFilter
-    return matchesSearch && matchesStatus
-  })
-
-  const filteredCandidateIds = filtered.map((a) => a.candidateId)
-
-  const counts: Record<string, number> = { all: MOCK_APPLICATIONS.length }
-  for (const s of STATUS_FILTERS) {
-    if (s.value !== 'all') {
-      counts[s.value] = MOCK_APPLICATIONS.filter(
-        (a) => a.status === s.value
-      ).length
+  const counts = useMemo(() => {
+    const c: Record<string, number> = { all: allApplications.length }
+    for (const f of STATUS_FILTERS) {
+      if (f.value !== 'all') {
+        c[f.value] = allApplications.filter((a) => a.status === f.value).length
+      }
     }
-  }
+    return c
+  }, [allApplications])
+
+  const filtered = useMemo(() => {
+    return allApplications.filter((app) => {
+      const matchesSearch =
+        !debouncedQ ||
+        app.candidateName.toLowerCase().includes(debouncedQ.toLowerCase()) ||
+        app.jobTitle.toLowerCase().includes(debouncedQ.toLowerCase()) ||
+        app.candidateEmail.toLowerCase().includes(debouncedQ.toLowerCase())
+      const matchesStatus = status === 'all' || app.status === status
+      return matchesSearch && matchesStatus
+    })
+  }, [allApplications, debouncedQ, status])
+
+  const filteredApplicationIds = useMemo(
+    () => filtered.map((a) => a.id),
+    [filtered]
+  )
+
+  if (isLoading) return <ApplicationsLoadingSkeleton />
 
   return (
     <div className="space-y-6">
@@ -181,10 +224,10 @@ export default function ApplicationsPage() {
         {STATUS_FILTERS.map((filter) => (
           <button
             key={filter.value}
-            onClick={() => setStatusFilter(filter.value)}
+            onClick={() => setQueryStates({ status: filter.value })}
             className={cn(
               'flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[12px] font-medium whitespace-nowrap transition-colors',
-              statusFilter === filter.value
+              status === filter.value
                 ? 'bg-primary/10 text-primary'
                 : 'text-muted-foreground hover:bg-accent hover:text-foreground'
             )}
@@ -193,7 +236,7 @@ export default function ApplicationsPage() {
             <span
               className={cn(
                 'rounded-full px-1.5 py-0.5 text-[10px] font-bold tabular-nums',
-                statusFilter === filter.value
+                status === filter.value
                   ? 'bg-primary/20 text-primary'
                   : 'bg-muted text-muted-foreground'
               )}
@@ -209,9 +252,9 @@ export default function ApplicationsPage() {
         <CardHeader className="pb-3">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <CardTitle className="text-[15px] font-semibold">
-              {statusFilter === 'all'
+              {status === 'all'
                 ? 'All Applications'
-                : (APPLICATION_STATUS_CONFIG[statusFilter]?.label ?? '') +
+                : (APPLICATION_STATUS_CONFIG[status]?.label ?? '') +
                   ' Applications'}
               <span className="text-muted-foreground ml-2 text-[12px] font-normal">
                 ({filtered.length})
@@ -225,8 +268,8 @@ export default function ApplicationsPage() {
               />
               <Input
                 placeholder="Search by name, job, or email..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                value={q}
+                onChange={(e) => setQueryStates({ q: e.target.value })}
                 className="bg-muted/50 focus-visible:bg-background h-8 rounded-lg border-0 pl-8 text-[12px]"
               />
             </div>
@@ -267,7 +310,7 @@ export default function ApplicationsPage() {
                     app={app}
                     index={i}
                     onSelect={() =>
-                      openCandidate(app.candidateId, filteredCandidateIds)
+                      openCandidate(app.id, filteredApplicationIds)
                     }
                   />
                 ))}

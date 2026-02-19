@@ -9,6 +9,7 @@
     "deploy": "trigger deploy"
   },
   "dependencies": {
+    "@hackhyre/db": "workspace:^",
     "@hackhyre/email": "workspace:*",
     "@react-email/render": "^2.0.4",
     "@trigger.dev/sdk": "4.3.3",

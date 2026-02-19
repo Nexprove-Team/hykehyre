@@ -829,6 +829,176 @@ export const MOCK_AI_PARSED_JOB = {
   skills: ['React', 'Node.js', 'PostgreSQL', 'TypeScript', 'Docker'],
 }
 
+// ── Interview Types & Mock Data ───────────────────────────────────────
+
+export type InterviewStatus =
+  | 'scheduled'
+  | 'in_progress'
+  | 'completed'
+  | 'cancelled'
+  | 'no_show'
+export type InterviewType = 'screening' | 'technical' | 'behavioral' | 'final'
+
+export interface MockInterview {
+  id: string
+  candidateId: string
+  candidateName: string
+  candidateEmail: string
+  jobId: string
+  jobTitle: string
+  scheduledAt: string
+  duration: number
+  meetLink: string
+  status: InterviewStatus
+  interviewType: InterviewType
+  notes: string | null
+}
+
+const today = new Date().toISOString().slice(0, 10)
+
+export const MOCK_INTERVIEWS: MockInterview[] = [
+  {
+    id: 'int-001',
+    candidateId: 'cand-001',
+    candidateName: 'Alex Johnson',
+    candidateEmail: 'alex@example.com',
+    jobId: 'job-001',
+    jobTitle: 'Senior Frontend Engineer',
+    scheduledAt: `${today}T10:00:00`,
+    duration: 45,
+    meetLink: 'https://meet.google.com/abc-defg-hij',
+    status: 'scheduled',
+    interviewType: 'screening',
+    notes: 'Initial screening call. Discuss React experience and team fit.',
+  },
+  {
+    id: 'int-002',
+    candidateId: 'cand-002',
+    candidateName: 'Priya Sharma',
+    candidateEmail: 'priya@example.com',
+    jobId: 'job-001',
+    jobTitle: 'Senior Frontend Engineer',
+    scheduledAt: `${today}T14:00:00`,
+    duration: 60,
+    meetLink: 'https://meet.google.com/klm-nopq-rst',
+    status: 'in_progress',
+    interviewType: 'technical',
+    notes: 'Live coding session — React component design and state management.',
+  },
+  {
+    id: 'int-003',
+    candidateId: 'cand-003',
+    candidateName: 'Marcus Chen',
+    candidateEmail: 'marcus@example.com',
+    jobId: 'job-002',
+    jobTitle: 'Backend Engineer',
+    scheduledAt: `${today}T16:30:00`,
+    duration: 30,
+    meetLink: 'https://meet.google.com/uvw-xyza-bcd',
+    status: 'scheduled',
+    interviewType: 'screening',
+    notes: null,
+  },
+  {
+    id: 'int-004',
+    candidateId: 'cand-004',
+    candidateName: 'Sarah Williams',
+    candidateEmail: 'sarah@example.com',
+    jobId: 'job-003',
+    jobTitle: 'Product Designer',
+    scheduledAt: '2026-02-15T11:00:00',
+    duration: 45,
+    meetLink: 'https://meet.google.com/efg-hijk-lmn',
+    status: 'completed',
+    interviewType: 'behavioral',
+    notes: 'Great cultural fit. Strong portfolio presentation. Recommend advancing to final round.',
+  },
+  {
+    id: 'int-005',
+    candidateId: 'cand-006',
+    candidateName: 'Emma Müller',
+    candidateEmail: 'emma@example.com',
+    jobId: 'job-006',
+    jobTitle: 'Full Stack Developer',
+    scheduledAt: '2026-02-20T09:00:00',
+    duration: 60,
+    meetLink: 'https://meet.google.com/opq-rstu-vwx',
+    status: 'scheduled',
+    interviewType: 'technical',
+    notes: 'Focus on system design and full stack architecture.',
+  },
+  {
+    id: 'int-006',
+    candidateId: 'cand-007',
+    candidateName: 'James Okafor',
+    candidateEmail: 'james@example.com',
+    jobId: 'job-002',
+    jobTitle: 'Backend Engineer',
+    scheduledAt: '2026-02-13T15:00:00',
+    duration: 45,
+    meetLink: 'https://meet.google.com/yza-bcde-fgh',
+    status: 'completed',
+    interviewType: 'technical',
+    notes: 'Excellent technical depth. Payment systems knowledge is outstanding.',
+  },
+  {
+    id: 'int-007',
+    candidateId: 'cand-008',
+    candidateName: 'Lina Petrov',
+    candidateEmail: 'lina@example.com',
+    jobId: 'job-006',
+    jobTitle: 'Full Stack Developer',
+    scheduledAt: '2026-02-19T13:00:00',
+    duration: 30,
+    meetLink: 'https://meet.google.com/ijk-lmno-pqr',
+    status: 'scheduled',
+    interviewType: 'screening',
+    notes: 'Quick intro call to discuss remote work expectations.',
+  },
+  {
+    id: 'int-008',
+    candidateId: 'cand-005',
+    candidateName: 'David Kim',
+    candidateEmail: 'david@example.com',
+    jobId: 'job-001',
+    jobTitle: 'Senior Frontend Engineer',
+    scheduledAt: '2026-02-10T10:00:00',
+    duration: 45,
+    meetLink: 'https://meet.google.com/stu-vwxy-zab',
+    status: 'cancelled',
+    interviewType: 'screening',
+    notes: 'Candidate withdrew application.',
+  },
+  {
+    id: 'int-009',
+    candidateId: 'cand-002',
+    candidateName: 'Priya Sharma',
+    candidateEmail: 'priya@example.com',
+    jobId: 'job-001',
+    jobTitle: 'Senior Frontend Engineer',
+    scheduledAt: '2026-02-12T10:30:00',
+    duration: 60,
+    meetLink: 'https://meet.google.com/cde-fghi-jkl',
+    status: 'completed',
+    interviewType: 'final',
+    notes: 'Final round with CTO. Strong hire recommendation.',
+  },
+  {
+    id: 'int-010',
+    candidateId: 'cand-003',
+    candidateName: 'Marcus Chen',
+    candidateEmail: 'marcus@example.com',
+    jobId: 'job-002',
+    jobTitle: 'Backend Engineer',
+    scheduledAt: '2026-02-11T14:00:00',
+    duration: 45,
+    meetLink: 'https://meet.google.com/mno-pqrs-tuv',
+    status: 'no_show',
+    interviewType: 'technical',
+    notes: 'Candidate did not join. Follow-up email sent.',
+  },
+]
+
 // Voice mode AI conversation script
 export const VOICE_AI_SCRIPT = [
   {

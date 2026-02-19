@@ -5,6 +5,7 @@ import {
   People,
   DocumentText,
   Calendar,
+  Clock,
   Chart,
   Setting,
 } from '@hackhyre/ui/icons'
@@ -28,6 +29,7 @@ export const SIDEBAR_NAV_ITEMS: NavItem[] = [
     badge: 12,
   },
   { label: 'Interviews', href: '/recuriter/interviews', icon: Calendar },
+  { label: 'Schedule', href: '/recuriter/schedule', icon: Clock },
   { label: 'Analytics', href: '/recuriter/analytics', icon: Chart },
 ]
 
@@ -74,6 +76,47 @@ export const APPLICATION_STATUS_CONFIG: Record<
     variant: 'default',
     className: 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20',
   },
+}
+
+export const INTERVIEW_STATUS_CONFIG: Record<
+  string,
+  { label: string; variant: string; className?: string }
+> = {
+  scheduled: {
+    label: 'Scheduled',
+    variant: 'default',
+    className: 'bg-blue-500/15 text-blue-600 border-blue-500/20',
+  },
+  in_progress: {
+    label: 'In Progress',
+    variant: 'default',
+    className: 'bg-amber-500/15 text-amber-600 border-amber-500/20',
+  },
+  completed: {
+    label: 'Completed',
+    variant: 'default',
+    className: 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20',
+  },
+  cancelled: {
+    label: 'Cancelled',
+    variant: 'secondary',
+    className: 'bg-red-500/10 text-red-600 border-red-500/20',
+  },
+  no_show: {
+    label: 'No Show',
+    variant: 'secondary',
+    className: 'bg-muted text-muted-foreground',
+  },
+}
+
+export const INTERVIEW_TYPE_CONFIG: Record<
+  string,
+  { label: string; className?: string }
+> = {
+  screening: { label: 'Screening' },
+  technical: { label: 'Technical' },
+  behavioral: { label: 'Behavioral' },
+  final: { label: 'Final Round' },
 }
 
 export const SIDEBAR_WIDTH_EXPANDED = 240
