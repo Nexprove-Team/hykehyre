@@ -1,6 +1,6 @@
 'use server'
 
-import { eq, desc } from 'drizzle-orm'
+import { eq, desc, and } from 'drizzle-orm'
 import { db, applications, jobs, companies } from '@hackhyre/db'
 import { getSession } from '@/lib/auth-session'
 
@@ -159,6 +159,92 @@ export async function getCandidateApplication(
 }
 
 
+
+// ── Submit Application (guest-friendly) ──────────────────────────────────────
+
+export interface SubmitApplicationInput {
+  jobId: string
+  candidateName: string
+  candidateEmail: string
+  resumeUrl?: string
+  linkedinUrl?: string
+  coverLetter?: string
+  talentPoolOptIn?: boolean
+}
+
+export interface SubmitApplicationResult {
+  success: boolean
+  applicationId?: string
+  error?: string
+}
+
+export async function submitApplication(
+  input: SubmitApplicationInput
+): Promise<SubmitApplicationResult> {
+  // Session is optional — guest applicants allowed
+  let candidateId: string | null = null
+  try {
+    const session = await getSession()
+    candidateId = session?.user?.id ?? null
+  } catch {
+    // not logged in — proceed as guest
+  }
+
+  // Validate job exists and is open
+  const [job] = await db
+    .select({ id: jobs.id, status: jobs.status })
+    .from(jobs)
+    .where(eq(jobs.id, input.jobId))
+    .limit(1)
+
+  if (!job) {
+    return { success: false, error: 'Job not found.' }
+  }
+
+  if (job.status !== 'open') {
+    return {
+      success: false,
+      error: 'This position is no longer accepting applications.',
+    }
+  }
+
+  // Check for duplicate application (same email + job)
+  const [existing] = await db
+    .select({ id: applications.id })
+    .from(applications)
+    .where(
+      and(
+        eq(applications.jobId, input.jobId),
+        eq(applications.candidateEmail, input.candidateEmail)
+      )
+    )
+    .limit(1)
+
+  if (existing) {
+    return {
+      success: false,
+      error: 'You have already applied for this position.',
+    }
+  }
+
+  const [inserted] = await db
+    .insert(applications)
+    .values({
+      jobId: input.jobId,
+      candidateId,
+      candidateName: input.candidateName,
+      candidateEmail: input.candidateEmail,
+      resumeUrl: input.resumeUrl ?? null,
+      linkedinUrl: input.linkedinUrl ?? null,
+      coverLetter: input.coverLetter ?? null,
+      talentPoolOptIn: input.talentPoolOptIn ?? false,
+    })
+    .returning({ id: applications.id })
+
+  return { success: true, applicationId: inserted!.id }
+}
+
+// ── Sidebar Badges ───────────────────────────────────────────────────────────
 
 export async function getCandidateSidebarBadges(): Promise<
   Record<string, number>

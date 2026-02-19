@@ -5,10 +5,10 @@ import { Sheet, SheetContent, SheetTitle } from '@hackhyre/ui/components/sheet'
 import { Badge } from '@hackhyre/ui/components/badge'
 import { Button } from '@hackhyre/ui/components/button'
 import { Separator } from '@hackhyre/ui/components/separator'
+import { Skeleton } from '@hackhyre/ui/components/skeleton'
 import {
   Location,
   Global,
-  Building,
   Calendar,
   People,
   Briefcase,
@@ -17,7 +17,7 @@ import {
 import { cn } from '@hackhyre/ui/lib/utils'
 import { useCompanySheet } from './use-company-sheet'
 import { toDisplayJob } from './mock-data'
-import { useCompanyJobs } from '@/hooks/use-jobs'
+import { useCompanyJobs, useCompanyProfile } from '@/hooks/use-jobs'
 
 // ── Light mode CSS variable overrides ─────────────────────────────────
 
@@ -39,218 +39,34 @@ const LIGHT_VARS: React.CSSProperties = {
   colorScheme: 'light',
 } as React.CSSProperties
 
-// ── Mock company profiles ─────────────────────────────────────────────
+// ── Logo color palette (deterministic from name) ──────────────────────
 
-interface CompanyProfile {
-  name: string
-  industry: string
-  description: string
-  founded: string
-  employees: string
-  headquarters: string
-  website: string
-  logoColor: string
-  logoLetter: string
+const LOGO_COLORS = [
+  'bg-blue-500',
+  'bg-rose-500',
+  'bg-indigo-600',
+  'bg-green-600',
+  'bg-violet-600',
+  'bg-sky-500',
+  'bg-pink-500',
+  'bg-amber-600',
+  'bg-teal-600',
+  'bg-red-600',
+  'bg-zinc-800',
+  'bg-purple-700',
+]
+
+function hashString(str: string): number {
+  let hash = 0
+  for (let i = 0; i < str.length; i++) {
+    hash = (hash << 5) - hash + str.charCodeAt(i)
+    hash |= 0
+  }
+  return Math.abs(hash)
 }
 
-const MOCK_COMPANIES: Record<string, CompanyProfile> = {
-  Amazon: {
-    name: 'Amazon',
-    industry: 'E-Commerce & Cloud',
-    description:
-      'Amazon is a multinational technology company focusing on e-commerce, cloud computing, digital streaming, and artificial intelligence. As one of the most valuable companies globally, we are constantly innovating to deliver the best customer experience.',
-    founded: '1994',
-    employees: '1,500,000+',
-    headquarters: 'Seattle, WA',
-    website: 'amazon.com',
-    logoColor: 'bg-black',
-    logoLetter: 'a',
-  },
-  Google: {
-    name: 'Google',
-    industry: 'Technology & Search',
-    description:
-      "Google is a global technology leader specializing in search, online advertising, cloud computing, and software. Our mission is to organize the world's information and make it universally accessible and useful.",
-    founded: '1998',
-    employees: '180,000+',
-    headquarters: 'Mountain View, CA',
-    website: 'google.com',
-    logoColor: 'bg-blue-500',
-    logoLetter: 'G',
-  },
-  Dribbble: {
-    name: 'Dribbble',
-    industry: 'Design Community',
-    description:
-      'Dribbble is the leading platform for designers to share their work, find inspiration, and connect with the design community. We help millions of designers and agencies find creative talent.',
-    founded: '2009',
-    employees: '200+',
-    headquarters: 'Remote',
-    website: 'dribbble.com',
-    logoColor: 'bg-pink-500',
-    logoLetter: 'D',
-  },
-  Twitter: {
-    name: 'Twitter',
-    industry: 'Social Media',
-    description:
-      'Twitter is a social media platform enabling real-time communication through short-form messages. We connect people to their interests and communities through open, public conversation.',
-    founded: '2006',
-    employees: '5,500+',
-    headquarters: 'San Francisco, CA',
-    website: 'twitter.com',
-    logoColor: 'bg-sky-500',
-    logoLetter: 'T',
-  },
-  Airbnb: {
-    name: 'Airbnb',
-    industry: 'Travel & Hospitality',
-    description:
-      'Airbnb is a global marketplace connecting travelers with unique accommodations and experiences. We believe in creating a world where anyone can belong anywhere.',
-    founded: '2008',
-    employees: '6,900+',
-    headquarters: 'San Francisco, CA',
-    website: 'airbnb.com',
-    logoColor: 'bg-rose-500',
-    logoLetter: 'A',
-  },
-  Apple: {
-    name: 'Apple',
-    industry: 'Consumer Electronics',
-    description:
-      'Apple designs, manufactures, and markets smartphones, personal computers, tablets, wearables, and accessories worldwide. Known for innovation and design excellence, we create products that empower creativity.',
-    founded: '1976',
-    employees: '164,000+',
-    headquarters: 'Cupertino, CA',
-    website: 'apple.com',
-    logoColor: 'bg-zinc-800',
-    logoLetter: '',
-  },
-  Spotify: {
-    name: 'Spotify',
-    industry: 'Music & Audio',
-    description:
-      "Spotify is the world's largest audio streaming platform, offering millions of songs, podcasts, and audiobooks. We are transforming how people discover and enjoy audio content.",
-    founded: '2006',
-    employees: '9,000+',
-    headquarters: 'Stockholm, Sweden',
-    website: 'spotify.com',
-    logoColor: 'bg-green-600',
-    logoLetter: 'S',
-  },
-  Meta: {
-    name: 'Meta',
-    industry: 'Social Technology',
-    description:
-      'Meta builds technologies that help people connect, find communities, and grow businesses. Our products include Facebook, Instagram, WhatsApp, and cutting-edge virtual reality experiences.',
-    founded: '2004',
-    employees: '67,000+',
-    headquarters: 'Menlo Park, CA',
-    website: 'meta.com',
-    logoColor: 'bg-blue-600',
-    logoLetter: 'M',
-  },
-  Netflix: {
-    name: 'Netflix',
-    industry: 'Entertainment & Streaming',
-    description:
-      "Netflix is the world's leading streaming entertainment service with over 230 million paid memberships. We offer a wide variety of TV series, documentaries, feature films, and games across genres.",
-    founded: '1997',
-    employees: '13,000+',
-    headquarters: 'Los Gatos, CA',
-    website: 'netflix.com',
-    logoColor: 'bg-red-600',
-    logoLetter: 'N',
-  },
-  Stripe: {
-    name: 'Stripe',
-    industry: 'Financial Technology',
-    description:
-      'Stripe is a technology company that builds economic infrastructure for the internet. Businesses of every size use our software to accept payments and manage their operations online.',
-    founded: '2010',
-    employees: '8,000+',
-    headquarters: 'San Francisco, CA',
-    website: 'stripe.com',
-    logoColor: 'bg-indigo-600',
-    logoLetter: 'S',
-  },
-  Figma: {
-    name: 'Figma',
-    industry: 'Design Tools',
-    description:
-      'Figma is a collaborative design tool that enables teams to design, prototype, and gather feedback in a single platform. We are redefining how teams create together.',
-    founded: '2012',
-    employees: '1,500+',
-    headquarters: 'San Francisco, CA',
-    website: 'figma.com',
-    logoColor: 'bg-violet-600',
-    logoLetter: 'F',
-  },
-  Slack: {
-    name: 'Slack',
-    industry: 'Workplace Communication',
-    description:
-      'Slack is a messaging platform for business that connects people with the information they need. We bring teams together, wherever they are, to do their best work.',
-    founded: '2009',
-    employees: '3,500+',
-    headquarters: 'San Francisco, CA',
-    website: 'slack.com',
-    logoColor: 'bg-purple-700',
-    logoLetter: 'S',
-  },
-  Adobe: {
-    name: 'Adobe',
-    industry: 'Creative Software',
-    description:
-      'Adobe is a global leader in digital media and marketing solutions. Our creative, document, and experience cloud solutions transform how people and businesses create, manage, and engage.',
-    founded: '1982',
-    employees: '29,000+',
-    headquarters: 'San Jose, CA',
-    website: 'adobe.com',
-    logoColor: 'bg-red-700',
-    logoLetter: 'A',
-  },
-  Shopify: {
-    name: 'Shopify',
-    industry: 'E-Commerce',
-    description:
-      'Shopify provides a commerce platform for businesses of all sizes. Our technology powers millions of merchants worldwide, making it easy to start, grow, market, and manage a retail business.',
-    founded: '2006',
-    employees: '11,000+',
-    headquarters: 'Ottawa, Canada',
-    website: 'shopify.com',
-    logoColor: 'bg-lime-700',
-    logoLetter: 'S',
-  },
-  Uber: {
-    name: 'Uber',
-    industry: 'Transportation & Delivery',
-    description:
-      'Uber is a technology platform connecting riders, drivers, merchants, and delivery people. We are reimagining the way the world moves for the better.',
-    founded: '2009',
-    employees: '32,000+',
-    headquarters: 'San Francisco, CA',
-    website: 'uber.com',
-    logoColor: 'bg-black',
-    logoLetter: 'U',
-  },
-}
-
-// ── Apple Logo SVG ────────────────────────────────────────────────────
-
-function AppleLogo({ size = 14 }: { size?: number }) {
-  return (
-    <svg
-      width={size}
-      height={Math.round(size * 1.2)}
-      viewBox="0 0 14 17"
-      fill="currentColor"
-      className="text-white"
-    >
-      <path d="M13.2 12.8c-.3.7-.7 1.3-1.1 1.8-.6.8-1.1 1.3-1.5 1.6-.6.5-1.3.7-2 .7-.5 0-1.1-.1-1.8-.4-.7-.3-1.3-.4-1.8-.4s-1.1.1-1.8.4c-.7.3-1.2.4-1.7.4-.7 0-1.4-.3-2-.8C.9 15.5.4 14.8 0 13.8c-.1-.4.1-.7.4-.9.3-.1.7 0 .8.3.3.8.7 1.4 1.2 1.8.4.3.8.5 1.2.5.3 0 .8-.1 1.4-.4.6-.3 1.2-.4 1.7-.4.5 0 1 .1 1.7.4.6.3 1.1.4 1.4.4.4 0 .9-.2 1.3-.5.4-.4.8-.9 1.1-1.6.2-.4.4-.9.5-1.3.1-.3-.1-.6-.3-.8-.8-.4-1.4-.9-1.8-1.6-.5-.7-.7-1.5-.7-2.4 0-1 .3-1.9.9-2.6.5-.5 1-.9 1.7-1.2.2-.1.5 0 .7.2.1.2.1.5-.1.6-.5.2-.9.5-1.3.9-.4.5-.6 1.2-.6 1.9 0 .8.2 1.4.6 2 .4.6.9 1 1.5 1.3.2.1.3.4.3.6 0 .1 0 .2-.1.3-.2.5-.3 1-.6 1.5z" />
-      <path d="M10.1 0c.1.7-.2 1.5-.7 2.2-.6.8-1.3 1.3-2.1 1.2-.1-.7.2-1.4.7-2.1C8.6.5 9.3.1 10.1 0z" />
-    </svg>
-  )
+function getLogoColor(name: string) {
+  return LOGO_COLORS[hashString(name) % LOGO_COLORS.length]!
 }
 
 // ── Info Row ──────────────────────────────────────────────────────────
@@ -283,9 +99,35 @@ const SHEET_CLASSES =
 export function CompanySheet() {
   const { isOpen, companyName, close } = useCompanySheet()
 
+  const { data: company, isLoading } = useCompanyProfile(companyName ?? '')
   const { data: rawJobs } = useCompanyJobs(companyName ?? '')
   const companyJobs = (rawJobs ?? []).map((item, i) => toDisplayJob(item, i))
-  const company = companyName ? MOCK_COMPANIES[companyName] : null
+
+  if (isLoading) {
+    return (
+      <Sheet open={isOpen} onOpenChange={(open) => !open && close()}>
+        <SheetContent
+          side="right"
+          className={SHEET_CLASSES}
+          style={LIGHT_VARS}
+          showCloseButton={false}
+        >
+          <SheetTitle className="sr-only">Company Profile</SheetTitle>
+          <div className="space-y-4 p-6">
+            <div className="flex items-start gap-4">
+              <Skeleton className="h-16 w-16 rounded-2xl" />
+              <div className="flex-1 space-y-2">
+                <Skeleton className="h-5 w-32" />
+                <Skeleton className="h-4 w-24" />
+              </div>
+            </div>
+            <Skeleton className="h-20 w-full" />
+            <Skeleton className="h-32 w-full" />
+          </div>
+        </SheetContent>
+      </Sheet>
+    )
+  }
 
   if (!company) {
     return (
@@ -304,6 +146,12 @@ export function CompanySheet() {
       </Sheet>
     )
   }
+
+  const logoColor = getLogoColor(company.name)
+  const logoLetter = company.name.charAt(0).toUpperCase()
+  const displayWebsite = company.website
+    ? company.website.replace(/^https?:\/\//, '').replace(/\/$/, '')
+    : null
 
   return (
     <Sheet open={isOpen} onOpenChange={(open) => !open && close()}>
@@ -348,46 +196,65 @@ export function CompanySheet() {
           {/* Header */}
           <div className="border-b border-neutral-200 px-6 pt-4 pb-5">
             <div className="flex items-start gap-4">
-              <div
-                className={cn(
-                  'flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl text-white',
-                  company.logoColor
-                )}
-              >
-                {company.name === 'Apple' ? (
-                  <AppleLogo size={20} />
-                ) : (
-                  <span className="text-xl font-bold">
-                    {company.logoLetter}
-                  </span>
-                )}
-              </div>
+              {company.logoUrl ? (
+                <img
+                  src={company.logoUrl}
+                  alt={company.name}
+                  className="h-16 w-16 shrink-0 rounded-2xl object-cover"
+                />
+              ) : (
+                <div
+                  className={cn(
+                    'flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl text-white',
+                    logoColor
+                  )}
+                >
+                  <span className="text-xl font-bold">{logoLetter}</span>
+                </div>
+              )}
               <div className="min-w-0 flex-1">
                 <h2 className="text-[18px] font-bold text-neutral-900">
                   {company.name}
                 </h2>
-                <Badge
-                  variant="outline"
-                  className="mt-1 border-neutral-200 bg-neutral-50 px-2 py-0.5 text-[11px] font-medium text-neutral-600"
-                >
-                  {company.industry}
-                </Badge>
-                <div className="mt-2 flex items-center gap-1.5 text-[12px] text-neutral-500">
-                  <Location size={12} variant="Linear" />
-                  {company.headquarters}
+                <div className="mt-1 flex items-center gap-2 text-[12px] text-neutral-500">
+                  <Briefcase size={12} variant="Linear" />
+                  {company.jobCount} open{' '}
+                  {company.jobCount === 1 ? 'position' : 'positions'}
                 </div>
               </div>
             </div>
 
             {/* Actions */}
             <div className="mt-4 flex gap-2">
-              <Button
-                size="sm"
-                className="bg-primary hover:bg-primary/90 flex-1 gap-2 rounded-lg text-[12px] font-semibold text-neutral-900"
-              >
-                <Global size={14} variant="Linear" />
-                Visit Website
-              </Button>
+              {company.website ? (
+                <Button
+                  size="sm"
+                  className="bg-primary hover:bg-primary/90 flex-1 gap-2 rounded-lg text-[12px] font-semibold text-neutral-900"
+                  asChild
+                >
+                  <a
+                    href={
+                      company.website.startsWith('http')
+                        ? company.website
+                        : `https://${company.website}`
+                    }
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Global size={14} variant="Linear" />
+                    Visit Website
+                  </a>
+                </Button>
+              ) : (
+                <Button
+                  size="sm"
+                  className="bg-primary hover:bg-primary/90 flex-1 gap-2 rounded-lg text-[12px] font-semibold text-neutral-900"
+                  disabled
+                >
+                  <Global size={14} variant="Linear" />
+                  No Website
+                </Button>
+              )}
               <Button
                 variant="outline"
                 size="sm"
@@ -401,16 +268,19 @@ export function CompanySheet() {
 
           <div className="space-y-0 px-6 py-5">
             {/* About */}
-            <div>
-              <h4 className="mb-2 text-[12px] font-semibold tracking-wider text-neutral-500 uppercase">
-                About
-              </h4>
-              <p className="text-[12px] leading-relaxed text-neutral-600">
-                {company.description}
-              </p>
-            </div>
-
-            <Separator className="my-5 bg-neutral-200" />
+            {company.description && (
+              <>
+                <div>
+                  <h4 className="mb-2 text-[12px] font-semibold tracking-wider text-neutral-500 uppercase">
+                    About
+                  </h4>
+                  <p className="text-[12px] leading-relaxed text-neutral-600">
+                    {company.description}
+                  </p>
+                </div>
+                <Separator className="my-5 bg-neutral-200" />
+              </>
+            )}
 
             {/* Company Info */}
             <div>
@@ -420,29 +290,24 @@ export function CompanySheet() {
               <div className="space-y-0.5">
                 <InfoRow
                   icon={Calendar}
-                  label="Founded"
-                  value={company.founded}
+                  label="Joined"
+                  value={company.createdAt.toLocaleDateString('en-US', {
+                    month: 'long',
+                    year: 'numeric',
+                  })}
                 />
                 <InfoRow
                   icon={People}
-                  label="Employees"
-                  value={company.employees}
+                  label="Open Jobs"
+                  value={String(company.jobCount)}
                 />
-                <InfoRow
-                  icon={Building}
-                  label="Industry"
-                  value={company.industry}
-                />
-                <InfoRow
-                  icon={Location}
-                  label="Headquarters"
-                  value={company.headquarters}
-                />
-                <InfoRow
-                  icon={Global}
-                  label="Website"
-                  value={company.website}
-                />
+                {displayWebsite && (
+                  <InfoRow
+                    icon={Global}
+                    label="Website"
+                    value={displayWebsite}
+                  />
+                )}
               </div>
             </div>
 

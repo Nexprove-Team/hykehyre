@@ -8,7 +8,6 @@ import { Label } from '@hackhyre/ui/components/label'
 import { Textarea } from '@hackhyre/ui/components/textarea'
 import { Checkbox } from '@hackhyre/ui/components/checkbox'
 import { Separator } from '@hackhyre/ui/components/separator'
-import { Badge } from '@hackhyre/ui/components/badge'
 import {
   Send,
   TickCircle,
@@ -17,12 +16,10 @@ import {
   Sms,
   User,
   Briefcase,
-  Star,
   CloseCircle,
-  ArrowRight,
 } from '@hackhyre/ui/icons'
-import { cn } from '@hackhyre/ui/lib/utils'
 import { useApplySheet } from './use-apply-sheet'
+import { submitApplication } from '@/actions/applications'
 
 // ── Force light mode via CSS variable overrides ───────────────────────
 
@@ -45,117 +42,6 @@ const LIGHT_VARS: React.CSSProperties = {
   '--input': 'oklch(0.92 0.005 260)',
   colorScheme: 'light',
 } as React.CSSProperties
-
-// ── Mock relevance results ────────────────────────────────────────────
-
-interface RelevanceResult {
-  score: number
-  feedback: string
-  strengths: string[]
-  gaps: string[]
-}
-
-function generateMockRelevance(): RelevanceResult {
-  const score = Math.round((0.6 + Math.random() * 0.35) * 100) / 100
-  const percentage = Math.round(score * 100)
-
-  const allStrengths = [
-    'Relevant industry experience matches role requirements',
-    'Strong technical skills aligned with job description',
-    'Educational background is a great fit for this position',
-    'Portfolio demonstrates relevant project work',
-    'Leadership experience adds value to this role',
-  ]
-  const allGaps = [
-    'Consider highlighting specific metrics and achievements',
-    'Adding more detail about relevant tools would strengthen your application',
-    'A more tailored cover letter could improve your score',
-  ]
-
-  const strengths = allStrengths
-    .sort(() => Math.random() - 0.5)
-    .slice(0, 2 + Math.floor(Math.random() * 2))
-  const gaps =
-    percentage >= 80
-      ? allGaps.slice(0, 1)
-      : allGaps
-          .sort(() => Math.random() - 0.5)
-          .slice(0, 1 + Math.floor(Math.random() * 2))
-
-  let feedback: string
-  if (percentage >= 85) {
-    feedback =
-      'Excellent match! Your profile strongly aligns with this role. The hiring team will be reviewing your application shortly.'
-  } else if (percentage >= 70) {
-    feedback =
-      'Good match! Your skills and experience are relevant to this position. A few enhancements could strengthen your application further.'
-  } else {
-    feedback =
-      'Your application has been submitted. While there are some gaps, your background shows potential. Consider the suggestions below.'
-  }
-
-  return { score, feedback, strengths, gaps }
-}
-
-// ── Score Ring ─────────────────────────────────────────────────────────
-
-function ScoreRing({ score }: { score: number }) {
-  const percentage = Math.round(score * 100)
-  const circumference = 2 * Math.PI * 40
-  const offset = circumference - score * circumference
-
-  const color =
-    percentage >= 80
-      ? 'text-emerald-500'
-      : percentage >= 65
-        ? 'text-amber-500'
-        : 'text-rose-500'
-
-  const strokeColor =
-    percentage >= 80
-      ? 'stroke-emerald-500'
-      : percentage >= 65
-        ? 'stroke-amber-500'
-        : 'stroke-rose-500'
-
-  return (
-    <div className="relative flex h-28 w-28 items-center justify-center">
-      <svg
-        className="-rotate-90"
-        width="112"
-        height="112"
-        viewBox="0 0 100 100"
-      >
-        <circle
-          cx="50"
-          cy="50"
-          r="40"
-          fill="none"
-          stroke="#e5e5e5"
-          strokeWidth="6"
-        />
-        <circle
-          cx="50"
-          cy="50"
-          r="40"
-          fill="none"
-          className={strokeColor}
-          strokeWidth="6"
-          strokeLinecap="round"
-          strokeDasharray={circumference}
-          strokeDashoffset={offset}
-          style={{ transition: 'stroke-dashoffset 1s ease-out' }}
-        />
-      </svg>
-      <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className={cn('text-2xl font-bold tabular-nums', color)}>
-          {percentage}%
-        </span>
-        <span className="text-[10px] font-medium text-neutral-500">Match</span>
-      </div>
-    </div>
-  )
-}
 
 // ── Form State ─────────────────────────────────────────────────────────
 
@@ -183,37 +69,76 @@ const SHEET_CLASSES =
   'w-full sm:w-[520px] sm:max-w-[520px] p-0 flex flex-col inset-0 sm:inset-y-3 sm:right-3 sm:left-auto h-dvh sm:h-[calc(100dvh-1.5rem)] rounded-none sm:rounded-2xl border-0 sm:border bg-white text-neutral-900'
 
 export function ApplySheet() {
-  const { isOpen, jobTitle, company, close } = useApplySheet()
+  const { isOpen, jobId, jobTitle, company, close } = useApplySheet()
   const [form, setForm] = useState<FormData>(INITIAL_FORM)
   const [submitted, setSubmitted] = useState(false)
-  const [result, setResult] = useState<RelevanceResult | null>(null)
   const [submitting, setSubmitting] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const update = (patch: Partial<FormData>) =>
     setForm((prev) => ({ ...prev, ...patch }))
 
-  const isValid = form.name.trim() && form.email.trim()
+  const isValid: boolean = !!(form.name.trim() && form.email.trim())
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!isValid) return
+    if (!isValid || !jobId) return
 
     setSubmitting(true)
-    // Simulate API call
-    await new Promise((r) => setTimeout(r, 1500))
-    setResult(generateMockRelevance())
-    setSubmitted(true)
-    setSubmitting(false)
+    setError(null)
+
+    try {
+      // Upload resume if present
+      let resumeUrl: string | undefined
+      if (form.resumeFile) {
+        const fd = new window.FormData()
+        fd.append('file', form.resumeFile)
+        fd.append('jobId', jobId)
+
+        const uploadRes = await fetch('/api/applications/upload', {
+          method: 'POST',
+          body: fd,
+        })
+        const uploadData = await uploadRes.json()
+
+        if (!uploadRes.ok) {
+          setError(uploadData.error ?? 'Failed to upload resume.')
+          setSubmitting(false)
+          return
+        }
+        resumeUrl = uploadData.url
+      }
+
+      // Submit application
+      const result = await submitApplication({
+        jobId,
+        candidateName: form.name.trim(),
+        candidateEmail: form.email.trim(),
+        resumeUrl,
+        linkedinUrl: form.linkedinUrl.trim() || undefined,
+        coverLetter: form.coverLetter.trim() || undefined,
+        talentPoolOptIn: form.talentPoolOptIn,
+      })
+
+      if (result.success) {
+        setSubmitted(true)
+      } else {
+        setError(result.error ?? 'Something went wrong.')
+      }
+    } catch {
+      setError('Something went wrong. Please try again.')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   const handleClose = () => {
     close()
-    // Reset after close animation
     setTimeout(() => {
       setForm(INITIAL_FORM)
       setSubmitted(false)
-      setResult(null)
+      setError(null)
       setSubmitting(false)
     }, 300)
   }
@@ -261,14 +186,15 @@ export function ApplySheet() {
 
         {/* Scrollable body */}
         <div className="min-h-0 flex-1 overflow-y-auto">
-          {submitted && result ? (
-            <SuccessView result={result} onClose={handleClose} />
+          {submitted ? (
+            <SuccessView onClose={handleClose} />
           ) : (
             <ApplicationForm
               form={form}
               update={update}
               submitting={submitting}
               isValid={isValid}
+              error={error}
               fileInputRef={fileInputRef}
               onSubmit={handleSubmit}
             />
@@ -286,6 +212,7 @@ function ApplicationForm({
   update,
   submitting,
   isValid,
+  error,
   fileInputRef,
   onSubmit,
 }: {
@@ -293,8 +220,9 @@ function ApplicationForm({
   update: (patch: Partial<FormData>) => void
   submitting: boolean
   isValid: boolean
+  error: string | null
   fileInputRef: React.RefObject<HTMLInputElement | null>
-  onSubmit: (e: React.FormEvent) => void
+  onSubmit: (e: React.SyntheticEvent) => void
 }) {
   return (
     <form onSubmit={onSubmit} className="px-5 py-5">
@@ -466,6 +394,13 @@ function ApplicationForm({
           </div>
         </label>
 
+        {/* Error */}
+        {error && (
+          <div className="rounded-lg border border-rose-200 bg-rose-50 px-3 py-2.5 text-[12px] text-rose-700">
+            {error}
+          </div>
+        )}
+
         {/* Submit */}
         <Button
           type="submit"
@@ -496,104 +431,22 @@ function ApplicationForm({
   )
 }
 
-// ── Success View ──────────────────────────────────────────────────────
-
-function SuccessView({
-  result,
-  onClose,
-}: {
-  result: RelevanceResult
-  onClose: () => void
-}) {
-  const percentage = Math.round(result.score * 100)
-
+function SuccessView({ onClose }: { onClose: () => void }) {
   return (
     <div className="px-5 py-6">
       <div className="flex flex-col items-center text-center">
-        <ScoreRing score={result.score} />
-
-        <div className="mt-4">
-          <div className="flex items-center justify-center gap-2">
-            <TickCircle size={18} variant="Bold" className="text-emerald-500" />
-            <h3 className="text-[16px] font-bold text-neutral-900">
-              Application Received
-            </h3>
-          </div>
-          <Badge
-            variant="outline"
-            className={cn(
-              'mt-2 px-2.5 py-0.5 text-[11px] font-semibold',
-              percentage >= 80
-                ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
-                : percentage >= 65
-                  ? 'border-amber-200 bg-amber-50 text-amber-700'
-                  : 'border-rose-200 bg-rose-50 text-rose-700'
-            )}
-          >
-            {percentage >= 80
-              ? 'Strong Match'
-              : percentage >= 65
-                ? 'Good Match'
-                : 'Potential Match'}
-          </Badge>
+        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50">
+          <TickCircle size={32} variant="Bold" className="text-emerald-500" />
         </div>
+
+        <h3 className="mt-4 text-[16px] font-bold text-neutral-900">
+          Application Submitted
+        </h3>
+        <p className="mt-2 text-[12px] leading-relaxed text-neutral-600">
+          Your application has been received and will be reviewed by the hiring
+          team shortly.
+        </p>
       </div>
-
-      <p className="mt-4 text-center text-[12px] leading-relaxed text-neutral-600">
-        {result.feedback}
-      </p>
-
-      <Separator className="my-5 bg-neutral-200" />
-
-      {/* Strengths */}
-      {result.strengths.length > 0 && (
-        <div className="mb-4">
-          <div className="mb-2.5 flex items-center gap-2">
-            <Star size={14} variant="Bold" className="text-emerald-500" />
-            <h4 className="text-[12px] font-semibold text-neutral-900">
-              What stood out
-            </h4>
-          </div>
-          <ul className="space-y-2">
-            {result.strengths.map((item, i) => (
-              <li
-                key={i}
-                className="flex items-start gap-2.5 text-[12px] text-neutral-600"
-              >
-                <TickCircle
-                  size={13}
-                  variant="Bold"
-                  className="mt-0.5 shrink-0 text-emerald-500"
-                />
-                {item}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      {/* Suggestions */}
-      {result.gaps.length > 0 && (
-        <div className="mb-5">
-          <div className="mb-2.5 flex items-center gap-2">
-            <ArrowRight size={14} variant="Bold" className="text-amber-500" />
-            <h4 className="text-[12px] font-semibold text-neutral-900">
-              How to improve
-            </h4>
-          </div>
-          <ul className="space-y-2">
-            {result.gaps.map((item, i) => (
-              <li
-                key={i}
-                className="flex items-start gap-2.5 text-[12px] text-neutral-600"
-              >
-                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-400" />
-                {item}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
 
       <Separator className="my-5 bg-neutral-200" />
 
