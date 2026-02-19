@@ -88,7 +88,7 @@ export function JobPreview({ data }: JobPreviewProps) {
       : null
 
   return (
-    <div className="sticky top-0">
+    <div>
       <Card>
         <CardHeader className="pb-3">
           <CardTitle className="text-muted-foreground text-sm font-semibold">

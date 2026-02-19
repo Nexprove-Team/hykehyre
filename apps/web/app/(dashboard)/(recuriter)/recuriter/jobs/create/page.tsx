@@ -13,8 +13,8 @@ import { FormMode } from '@/components/jobs/create/form-mode'
 
 export default function CreateJobPage() {
   return (
-    <div className="h-full space-y-6">
-      <div>
+    <div className="flex h-full flex-col overflow-hidden">
+      <div className="mb-4">
         <h1 className="font-mono text-2xl font-bold tracking-tight">
           Create a Job
         </h1>
@@ -23,7 +23,7 @@ export default function CreateJobPage() {
         </p>
       </div>
 
-      <Tabs defaultValue="ai">
+      <Tabs defaultValue="ai" className="flex min-h-0 flex-1 flex-col">
         <TabsList variant="line" className="mb-6">
           <TabsTrigger value="ai" className="gap-1.5">
             <MagicStar size={16} variant="Linear" />
@@ -35,7 +35,7 @@ export default function CreateJobPage() {
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="ai">
+        <TabsContent value="ai" className="min-h-0 flex-1">
           <AiMode />
         </TabsContent>
         <TabsContent value="form">
