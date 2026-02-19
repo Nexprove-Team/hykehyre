@@ -198,6 +198,50 @@ export async function getFeaturedJobs(): Promise<PublicJobListItem[]> {
   return rows.map(mapRow)
 }
 
+export interface CompanyProfile {
+  id: string
+  name: string
+  description: string | null
+  website: string | null
+  logoUrl: string | null
+  createdAt: Date
+  jobCount: number
+}
+
+export async function getCompanyByName(
+  name: string
+): Promise<CompanyProfile | null> {
+  const rows = await db
+    .select({
+      id: companies.id,
+      name: companies.name,
+      description: companies.description,
+      website: companies.website,
+      logoUrl: companies.logoUrl,
+      createdAt: companies.createdAt,
+      jobCount: count(jobs.id),
+    })
+    .from(companies)
+    .leftJoin(
+      jobs,
+      and(eq(jobs.companyId, companies.id), eq(jobs.status, 'open'))
+    )
+    .where(eq(companies.name, name))
+    .groupBy(
+      companies.id,
+      companies.name,
+      companies.description,
+      companies.website,
+      companies.logoUrl,
+      companies.createdAt
+    )
+    .limit(1)
+
+  const row = rows[0]
+  if (!row) return null
+  return { ...row, jobCount: Number(row.jobCount) }
+}
+
 export async function getTopCompanies(): Promise<TopCompany[]> {
   const rows = await db
     .select({

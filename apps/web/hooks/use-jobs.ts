@@ -3,6 +3,7 @@ import {
   getPublicJobs,
   getJobById,
   getCompanyJobs,
+  getCompanyByName,
   getFeaturedJobs,
   getTopCompanies,
 } from '@/actions/jobs'
@@ -19,6 +20,8 @@ export const jobKeys = {
   list: (filters: JobFilters) => [...jobKeys.all, 'list', filters] as const,
   detail: (id: string) => [...jobKeys.all, 'detail', id] as const,
   companyJobs: (name: string) => [...jobKeys.all, 'company', name] as const,
+  companyProfile: (name: string) =>
+    [...jobKeys.all, 'company-profile', name] as const,
   featured: () => [...jobKeys.all, 'featured'] as const,
   topCompanies: () => [...jobKeys.all, 'top-companies'] as const,
 }
@@ -35,6 +38,14 @@ export function useJobById(id: string) {
     queryKey: jobKeys.detail(id),
     queryFn: () => getJobById(id),
     enabled: !!id,
+  })
+}
+
+export function useCompanyProfile(companyName: string) {
+  return useQuery({
+    queryKey: jobKeys.companyProfile(companyName),
+    queryFn: () => getCompanyByName(companyName),
+    enabled: !!companyName,
   })
 }
 

@@ -14,7 +14,6 @@ import { Button } from '@hackhyre/ui/components/button'
 import { Badge } from '@hackhyre/ui/components/badge'
 import { Separator } from '@hackhyre/ui/components/separator'
 import { Avatar, AvatarFallback } from '@hackhyre/ui/components/avatar'
-import { Progress } from '@hackhyre/ui/components/progress'
 import {
   ArrowLeft,
   Briefcase,
@@ -34,10 +33,12 @@ import {
   TaskSquare,
   Code,
 } from '@hackhyre/ui/icons'
+import { Skeleton } from '@hackhyre/ui/components/skeleton'
 import { cn } from '@hackhyre/ui/lib/utils'
-import { MOCK_JOBS, MOCK_APPLICATIONS, MOCK_COMPANY } from '@/lib/mock-data'
 import { JOB_STATUS_CONFIG, APPLICATION_STATUS_CONFIG } from '@/lib/constants'
 import { useCandidateSheet } from '@/hooks/use-candidate-sheet'
+import { useRecruiterJobDetail } from '@/hooks/use-recruiter-jobs'
+import { Streamdown } from 'streamdown'
 
 const STATUS_ICON: Record<string, typeof TickCircle> = {
   open: TickCircle,
@@ -63,8 +64,9 @@ function formatSalary(
   return `Up to ${fmt(max!)}`
 }
 
-function formatDate(dateStr: string) {
-  return new Date(dateStr).toLocaleDateString('en-US', {
+function formatDate(date: string | Date) {
+  const d = typeof date === 'string' ? new Date(date) : date
+  return d.toLocaleDateString('en-US', {
     month: 'long',
     day: 'numeric',
     year: 'numeric',
@@ -76,18 +78,6 @@ function formatEmploymentType(type: string) {
     .split('_')
     .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
     .join(' ')
-}
-
-function formatRelativeTime(dateStr: string) {
-  const now = new Date()
-  const date = new Date(dateStr)
-  const diffMs = now.getTime() - date.getTime()
-  const diffH = Math.floor(diffMs / (1000 * 60 * 60))
-  if (diffH < 1) return 'Just now'
-  if (diffH < 24) return `${diffH}h ago`
-  const diffD = Math.floor(diffH / 24)
-  if (diffD === 1) return 'Yesterday'
-  return `${diffD}d ago`
 }
 
 function InfoRow({
@@ -147,28 +137,46 @@ function ListSection({
   )
 }
 
-export default function JobDetailPage({
-  params,
-}: {
-  params: Promise<{ id: string }>
-}) {
-  const { id } = use(params)
-  const job = MOCK_JOBS.find((j) => j.id === id)
+export default function JobDetailPage(
+  props: PageProps<'/recuriter/jobs/[id]'>
+) {
+  const { id } = use(props.params)
+  const { data: job, isLoading, error } = useRecruiterJobDetail(id)
   const openCandidate = useCandidateSheet((s) => s.open)
 
-  if (!job) {
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <Skeleton className="h-8 w-32" />
+        <Skeleton className="h-10 w-2/3" />
+        <div className="grid gap-6 lg:grid-cols-3">
+          <div className="space-y-6 lg:col-span-2">
+            <Skeleton className="h-48 w-full rounded-xl" />
+            <Skeleton className="h-64 w-full rounded-xl" />
+          </div>
+          <div className="space-y-6">
+            <Skeleton className="h-48 w-full rounded-xl" />
+            <Skeleton className="h-32 w-full rounded-xl" />
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (error || !job) {
     notFound()
   }
 
-  const applications = MOCK_APPLICATIONS.filter((a) => a.jobId === job.id)
-  const applicantIds = applications.map((a) => a.candidateId)
+  const jobApplications = job.applications
+  const applicantIds = jobApplications
+    .map((a) => a.candidateId)
+    .filter((id): id is string => id !== null)
   const statusConfig = JOB_STATUS_CONFIG[job.status]
   const StatusIcon = STATUS_ICON[job.status] ?? Clock
   const salary = formatSalary(job.salaryMin, job.salaryMax, job.salaryCurrency)
 
   return (
     <div className="space-y-6">
-      {/* Back + Actions Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <Button
           variant="ghost"
@@ -176,7 +184,7 @@ export default function JobDetailPage({
           className="text-muted-foreground w-fit gap-2"
           asChild
         >
-          <Link href="/jobs">
+          <Link href="/recuriter/jobs">
             <ArrowLeft size={16} variant="Linear" />
             Back to Jobs
           </Link>
@@ -209,7 +217,6 @@ export default function JobDetailPage({
         </div>
       </div>
 
-      {/* Title + Status */}
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
@@ -229,34 +236,34 @@ export default function JobDetailPage({
           </Badge>
         </div>
         <p className="text-muted-foreground mt-1.5 text-[13px]">
-          {MOCK_COMPANY.name} &middot; Posted {formatDate(job.createdAt)}
+          {job.company?.name?.toLocaleUpperCase() ?? 'No company'} &middot;
+          Posted {formatDate(job.createdAt)}
         </p>
       </motion.div>
 
       <div className="grid gap-6 lg:grid-cols-3">
-        {/* Left Column — Description, Requirements, Job Details */}
         <div className="space-y-6 lg:col-span-2">
-          {/* Description */}
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.05, duration: 0.3 }}
           >
             <Card>
-              <CardHeader className="pb-3">
+              <CardHeader>
                 <CardTitle className="text-[15px] font-semibold">
                   About this role
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground text-[13px] leading-relaxed">
+                <Streamdown
+                  mode="static"
+                  className="text-muted-foreground text-[13px] leading-relaxed"
+                >
                   {job.description}
-                </p>
+                </Streamdown>
               </CardContent>
             </Card>
           </motion.div>
-
-          {/* Requirements + Responsibilities + Skills */}
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
@@ -375,7 +382,7 @@ export default function JobDetailPage({
                   <InfoRow
                     icon={People}
                     label="Total Applicants"
-                    value={`${job.applicationCount} applicants`}
+                    value={`${jobApplications.length} applicants`}
                   />
                 </div>
               </CardContent>
@@ -397,13 +404,13 @@ export default function JobDetailPage({
                   <CardTitle className="text-[15px] font-semibold">
                     Applicants
                     <span className="text-muted-foreground ml-2 text-[12px] font-normal">
-                      ({applications.length})
+                      ({jobApplications.length})
                     </span>
                   </CardTitle>
                 </div>
               </CardHeader>
               <CardContent>
-                {applications.length === 0 ? (
+                {jobApplications.length === 0 ? (
                   <div className="flex flex-col items-center py-8 text-center">
                     <People
                       size={32}
@@ -416,7 +423,7 @@ export default function JobDetailPage({
                   </div>
                 ) : (
                   <div className="space-y-1">
-                    {applications.map((app, i) => {
+                    {jobApplications.map((app, i) => {
                       const appConfig = APPLICATION_STATUS_CONFIG[app.status]
                       const initials = app.candidateName
                         .split(' ')
@@ -431,6 +438,7 @@ export default function JobDetailPage({
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: i * 0.05, duration: 0.2 }}
                           onClick={() =>
+                            app.candidateId &&
                             openCandidate(app.candidateId, applicantIds)
                           }
                           className="hover:bg-accent/50 flex w-full items-center gap-3 rounded-xl p-2.5 text-left transition-colors"
@@ -481,7 +489,7 @@ export default function JobDetailPage({
               <CardContent className="space-y-3">
                 {Object.entries(APPLICATION_STATUS_CONFIG).map(
                   ([status, config]) => {
-                    const count = applications.filter(
+                    const count = jobApplications.filter(
                       (a) => a.status === status
                     ).length
                     return (

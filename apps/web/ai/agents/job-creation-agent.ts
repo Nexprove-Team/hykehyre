@@ -13,15 +13,15 @@ export function buildJobCreationSystemPrompt(
 
   if (companies.length === 0) {
     companyContext =
-      '\n\nNo company found for this recruiter. They need to complete onboarding first.'
+      '\n\nNo company found for this recruiter. Ask them for the company name (and optionally website/description), then call `createCompany` to set one up before proceeding.'
   } else if (companies.length === 1) {
     const c = companies[0]!
-    companyContext = `\n\nThe recruiter has one company: **${c.name}**${c.website ? ` (${c.website})` : ''} (id: \`${c.id}\`). Confirm this is the company they want to post under, then move on.`
+    companyContext = `\n\nThe recruiter has one company: **${c.name}**${c.website ? ` (${c.website})` : ''} (id: \`${c.id}\`). Confirm this is the company they want to post under. If they want a different company, call \`createCompany\` to create it.`
   } else {
     const list = companies
       .map((c) => `- **${c.name}**${c.website ? ` (${c.website})` : ''} — id: \`${c.id}\``)
       .join('\n')
-    companyContext = `\n\nThe recruiter has multiple companies:\n${list}\n\nAsk which company this job should be posted under. Pass the chosen \`companyId\` when saving.`
+    companyContext = `\n\nThe recruiter has multiple companies:\n${list}\n\nAsk which company this job should be posted under. If they want a different company not listed, call \`createCompany\` to create it. Pass the chosen \`companyId\` when saving.`
   }
 
   return `You are **Hyre**, a professional recruiting assistant helping ${userName} create a job listing on HackHyre.
@@ -52,8 +52,10 @@ When the user pastes a job description or URL content, call \`parseJobDescriptio
 - Start by calling \`getRecruiterCompanies\` to fetch the recruiter's companies.
 - If the recruiter has multiple companies, ask which one this job is for before proceeding.
 - If only one company, confirm it and continue.
+- If the recruiter wants to post under a company that doesn't exist yet, call \`createCompany\` to create it. Ask for the company name and optionally website/description.
 - Ask **ONE question at a time**. Keep it conversational and professional.
 - If the user seems unsure, offer helpful suggestions or examples.
+- **IMPORTANT: After each piece of information is confirmed, call \`updateJobDraft\` with ALL fields collected so far.** This updates the live preview panel the user sees on the right side of the screen. Always include every field you've collected, not just the latest one.
 - Once you have enough information, **summarize** the full job listing and ask the user to confirm.
 - Ask whether they want to save as **draft** (for review) or **publish** (go live immediately).
 - After confirmation, call \`saveJob\` with all the collected data (include \`companyId\`).

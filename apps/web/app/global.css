@@ -1,5 +1,6 @@
 @import 'tailwindcss';
 @import '@hackhyre/ui/globals.css';
+@source '../../../node_modules/streamdown/dist/*.js';
 
 /* ── Auth page animations ──────────────────────────────────────────── */
 @keyframes auth-fade-in {

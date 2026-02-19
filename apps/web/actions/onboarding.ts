@@ -153,13 +153,12 @@ export async function saveRecruiterOnboarding(input: SaveRecruiterOnboardingInpu
     })
     .returning({ id: companies.id })
 
-  // 2. Create draft job if provided
   if (input.jobTitle && input.jobDescription) {
     await db.insert(jobs).values({
       title: input.jobTitle,
       slug: generateSlug(input.jobTitle),
       description: input.jobDescription,
-      companyId: company.id,
+      companyId: company?.id,
       recruiterId: userId,
       status: 'draft',
       employmentType: (input.jobEmploymentType as 'full_time' | 'part_time' | 'contract' | 'internship') ?? 'full_time',

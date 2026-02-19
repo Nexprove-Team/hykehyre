@@ -38,6 +38,7 @@ import { useCompanySheet } from '../(components)/use-company-sheet'
 import { CompanySheet } from '../(components)/company-sheet'
 import { useApplySheet } from '../(components)/use-apply-sheet'
 import { ApplySheet } from '../(components)/apply-sheet'
+import { Streamdown } from 'streamdown'
 
 // ── Force light mode via CSS variable overrides ───────────────────────
 
@@ -171,8 +172,7 @@ function getJobDetails(
         raw.requirements.length > 0
           ? raw.requirements
           : DEFAULT_DETAILS.requirements,
-      skills:
-        raw.skills.length > 0 ? raw.skills : DEFAULT_DETAILS.skills,
+      skills: raw.skills.length > 0 ? raw.skills : DEFAULT_DETAILS.skills,
     }
   }
   const overrides = JOB_DETAILS[id]
@@ -315,9 +315,7 @@ function SimilarJobCard({ job }: { job: PublicJob }) {
 
 export default function JobDetailPage({
   params,
-}: {
-  params: Promise<{ id: string }>
-}) {
+}: PageProps<'/jobs-listing/[id]'>) {
   const { id } = use(params)
   const { data: rawJob, isLoading } = useJobById(id)
   const { data: rawSimilar } = usePublicJobs({})
@@ -414,7 +412,6 @@ export default function JobDetailPage({
             </div>
           </div>
 
-          {/* Title + Company */}
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
@@ -428,7 +425,7 @@ export default function JobDetailPage({
                 </h1>
                 <div className="mt-1.5 flex flex-wrap items-center gap-2 text-[13px] text-neutral-500">
                   <span className="font-medium text-neutral-700">
-                    {job.company}
+                    {job.company?.toLocaleUpperCase() ?? 'No company'}
                   </span>
                   <span>&middot;</span>
                   <span className="flex items-center gap-1">
@@ -459,29 +456,28 @@ export default function JobDetailPage({
           </motion.div>
 
           <div className="grid gap-6 lg:grid-cols-3">
-            {/* Left Column — Description, Requirements, Job Details */}
             <div className="space-y-6 lg:col-span-2">
-              {/* Description */}
               <motion.div
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.05, duration: 0.3 }}
               >
                 <Card className="border-neutral-200 bg-white shadow-none">
-                  <CardHeader className="pb-3">
+                  <CardHeader>
                     <CardTitle className="text-[15px] font-semibold text-neutral-900">
                       About this role
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-[13px] leading-relaxed text-neutral-600">
+                    <Streamdown
+                      mode="static"
+                      className="text-[13px] leading-relaxed text-neutral-600"
+                    >
                       {details.description}
-                    </p>
+                    </Streamdown>
                   </CardContent>
                 </Card>
               </motion.div>
-
-              {/* Requirements + Responsibilities + Skills */}
               <motion.div
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
