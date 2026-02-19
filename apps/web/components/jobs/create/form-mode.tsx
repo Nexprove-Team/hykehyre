@@ -160,112 +160,6 @@ export function FormMode() {
             onSubmit={form.handleSubmit((v) => onSubmit(v, false))}
             className="space-y-5"
           >
-            {/* Company */}
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle className="flex items-center gap-2 text-sm">
-                  <Building
-                    size={16}
-                    variant="Bulk"
-                    className="text-primary"
-                  />
-                  Company
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="companyId"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Select Company</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        value={field.value ?? ''}
-                        disabled={companiesLoading}
-                      >
-                        <FormControl>
-                          <SelectTrigger className="w-full">
-                            <SelectValue
-                              placeholder={
-                                companiesLoading
-                                  ? 'Loading companies...'
-                                  : 'Select a company'
-                              }
-                            />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {companiesList?.map((c) => (
-                            <SelectItem key={c.id} value={c.id}>
-                              {c.name}
-                            </SelectItem>
-                          ))}
-                          <SelectItem value={NEW_COMPANY_VALUE}>
-                            + Add new company
-                          </SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                {companyIdValue === NEW_COMPANY_VALUE && (
-                  <div className="space-y-3 rounded-md border p-3">
-                    <FormField
-                      control={form.control}
-                      name="newCompanyName"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Company Name</FormLabel>
-                          <FormControl>
-                            <Input
-                              placeholder="Acme Inc."
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="newCompanyWebsite"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Website (optional)</FormLabel>
-                          <FormControl>
-                            <Input
-                              placeholder="https://acme.com"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="newCompanyDescription"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Description (optional)</FormLabel>
-                          <FormControl>
-                            <Input
-                              placeholder="Brief description of the company"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-
             {/* Basic Info */}
             <Card>
               <CardHeader className="pb-3">
@@ -373,6 +267,112 @@ export function FormMode() {
                     )}
                   />
                 </div>
+              </CardContent>
+            </Card>
+
+            {/* Company */}
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="flex items-center gap-2 text-sm">
+                  <Building
+                    size={16}
+                    variant="Bulk"
+                    className="text-primary"
+                  />
+                  Company
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="companyId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Select Company</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value ?? ''}
+                        disabled={companiesLoading}
+                      >
+                        <FormControl>
+                          <SelectTrigger className="w-full">
+                            <SelectValue
+                              placeholder={
+                                companiesLoading
+                                  ? 'Loading companies...'
+                                  : 'Select a company'
+                              }
+                            />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {companiesList?.map((c) => (
+                            <SelectItem key={c.id} value={c.id}>
+                              {c.name}
+                            </SelectItem>
+                          ))}
+                          <SelectItem value={NEW_COMPANY_VALUE}>
+                            + Add new company
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {companyIdValue === NEW_COMPANY_VALUE && (
+                  <div className="space-y-3 rounded-md border p-3">
+                    <FormField
+                      control={form.control}
+                      name="newCompanyName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Company Name</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="Acme Inc."
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="newCompanyWebsite"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Website (optional)</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="https://acme.com"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="newCompanyDescription"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Description (optional)</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="Brief description of the company"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                )}
               </CardContent>
             </Card>
 

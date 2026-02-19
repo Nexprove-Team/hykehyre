@@ -9,21 +9,13 @@ import { useCreateJob } from '@/hooks/use-jobs'
 import type { CreateJobInput } from '@/actions/job-mutations'
 
 import { Button } from '@hackhyre/ui/components/button'
-import { Input } from '@hackhyre/ui/components/input'
 import { Spinner } from '@hackhyre/ui/components/spinner'
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from '@hackhyre/ui/components/card'
 import { ScrollArea } from '@hackhyre/ui/components/scroll-area'
-import { Microphone2, Send, TickCircle } from '@hackhyre/ui/icons'
+import { TickCircle, MagicStar } from '@hackhyre/ui/icons'
 import { cn } from '@hackhyre/ui/lib/utils'
 
-import { VoiceChatBubble, type ChatMessage } from './voice-chat-bubble'
+import { ChatBubble, TypingIndicator, type ChatMessage } from './chat-bubble'
+import { ChatInput } from './chat-input'
 import { JobPreview } from './job-preview'
 import { VOICE_AI_SCRIPT } from '@/lib/mock-data'
 
@@ -43,7 +35,7 @@ interface ConstructedJob {
   skills?: string[]
 }
 
-export function VoiceMode() {
+export function AiMode() {
   const router = useRouter()
   const { mutateAsync, isPending: isCreating } = useCreateJob()
   const [messages, setMessages] = useState<ChatMessage[]>([])
@@ -54,15 +46,13 @@ export function VoiceMode() {
   const [constructedJob, setConstructedJob] = useState<ConstructedJob>({})
   const [isComplete, setIsComplete] = useState(false)
   const scrollRef = useRef<HTMLDivElement>(null)
+  const bottomRef = useRef<HTMLDivElement>(null)
 
-  // Auto-scroll to bottom
   useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight
-    }
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages, isTyping])
 
-
+  // Send initial AI greeting
   useEffect(() => {
     const timer = setTimeout(() => {
       const firstScript = VOICE_AI_SCRIPT[0]
@@ -76,7 +66,7 @@ export function VoiceMode() {
         ])
         setScriptIndex(1)
       }
-    }, 500)
+    }, 400)
     return () => clearTimeout(timer)
   }, [])
 
@@ -84,7 +74,6 @@ export function VoiceMode() {
     (text: string) => {
       if (!text.trim() || isTyping || isComplete) return
 
-      // Add user message
       const userMsg: ChatMessage = {
         id: `user-${Date.now()}`,
         role: 'user',
@@ -93,7 +82,6 @@ export function VoiceMode() {
       setMessages((prev) => [...prev, userMsg])
       setInput('')
 
-      // Update constructed job based on script step
       const currentScript = VOICE_AI_SCRIPT[scriptIndex - 1]
       if (currentScript?.field) {
         const userText = text.trim()
@@ -133,8 +121,7 @@ export function VoiceMode() {
                 userText.toLowerCase().includes('remote') ||
                 userText.toLowerCase().includes('yes')
               break
-            case 'salary':
-              // Extract numbers from text
+            case 'salary': {
               const nums = userText.match(/\d[\d,]*/g)
               if (nums && nums.length >= 2) {
                 updated.salaryMin = parseInt(nums[0]!.replace(/,/g, ''), 10)
@@ -146,6 +133,7 @@ export function VoiceMode() {
               }
               updated.salaryCurrency = 'USD'
               break
+            }
             case 'responsibilities':
               updated.responsibilities = userText
                 .split(/[,;\n]/)
@@ -186,12 +174,11 @@ export function VoiceMode() {
           ])
           setScriptIndex((prev) => prev + 1)
 
-          // Check if this is the last step
           if (scriptIndex >= VOICE_AI_SCRIPT.length - 1) {
             setIsComplete(true)
           }
         }
-      }, 1500)
+      }, 1200)
     },
     [scriptIndex, isTyping, isComplete]
   )
@@ -200,23 +187,14 @@ export function VoiceMode() {
     processUserMessage(input)
   }
 
-  function handleKeyDown(e: React.KeyboardEvent) {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault()
-      handleSend()
-    }
-  }
-
   function toggleRecording() {
     if (isRecording) {
       setIsRecording(false)
-      // Mock: simulate voice-to-text after "recording"
       setTimeout(() => {
         processUserMessage('Senior Full Stack Engineer')
       }, 300)
     } else {
       setIsRecording(true)
-      // Auto-stop after 3 seconds (mock)
       setTimeout(() => setIsRecording(false), 3000)
     }
   }
@@ -226,8 +204,11 @@ export function VoiceMode() {
       await mutateAsync({
         title: constructedJob.title ?? 'Untitled Job',
         description: constructedJob.description ?? '',
-        employmentType: constructedJob.employmentType as CreateJobInput['employmentType'],
-        experienceLevel: constructedJob.experienceLevel as CreateJobInput['experienceLevel'],
+        companyId: constructedJob.companyId,
+        employmentType:
+          constructedJob.employmentType as CreateJobInput['employmentType'],
+        experienceLevel:
+          constructedJob.experienceLevel as CreateJobInput['experienceLevel'],
         location: constructedJob.location,
         isRemote: constructedJob.isRemote,
         salaryMin: constructedJob.salaryMin,
@@ -244,84 +225,90 @@ export function VoiceMode() {
       router.push('/recuriter/jobs')
     } catch (error) {
       toast.error('Failed to create job', {
-        description: error instanceof Error ? error.message : 'Something went wrong',
+        description:
+          error instanceof Error ? error.message : 'Something went wrong',
       })
     }
   }
 
+  const hasContent = Object.keys(constructedJob).length > 0
+
   return (
-    <div className="grid grid-cols-1 gap-6 lg:grid-cols-5">
+    <div className="grid h-[calc(100vh-15rem)] grid-cols-1 gap-6 lg:grid-cols-5">
       {/* Chat panel */}
       <div className="lg:col-span-3">
-        <Card className="flex flex-col">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-base font-semibold">
-              Voice Conversation
-            </CardTitle>
-            <CardDescription>
-              Talk to our AI to build your job listing step by step
-            </CardDescription>
-          </CardHeader>
-
-          <CardContent className="flex-1 px-4">
-            <ScrollArea className="h-100 pr-4" ref={scrollRef}>
-              <div className="space-y-4 py-2">
-                {messages.map((msg) => (
-                  <VoiceChatBubble key={msg.id} message={msg} />
-                ))}
-
-                {isTyping && (
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="text-muted-foreground flex items-center gap-2 text-sm"
-                  >
-                    <Spinner className="h-4 w-4" />
-                    AI is thinking...
-                  </motion.div>
-                )}
-              </div>
-            </ScrollArea>
-          </CardContent>
-
-          <CardFooter className="border-t pt-4">
-            <div className="flex w-full items-center gap-2">
-              <Button
-                type="button"
-                variant={isRecording ? 'destructive' : 'outline'}
-                size="icon"
-                className={cn('shrink-0', isRecording && 'animate-pulse')}
-                onClick={toggleRecording}
-                disabled={isTyping || isComplete}
-              >
-                <Microphone2
-                  size={18}
-                  variant={isRecording ? 'Bold' : 'Linear'}
-                />
-              </Button>
-
-              <Input
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder={
-                  isComplete ? 'Conversation complete' : 'Type your response...'
-                }
-                disabled={isTyping || isComplete}
-                className="flex-1"
-              />
-
-              <Button
-                type="button"
-                size="icon"
-                onClick={handleSend}
-                disabled={!input.trim() || isTyping || isComplete}
-              >
-                <Send size={18} variant="Bold" />
-              </Button>
+        <div className="border-border/40 bg-card flex h-full flex-col overflow-hidden rounded-xl border">
+          {/* Header */}
+          <div className="border-border/40 flex items-center gap-3 border-b px-5 py-3.5">
+            <div className="bg-primary/10 flex h-8 w-8 items-center justify-center rounded-lg">
+              <MagicStar size={16} variant="Bold" className="text-primary" />
             </div>
-          </CardFooter>
-        </Card>
+            <div className="min-w-0 flex-1">
+              <h3 className="text-sm font-semibold">Hyre AI</h3>
+              <p className="text-muted-foreground text-xs">
+                Create your job listing through conversation
+              </p>
+            </div>
+            {isComplete && (
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                className="bg-primary/10 text-primary rounded-full px-2.5 py-0.5 text-xs font-medium"
+              >
+                Complete
+              </motion.div>
+            )}
+          </div>
+
+          {/* Messages area */}
+          <ScrollArea className="min-h-0 flex-1" ref={scrollRef}>
+            <div className="space-y-4 px-5 py-4">
+              {/* Welcome hint — visible only before first AI message */}
+              {messages.length === 0 && (
+                <div className="flex h-64 items-center justify-center">
+                  <div className="text-muted-foreground/40 text-center">
+                    <MagicStar
+                      size={32}
+                      variant="Bulk"
+                      className="mx-auto mb-3"
+                    />
+                    <p className="text-sm">Starting conversation...</p>
+                  </div>
+                </div>
+              )}
+
+              {messages.map((msg) => (
+                <ChatBubble key={msg.id} message={msg} />
+              ))}
+
+              <AnimatePresence>
+                {isTyping && <TypingIndicator />}
+              </AnimatePresence>
+
+              <div ref={bottomRef} />
+            </div>
+          </ScrollArea>
+
+          {/* Input area */}
+          <div className="border-border/40 border-t px-4 py-3">
+            <ChatInput
+              value={input}
+              onChange={setInput}
+              onSend={handleSend}
+              onMicToggle={toggleRecording}
+              isRecording={isRecording}
+              disabled={isTyping || isComplete}
+              placeholder={
+                isComplete
+                  ? 'Conversation complete — review your listing'
+                  : 'Type your response or use the mic...'
+              }
+            />
+            <p className="text-muted-foreground/50 mt-2 px-1 text-[11px]">
+              Press Enter to send &middot; Shift+Enter for new line
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* Preview panel */}
@@ -333,8 +320,17 @@ export function VoiceMode() {
             <motion.div
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
             >
-              <Button className="w-full" size="lg" onClick={handleCreateJob} disabled={isCreating}>
+              <Button
+                className={cn(
+                  'w-full',
+                  'bg-primary hover:bg-primary/90 relative overflow-hidden'
+                )}
+                size="lg"
+                onClick={handleCreateJob}
+                disabled={isCreating}
+              >
                 {isCreating ? (
                   <Spinner className="mr-2 h-4 w-4" />
                 ) : (

@@ -6,21 +6,14 @@ import {
   TabsList,
   TabsTrigger,
 } from '@hackhyre/ui/components/tabs'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@hackhyre/ui/components/tooltip'
-import { Microphone2, DocumentText, Magicpen } from '@hackhyre/ui/icons'
+import { MagicStar, DocumentText } from '@hackhyre/ui/icons'
 
-import { VoiceMode } from '@/components/jobs/create/voice-mode'
+import { AiMode } from '@/components/jobs/create/ai-mode'
 import { FormMode } from '@/components/jobs/create/form-mode'
-import { AIPasteMode } from '@/components/jobs/create/ai-paste-mode'
 
 export default function CreateJobPage() {
   return (
-    <div className="space-y-6">
+    <div className="h-full space-y-6">
       <div>
         <h1 className="font-mono text-2xl font-bold tracking-tight">
           Create a Job
@@ -30,45 +23,23 @@ export default function CreateJobPage() {
         </p>
       </div>
 
-      <Tabs defaultValue="voice">
+      <Tabs defaultValue="ai">
         <TabsList variant="line" className="mb-6">
-          <TabsTrigger value="voice" className="gap-1.5">
-            <Microphone2 size={16} variant="Linear" />
-            Voice
+          <TabsTrigger value="ai" className="gap-1.5">
+            <MagicStar size={16} variant="Linear" />
+            AI
           </TabsTrigger>
           <TabsTrigger value="form" className="gap-1.5">
             <DocumentText size={16} variant="Linear" />
             Form
           </TabsTrigger>
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <span>
-                  <TabsTrigger
-                    value="paste"
-                    className="gap-1.5 disabled:cursor-not-allowed"
-                    disabled
-                  >
-                    <Magicpen size={16} variant="Linear" />
-                    AI Paste
-                  </TabsTrigger>
-                </span>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Coming soon</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
         </TabsList>
 
-        <TabsContent value="voice">
-          <VoiceMode />
+        <TabsContent value="ai">
+          <AiMode />
         </TabsContent>
         <TabsContent value="form">
           <FormMode />
-        </TabsContent>
-        <TabsContent value="paste">
-          <AIPasteMode />
         </TabsContent>
       </Tabs>
     </div>
