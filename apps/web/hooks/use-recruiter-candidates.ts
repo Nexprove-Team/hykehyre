@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueries } from '@tanstack/react-query'
 import {
   getRecruiterCandidates,
   getRecruiterCandidateDetail,
@@ -23,5 +23,15 @@ export function useRecruiterCandidateDetail(applicationId: string) {
     queryKey: recruiterCandidateKeys.detail(applicationId),
     queryFn: () => getRecruiterCandidateDetail(applicationId),
     enabled: !!applicationId,
+  })
+}
+
+export function useRecruiterCandidateDetails(applicationIds: string[]) {
+  return useQueries({
+    queries: applicationIds.map((id) => ({
+      queryKey: recruiterCandidateKeys.detail(id),
+      queryFn: () => getRecruiterCandidateDetail(id),
+      enabled: !!id,
+    })),
   })
 }

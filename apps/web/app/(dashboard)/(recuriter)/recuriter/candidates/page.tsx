@@ -14,6 +14,7 @@ import { Input } from '@hackhyre/ui/components/input'
 import { Button } from '@hackhyre/ui/components/button'
 import { Avatar, AvatarFallback } from '@hackhyre/ui/components/avatar'
 import { Skeleton } from '@hackhyre/ui/components/skeleton'
+import { Checkbox } from '@hackhyre/ui/components/checkbox'
 import {
   Select,
   SelectContent,
@@ -30,11 +31,14 @@ import {
   SearchNormal,
   ArrowRight,
   MagicStar,
+  Ranking,
 } from '@hackhyre/ui/icons'
 import { cn } from '@hackhyre/ui/lib/utils'
 import { APPLICATION_STATUS_CONFIG } from '@/lib/constants'
 import { StatCard } from '@/components/dashboard/stat-card'
 import { useRecruiterCandidates } from '@/hooks/use-recruiter-candidates'
+import { useCandidateComparison } from '@/hooks/use-candidate-comparison'
+import { ComparisonFloatingBar } from '@/components/dashboard/comparison-floating-bar'
 
 type SortKey = 'match' | 'newest' | 'experience' | 'name'
 
@@ -127,6 +131,8 @@ export default function CandidatesPage() {
   const [search, setSearch] = useState('')
   const [sort, setSort] = useState<SortKey>('match')
   const { data: candidates = [], isLoading } = useRecruiterCandidates()
+  const { isSelecting, selectedIds, toggleSelecting, toggleCandidate } =
+    useCandidateComparison()
 
   // Filter & sort
   const filtered = useMemo(() => {
@@ -247,6 +253,15 @@ export default function CandidatesPage() {
                   <SelectItem value="name">Name A-Z</SelectItem>
                 </SelectContent>
               </Select>
+              <Button
+                variant={isSelecting ? 'default' : 'outline'}
+                size="sm"
+                onClick={toggleSelecting}
+                className="h-8 gap-1.5 text-[12px]"
+              >
+                <Ranking size={14} variant={isSelecting ? 'Bold' : 'Linear'} />
+                {isSelecting ? 'Cancel' : 'Compare'}
+              </Button>
             </div>
           </div>
         </CardHeader>
@@ -277,6 +292,11 @@ export default function CandidatesPage() {
                   APPLICATION_STATUS_CONFIG[candidate.bestStatus]
                 const visibleSkills = candidate.skills.slice(0, 4)
                 const overflowCount = candidate.skills.length - 4
+                const isSelected = selectedIds.includes(
+                  candidate.bestApplicationId
+                )
+                const isMaxed =
+                  selectedIds.length >= 4 && !isSelected
 
                 return (
                   <motion.div
@@ -288,11 +308,48 @@ export default function CandidatesPage() {
                       duration: 0.25,
                     }}
                   >
-                    <Card className="group hover:border-primary/20 transition-colors">
-                      <CardContent className="p-4">
+                    <Card
+                      className={cn(
+                        'group transition-colors',
+                        isSelecting
+                          ? isSelected
+                            ? 'border-primary ring-2 ring-primary/20 cursor-pointer'
+                            : isMaxed
+                              ? 'opacity-50 pointer-events-none'
+                              : 'hover:border-primary/20 cursor-pointer'
+                          : 'hover:border-primary/20'
+                      )}
+                      onClick={
+                        isSelecting && !isMaxed
+                          ? () =>
+                              toggleCandidate(candidate.bestApplicationId)
+                          : undefined
+                      }
+                    >
+                      <CardContent className="relative p-4">
+                        {/* Selection checkbox */}
+                        {isSelecting && (
+                          <div className="absolute top-3 left-3 z-10">
+                            <Checkbox
+                              checked={isSelected}
+                              onCheckedChange={() =>
+                                toggleCandidate(
+                                  candidate.bestApplicationId
+                                )
+                              }
+                              onClick={(e) => e.stopPropagation()}
+                            />
+                          </div>
+                        )}
+
                         {/* Top row: avatar + name | score ring */}
                         <div className="flex items-start justify-between gap-3">
-                          <div className="flex min-w-0 items-center gap-3">
+                          <div
+                            className={cn(
+                              'flex min-w-0 items-center gap-3',
+                              isSelecting && 'pl-6'
+                            )}
+                          >
                             <Avatar className="h-10 w-10 shrink-0">
                               <AvatarFallback className="bg-primary/10 text-primary text-[11px] font-bold">
                                 {initials}
@@ -365,19 +422,21 @@ export default function CandidatesPage() {
                               applied
                             </span>
                           </div>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="text-muted-foreground group-hover:text-primary h-7 gap-1 px-2 text-[11px]"
-                            asChild
-                          >
-                            <Link
-                              href={`/recuriter/candidates/${candidate.bestApplicationId}`}
+                          {!isSelecting && (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="text-muted-foreground group-hover:text-primary h-7 gap-1 px-2 text-[11px]"
+                              asChild
                             >
-                              View
-                              <ArrowRight size={12} variant="Linear" />
-                            </Link>
-                          </Button>
+                              <Link
+                                href={`/recuriter/candidates/${candidate.bestApplicationId}`}
+                              >
+                                View
+                                <ArrowRight size={12} variant="Linear" />
+                              </Link>
+                            </Button>
+                          )}
                         </div>
                       </CardContent>
                     </Card>
@@ -388,6 +447,8 @@ export default function CandidatesPage() {
           )}
         </CardContent>
       </Card>
+
+      {isSelecting && <ComparisonFloatingBar candidates={filtered} />}
     </div>
   )
 }
